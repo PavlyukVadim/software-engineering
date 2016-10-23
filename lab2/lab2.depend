@@ -1,0 +1,43 @@
+# depslib dependency file v1.0
+1477248885 source:/home/amadev/Рабочий стол/с++/lab2/main.cpp
+	<iostream>
+	"Point.h"
+	"Triangle.h"
+
+1477241889 /home/amadev/Рабочий стол/с++/lab2/include/Point.h
+
+1477242062 source:/home/amadev/Рабочий стол/с++/lab2/src/Point.cpp
+	"Point.h"
+	<iostream>
+
+1477247781 source:/home/amadev/Рабочий стол/с++/lab2/src/SegmentA.cpp
+	"SegmentA.h"
+	"math.h"
+
+1477248839 /home/amadev/Рабочий стол/с++/lab2/include/SegmentA.h
+	"Point.h"
+
+1477247870 source:/home/amadev/Рабочий стол/с++/lab2/src/SegmentB.cpp
+	"SegmentB.h"
+	"math.h"
+
+1477247906 /home/amadev/Рабочий стол/с++/lab2/include/SegmentB.h
+	"Point.h"
+
+1477247878 source:/home/amadev/Рабочий стол/с++/lab2/src/SegmentC.cpp
+	"SegmentC.h"
+	"math.h"
+
+1477247925 /home/amadev/Рабочий стол/с++/lab2/include/SegmentC.h
+	"Point.h"
+
+1477249439 source:/home/amadev/Рабочий стол/с++/lab2/src/Triangle.cpp
+	"Triangle.h"
+	<iostream>
+	<math.h>
+
+1477249377 /home/amadev/Рабочий стол/с++/lab2/include/Triangle.h
+	"SegmentA.h"
+	"SegmentB.h"
+	"SegmentC.h"
+
