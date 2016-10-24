@@ -13,6 +13,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add directory="include" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -22,6 +23,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -32,7 +34,17 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="include/Point.h" />
+		<Unit filename="include/SegmentA.h" />
+		<Unit filename="include/SegmentB.h" />
+		<Unit filename="include/SegmentC.h" />
+		<Unit filename="include/Triangle.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/Point.cpp" />
+		<Unit filename="src/SegmentA.cpp" />
+		<Unit filename="src/SegmentB.cpp" />
+		<Unit filename="src/SegmentC.cpp" />
+		<Unit filename="src/Triangle.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />
