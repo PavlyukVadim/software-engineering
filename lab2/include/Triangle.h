@@ -11,11 +11,16 @@ class Triangle {
     SegmentB segmentB;
     SegmentC segmentC;
 
+    struct M{
+        int x1[12];
+        int y1[12];
+    };
 
         Triangle(SegmentA n_segmentA, SegmentB n_segmentB, SegmentC n_segmentC): segmentA(n_segmentA), segmentB(n_segmentB), segmentC(n_segmentC) { }
     bool exist;
     void checkTriangle();
     void findSquare();
+    void Push(M &m, int x, int y, int &a);
 };
 
 

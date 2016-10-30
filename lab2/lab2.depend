@@ -14,7 +14,7 @@
 	"SegmentA.h"
 	"math.h"
 
-1477248839 /home/amadev/Рабочий стол/с++/lab2/include/SegmentA.h
+1477400273 /home/amadev/Рабочий стол/с++/lab2/include/SegmentA.h
 	"Point.h"
 
 1477247870 source:/home/amadev/Рабочий стол/с++/lab2/src/SegmentB.cpp
@@ -31,12 +31,12 @@
 1477247925 /home/amadev/Рабочий стол/с++/lab2/include/SegmentC.h
 	"Point.h"
 
-1477249439 source:/home/amadev/Рабочий стол/с++/lab2/src/Triangle.cpp
+1477400637 source:/home/amadev/Рабочий стол/с++/lab2/src/Triangle.cpp
 	"Triangle.h"
 	<iostream>
 	<math.h>
 
-1477249377 /home/amadev/Рабочий стол/с++/lab2/include/Triangle.h
+1477400535 /home/amadev/Рабочий стол/с++/lab2/include/Triangle.h
 	"SegmentA.h"
 	"SegmentB.h"
 	"SegmentC.h"
