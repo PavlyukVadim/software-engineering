@@ -1,15 +1,16 @@
 # depslib dependency file v1.0
-1477843762 source:/home/amadev/Рабочий стол/с++/Polymorphism/main.cpp
+1478002860 source:/home/amadev/Рабочий стол/с++/Polymorphism/main.cpp
 	<iostream>
 	"Func1.h"
 	"Func2.h"
-
-1477842782 /home/amadev/Рабочий стол/с++/Polymorphism/include/Func1.h
 	"Function.h"
 
-1477842800 /home/amadev/Рабочий стол/с++/Polymorphism/include/Function.h
+1478003928 /home/amadev/Рабочий стол/с++/Polymorphism/include/Func1.h
+	"Function.h"
 
-1477843772 source:/home/amadev/Рабочий стол/с++/Polymorphism/src/Func1.cpp
+1478003895 /home/amadev/Рабочий стол/с++/Polymorphism/include/Function.h
+
+1477992497 source:/home/amadev/Рабочий стол/с++/Polymorphism/src/Func1.cpp
 	"Func1.h"
 	<math.h>
 	<iostream>
@@ -19,14 +20,14 @@
 
 1477840967 /home/amadev/Рабочий стол/с++/Polymorphism/include/func2.h
 
-1477842198 source:/home/amadev/Рабочий стол/с++/Polymorphism/src/Function.cpp
+1478004009 source:/home/amadev/Рабочий стол/с++/Polymorphism/src/Function.cpp
 	"Function.h"
 
-1477843869 source:/home/amadev/Рабочий стол/с++/Polymorphism/src/Func2.cpp
+1478004022 source:/home/amadev/Рабочий стол/с++/Polymorphism/src/Func2.cpp
 	"Func2.h"
 	<math.h>
 	<iostream>
 
-1477843730 /home/amadev/Рабочий стол/с++/Polymorphism/include/Func2.h
+1478003946 /home/amadev/Рабочий стол/с++/Polymorphism/include/Func2.h
 	"Function.h"
 

@@ -8,6 +8,7 @@ class Func1 : public Func
     public:
         Func1(double x1, double y1, double z1): Func(x1, y1, z1) {};
         void calculating();
+        virtual ~Func1();
 };
 
 #endif // FUNC1_H

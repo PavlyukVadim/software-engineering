@@ -1,0 +1,33 @@
+# depslib dependency file v1.0
+1478468041 source:/home/amadev/Рабочий стол/с++/lab4/main.cpp
+	<iostream>
+	"AlgebraicExpressions.h"
+
+1478468013 source:/home/amadev/Рабочий стол/с++/lab4/src/AlgebraicExpressions.cpp
+	"AlgebraicExpressions.h"
+
+1478468061 /home/amadev/Рабочий стол/с++/lab4/include/AlgebraicExpressions.h
+	<string>
+	<iostream>
+	<stack>
+	<string>
+	<cctype>
+	<stdlib.h>
+	<sstream>
+
+1478468142 source:/home/amadev/Рабочий стол/с++/Exceptions/main.cpp
+	<iostream>
+	"AlgebraicExpressions.h"
+
+1478468061 /home/amadev/Рабочий стол/с++/Exceptions/include/AlgebraicExpressions.h
+	<string>
+	<iostream>
+	<stack>
+	<string>
+	<cctype>
+	<stdlib.h>
+	<sstream>
+
+1478468013 source:/home/amadev/Рабочий стол/с++/Exceptions/src/AlgebraicExpressions.cpp
+	"AlgebraicExpressions.h"
+

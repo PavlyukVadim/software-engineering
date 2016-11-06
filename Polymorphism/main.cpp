@@ -2,16 +2,18 @@
 
 #include "Func1.h"
 #include "Func2.h"
+#include "Function.h"
 
 using namespace std;
 
 int main()
 {
-    Func1 *func1 = new Func1(1, 1, 1);
-    func1->calculating();
+    Func* functions[2];
+    functions[0] = new Func1(1, 1, 1);
+    functions[1] = new Func2(0, 1, 1);
 
-    Func2 *func2 = new Func2(0, 1, 1);
-    func2->calculating();
+    functions[0]->calculating();
+    functions[1]->calculating();
 
     return 0;
 }

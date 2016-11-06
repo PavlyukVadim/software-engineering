@@ -6,5 +6,9 @@
 using namespace std;
 
 void Func1::calculating(){
-    cout << "(7 * x^4 + √3xy) = "  << (7 * pow(x, 4) + sqrt(3 * x * y)) << endl;
+    cout << "(7 * x^4 + √3xy) = "  << (7 * pow(x, 4) + sqrt(3 * x * y)) << endl << endl;
+}
+
+Func1::~Func1() {
+
 }
