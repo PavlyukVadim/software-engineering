@@ -14,7 +14,6 @@ AlgebraicExpressions AlgebraicExpressions::operator -(AlgebraicExpressions &rv){
 }
 
 
-
 double AlgebraicExpressions::Calc(double x) {
     stack<double> Operands;
     stack<char> Functions;

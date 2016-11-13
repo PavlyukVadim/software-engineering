@@ -25,12 +25,14 @@ class AlgebraicExpressions
 
 
         string str;
-        AlgebraicExpressions();
+        AlgebraicExpressions() { str = "0";};
         AlgebraicExpressions(string n_str);
 
         AlgebraicExpressions operator -() const { return AlgebraicExpressions("- (" + str + ")"); };
         AlgebraicExpressions operator +(AlgebraicExpressions &rv);
         AlgebraicExpressions operator -(AlgebraicExpressions &rv);
+
+
 
 
         void readWhiteSpace(string s, int &pos);
@@ -44,8 +46,19 @@ class AlgebraicExpressions
         double Calc(double x);
 
         void getStr() {
-            cout << str << endl;
+            cout << "Expression: " << str << endl;
         }
+        void setStr() {
+
+            cout << "Input expression: ";
+            getline(cin, str);
+            if (!str.length()) {
+                str = "0";
+            }
+
+
+        }
+
 };
 
 #endif // ALGEBRAICEXPRESSIONS_H
