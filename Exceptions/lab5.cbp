@@ -35,8 +35,10 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="include/AlgebraicExpressions.h" />
+		<Unit filename="include/Exception.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="src/AlgebraicExpressions.cpp" />
+		<Unit filename="src/Exception.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

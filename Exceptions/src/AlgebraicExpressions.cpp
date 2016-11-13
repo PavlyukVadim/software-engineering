@@ -1,4 +1,5 @@
 #include "AlgebraicExpressions.h"
+#include "Exception.h"
 
 AlgebraicExpressions::AlgebraicExpressions(string n_str) {
     str = n_str;
@@ -15,6 +16,7 @@ AlgebraicExpressions AlgebraicExpressions::operator -(AlgebraicExpressions &rv){
 
 
 double AlgebraicExpressions::Calc(double x) {
+
     stack<double> Operands;
     stack<char> Functions;
 
@@ -83,14 +85,20 @@ double AlgebraicExpressions::Calc(double x) {
     }
     while (!token->isNull);
 
-    if (Operands.size() > 1 || Functions.size() > 0) {
-        cout << "Ошибка в разборе выражения";
-        return 0;
+
+    try {
+        if (Operands.size() > 1 || Functions.size() > 0) {
+            throw Exception("Ошибка в разборе выражения!!!");
+        }
     }
+    catch (Exception& excection) {
+		excection.show();
+		return true;
+	}
 
     double op = Operands.top();
     Operands.pop();
-    cout << op << endl;
+    //cout << op << endl;
     return op;
 
 }

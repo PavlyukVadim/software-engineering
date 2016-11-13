@@ -9,6 +9,17 @@
 #include <unistd.h>//-
 
 
+
+void posix_death_signal(int signum) {
+    try{
+        throw Exception("Faulty sequence of operators and operands!!!");
+    }
+    catch (Exception& excection) {
+		excection.show();
+	}
+	exit(3); //выход из программы. Если не сделать этого, то обработчик будет вызываться бесконечно.
+}
+
 void signal_callback_handler(int signum) {
    printf("\nCaught signal %d\n",signum);
    if (signum == 2) {
@@ -17,12 +28,13 @@ void signal_callback_handler(int signum) {
    //exit(signum);
 }
 
-
 using namespace std;
 
 int main () {
 
   signal(SIGINT, signal_callback_handler);
+  signal(SIGSEGV, posix_death_signal);
+
 
   cout << "Pavlyuk Vadim Ruslanovych" << endl;
   cout << "V : 14" << endl;
@@ -47,6 +59,7 @@ int main () {
     a = a - b;
     a.getStr();
 
+
     double res = a.Calc(5);
     cout << "Result: " << res << endl;
 
@@ -65,23 +78,3 @@ int main () {
 
   return 0;
 }
-
-
-
-
-/*try {
-		char str[size];
-		gets_s(str, size);
-
-		if (strlen(str) != 1) throw CException("Wrong input format!!!");
-		case '2': return false;
-		default: throw CException("Unexpected input!");
-		}
-
-		return true;
-	}
-	catch (CException& excection) {
-		excection.show();
-		system("pause");
-		return true;
-	}*/
