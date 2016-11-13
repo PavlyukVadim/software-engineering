@@ -2,18 +2,32 @@
 #include <stdio.h>
 #include "AlgebraicExpressions.h"
 #include "Exception.h"
-
 #include <regex>
+
+#include <signal.h>//-
+#include <stdlib.h>//-- for signal
+#include <unistd.h>//-
+
+
+void signal_callback_handler(int signum) {
+   printf("\nCaught signal %d\n",signum);
+   if (signum == 2) {
+        printf("(Ctrl+^C)\n");
+   }
+   //exit(signum);
+}
+
 
 using namespace std;
 
 int main () {
 
+  signal(SIGINT, signal_callback_handler);
+
   cout << "Pavlyuk Vadim Ruslanovych" << endl;
   cout << "V : 14" << endl;
   cout << "L : B" << endl << endl;
   bool cont = true;
-
   regex integer("^[0-9x+*-/^()., ]+$");
 
   do {
@@ -22,22 +36,19 @@ int main () {
     try {
         a.setStr();
         if(!regex_match(a.str, integer)) throw Exception("Wrong input format!!!");
-        //(a.str.length() == 1)
     }
     catch (Exception& excection) {
 		excection.show();
-		//system("pause");
 		return true;
 	}
-
 
     AlgebraicExpressions b("2 * 5");
 
     a = a - b;
     a.getStr();
 
-    //double res = a.Calc(5);
-
+    double res = a.Calc(5);
+    cout << "Result: " << res << endl;
 
     cout << "press Q for exit or other key for restart : ";
     char c = getchar();
