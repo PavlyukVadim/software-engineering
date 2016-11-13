@@ -49,16 +49,12 @@ class AlgebraicExpressions
             cout << "Expression: " << str << endl;
         }
         void setStr() {
-
             cout << "Input expression: ";
             getline(cin, str);
             if (!str.length()) {
                 str = "0";
             }
-
-
         }
-
 };
 
 #endif // ALGEBRAICEXPRESSIONS_H
