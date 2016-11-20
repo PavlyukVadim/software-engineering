@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1479680162 source:/home/amadev/Рабочий стол/с++/associative/main.cpp
+	<iostream>
+	"associative.h"
+	<string.h>
+
+1479680861 /home/amadev/Рабочий стол/с++/associative/include/associative.h
+	<stdio.h>
+	<string.h>
+	<cctype>
+	<iostream>
+
+1479679124 source:/home/amadev/Рабочий стол/с++/associative/src/associative.cpp
+
