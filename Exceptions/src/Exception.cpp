@@ -13,5 +13,5 @@ Exception::~Exception() {
 }
 
 void Exception::show(void) {
-	printf("Exeption: %s\n", msg);
+	printf("!!! Exeption: %s\n", msg);
 }

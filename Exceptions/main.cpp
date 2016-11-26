@@ -27,7 +27,6 @@ void signal_callback_handler(int signum) {
    //exit(signum);
 }
 
-
 using namespace std;
 
 int main () {

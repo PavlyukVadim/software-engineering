@@ -2,29 +2,15 @@
 #include "Exception.h"
 
 
-
-AlgebraicExpressions::AlgebraicExpressions(string n_str) {
-    str = n_str;
-}
-
-AlgebraicExpressions AlgebraicExpressions::operator +(AlgebraicExpressions &rv){
-    return AlgebraicExpressions("(" + str + ") + (" + rv.str + ")");
-}
-
-AlgebraicExpressions AlgebraicExpressions::operator -(AlgebraicExpressions &rv){
-    rv.getStr();
-    return AlgebraicExpressions("(" + str + ") - (" + rv.str + ")");
-}
-
-
 bool ArePair(char opening,char closing) {
 	if (opening == '(' && closing == ')') return true;
 	return false;
 }
 
 bool AreParanthesesBalanced(string exp) {
-	stack<char>  S;
-	for(int i =0; i<exp.length(); i++) {
+    cout << "E: "<<exp << endl;
+	stack<char> S;
+	for(int i =0; i < exp.length(); i++) {
 		if(exp[i] == '(')
 			S.push(exp[i]);
 		else if(exp[i] == ')') {
@@ -34,18 +20,71 @@ bool AreParanthesesBalanced(string exp) {
 				S.pop();
 		}
 	}
-	return S.empty() ? true:false;
+	return S.empty() ? true: false;
 }
 
+
+AlgebraicExpressions::AlgebraicExpressions(string n_str) {
+    str = n_str;
+}
+
+AlgebraicExpressions AlgebraicExpressions::operator +(AlgebraicExpressions &rv){
+    try {
+        if (!AreParanthesesBalanced(rv.str)) {
+            throw Exception("Parantheses are disbalanced !!!");
+        }
+    }
+    catch (Exception& excection) {
+		excection.show();
+		rv.str = "0";
+	}
+	try {
+        if (!AreParanthesesBalanced(str)) {
+            throw Exception("Parantheses are disbalanced !!!");
+        }
+    }
+    catch (Exception& excection) {
+		excection.show();
+		str = "0";
+	}
+    return AlgebraicExpressions("(" + str + ") + (" + rv.str + ")");
+}
+
+AlgebraicExpressions AlgebraicExpressions::operator -(AlgebraicExpressions &rv){
+    try {
+        if (!AreParanthesesBalanced(rv.str)) {
+            throw Exception("Parantheses are disbalanced !!!");
+        }
+    }
+    catch (Exception& excection) {
+		excection.show();
+		rv.str = "0";
+	}
+	try {
+        if (!AreParanthesesBalanced(str)) {
+            throw Exception("Parantheses are disbalanced !!!");
+        }
+    }
+    catch (Exception& excection) {
+		excection.show();
+		str = "0";
+	}
+    rv.getStr();
+    return AlgebraicExpressions("(" + str + ") - (" + rv.str + ")");
+}
 
 
 double AlgebraicExpressions::Calc(double x) {
 
-
-    if (!AreParanthesesBalanced(str)) {
-        cout << "Eror" << endl;
+    try {
+        if (!AreParanthesesBalanced(str)) {
+            throw Exception("Parantheses are disbalanced !!!");
+        }
     }
-
+    catch (Exception& excection) {
+		excection.show();
+		return 0;
+	}
 
     stack<double> Operands;
     stack<char> Functions;
@@ -94,18 +133,22 @@ double AlgebraicExpressions::Calc(double x) {
             }
         }
 
-        if (prevToken->ischar) {
-            if(prevToken->isOperation && token->isOperation ||
-               prevToken->isOperation && token->isRbracket) {
-                    cout << "Error" << endl;
-            }
-            if(prevToken->ch == '*' && token->isLbracket ||
-              prevToken->ch == '/' && token->isRbracket) {
-                    cout << "Error" << endl;
+        try {
+            if (prevToken->ischar) {
+                if(prevToken->isOperation && token->isOperation ||
+                   prevToken->isOperation && token->isRbracket) {
+                        throw Exception("Wrong order of operations!!!");
+                }
+                if(prevToken->ch == '*' && token->isLbracket ||
+                  prevToken->ch == '/' && token->isRbracket) {
+                        throw Exception("Wrong order of operations!!!");
+                }
             }
         }
-
-
+        catch (Exception& excection) {
+            excection.show();
+            return 0;
+        }
 
         // унарный + и -
         if (token->ischar && prevToken->ischar &&
