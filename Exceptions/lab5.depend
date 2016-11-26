@@ -15,7 +15,7 @@
 	<stdlib.h>
 	<sstream>
 
-1479051840 source:/home/amadev/Рабочий стол/с++/Exceptions/main.cpp
+1480193256 source:/home/amadev/Рабочий стол/с++/Exceptions/main.cpp
 	<iostream>
 	<stdio.h>
 	"AlgebraicExpressions.h"
@@ -25,7 +25,7 @@
 	<stdlib.h>
 	<unistd.h>
 
-1479048414 /home/amadev/Рабочий стол/с++/Exceptions/include/AlgebraicExpressions.h
+1480194583 /home/amadev/Рабочий стол/с++/Exceptions/include/AlgebraicExpressions.h
 	<string>
 	<iostream>
 	<stack>
@@ -34,7 +34,7 @@
 	<stdlib.h>
 	<sstream>
 
-1479050958 source:/home/amadev/Рабочий стол/с++/Exceptions/src/AlgebraicExpressions.cpp
+1480196323 source:/home/amadev/Рабочий стол/с++/Exceptions/src/AlgebraicExpressions.cpp
 	"AlgebraicExpressions.h"
 	"Exception.h"
 

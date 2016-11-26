@@ -9,7 +9,6 @@
 #include <unistd.h>//-
 
 
-
 void posix_death_signal(int signum) {
     try{
         throw Exception("Faulty sequence of operators and operands!!!");
@@ -28,19 +27,20 @@ void signal_callback_handler(int signum) {
    //exit(signum);
 }
 
+
 using namespace std;
 
 int main () {
 
   signal(SIGINT, signal_callback_handler);
-  signal(SIGSEGV, posix_death_signal);
+  //signal(SIGSEGV, posix_death_signal);
 
 
   cout << "Pavlyuk Vadim Ruslanovych" << endl;
   cout << "V : 14" << endl;
   cout << "L : B" << endl << endl;
   bool cont = true;
-  regex integer("^[0-9x+*-/^()., ]+$");
+  regex integer("^[0-9x+*-/(). ]+$");
 
   do {
 
@@ -51,10 +51,10 @@ int main () {
     }
     catch (Exception& excection) {
 		excection.show();
-		return true;
+		a.str = "0";
 	}
 
-    AlgebraicExpressions b("2 * 5");
+    AlgebraicExpressions b("2 * x");
 
     a = a - b;
     a.getStr();

@@ -15,24 +15,27 @@ using namespace std;
 class AlgebraicExpressions
 {
 
+    struct Token{
+        char ch = ' ';
+        double vl = 0;
+        bool ischar = false,
+        isdouble = false,
+        isNull = false,
+        isOperation = false,
+        isLbracket = false,
+        isRbracket = false;
+    };
+
+
     public:
-
-        struct Token{
-            char ch = ' ';
-            double vl = 0;
-            bool ischar = false, isdouble = false, isNull = false;
-        };
-
-
         string str;
+
         AlgebraicExpressions() { str = "0";};
         AlgebraicExpressions(string n_str);
 
         AlgebraicExpressions operator -() const { return AlgebraicExpressions("- (" + str + ")"); };
         AlgebraicExpressions operator +(AlgebraicExpressions &rv);
         AlgebraicExpressions operator -(AlgebraicExpressions &rv);
-
-
 
 
         void readWhiteSpace(string s, int &pos);

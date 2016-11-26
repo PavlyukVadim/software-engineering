@@ -1,6 +1,8 @@
 #include "AlgebraicExpressions.h"
 #include "Exception.h"
 
+
+
 AlgebraicExpressions::AlgebraicExpressions(string n_str) {
     str = n_str;
 }
@@ -15,7 +17,35 @@ AlgebraicExpressions AlgebraicExpressions::operator -(AlgebraicExpressions &rv){
 }
 
 
+bool ArePair(char opening,char closing) {
+	if (opening == '(' && closing == ')') return true;
+	return false;
+}
+
+bool AreParanthesesBalanced(string exp) {
+	stack<char>  S;
+	for(int i =0; i<exp.length(); i++) {
+		if(exp[i] == '(')
+			S.push(exp[i]);
+		else if(exp[i] == ')') {
+			if(S.empty() || !ArePair(S.top(),exp[i]))
+				return false;
+			else
+				S.pop();
+		}
+	}
+	return S.empty() ? true:false;
+}
+
+
+
 double AlgebraicExpressions::Calc(double x) {
+
+
+    if (!AreParanthesesBalanced(str)) {
+        cout << "Eror" << endl;
+    }
+
 
     stack<double> Operands;
     stack<char> Functions;
@@ -46,15 +76,39 @@ double AlgebraicExpressions::Calc(double x) {
     prevToken->ischar = true;
     prevToken->ch = 'Ы';
 
+
     do
     {
         token = getToken(s, pos);
 
-        // разрливаем унарный + и -
+
+        if (token->ischar) {
+            if(token->ch == '+' || token->ch == '-' || token->ch == '*' || token->ch == '/') {
+                token->isOperation = true;
+            }
+            else if(token->ch == ')') {
+                token->isRbracket = true;
+            }
+            else if(token->ch == '(') {
+                token->isLbracket = true;
+            }
+        }
+
+        if (prevToken->ischar) {
+            if(prevToken->isOperation && token->isOperation ||
+               prevToken->isOperation && token->isRbracket) {
+                    cout << "Error" << endl;
+            }
+            if(prevToken->ch == '*' && token->isLbracket ||
+              prevToken->ch == '/' && token->isRbracket) {
+                    cout << "Error" << endl;
+            }
+        }
+
+
+
+        // унарный + и -
         if (token->ischar && prevToken->ischar &&
-            // если эту сточку заменить на (char)prevToken != ')' &&
-            // то можно будет писать (2 * -5) или даже (2 - -4)
-            // но нужно будет ввести ещё одну проверку так, как запись 2 + -+-+-+2 тоже будет работать :)
             prevToken->ch == '(' &&
             ((token->ch == '+' || token->ch == '-')))
             Operands.push(0); // Добавляем нулевой элемент
@@ -63,12 +117,11 @@ double AlgebraicExpressions::Calc(double x) {
         {
             Operands.push(token->vl); // то просто кидаем в стек
         }
-        // в данном случае у нас только числа и операции. но можно добавить функции, переменные и т.д. и т.п.
         else if (token->ischar) // Если операция
         {
             if (token->ch == ')')
             {
-                // Скобка - исключение из правил. выталкивает все операции до первой открывающейся
+                // Скобка - выталкивает все операции до первой открывающейся
                 while (Functions.size() > 0 && Functions.top() != '(')
                     popFunction(Operands, Functions);
                 Functions.pop(); // Удаляем саму скобку "("
@@ -77,7 +130,6 @@ double AlgebraicExpressions::Calc(double x) {
             {
                 while (canPop(token->ch, Functions)) // Если можно вытолкнуть
                     popFunction(Operands, Functions); // то выталкиваем
-
                 Functions.push(token->ch); // Кидаем новую операцию в стек
             }
         }
@@ -98,7 +150,6 @@ double AlgebraicExpressions::Calc(double x) {
 
     double op = Operands.top();
     Operands.pop();
-    //cout << op << endl;
     return op;
 
 }
@@ -124,7 +175,7 @@ AlgebraicExpressions::Token* AlgebraicExpressions::getToken(string s, int &pos) 
     }
     else {
         token->ischar = true;
-        token->ch = readFunction(s, pos);;
+        token->ch = readFunction(s, pos);
         return token;
     }
 }
@@ -186,7 +237,6 @@ string AlgebraicExpressions::readDouble(string s, int &pos) {
 }
 
 char AlgebraicExpressions::readFunction(string s, int &pos) {
-    // в данном случае все операции состоят из одного символа
     return s[pos++];
 }
 
