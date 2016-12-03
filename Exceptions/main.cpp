@@ -8,6 +8,7 @@
 #include <stdlib.h>//-- for signal
 #include <unistd.h>//-
 
+#include <math.h>
 
 void posix_death_signal(int signum) {
     try{
@@ -47,10 +48,13 @@ int main () {
     try {
         a.setStr();
         if(!regex_match(a.str, integer)) throw Exception("Wrong input format!!!");
+        //if((int)a.str[0] == 48) throw Exception("Wrong input format!!!");
+        if(a.str[0] == '*' || a.str[0] == '/' || a.str[0] == ' ') throw Exception("Wrong input format!!!");
     }
     catch (Exception& excection) {
 		excection.show();
 		a.str = "0";
+		continue;
 	}
 
     AlgebraicExpressions b("2 * x");
@@ -60,7 +64,22 @@ int main () {
 
 
     double res = a.Calc(5);
+
+
+    try {
+        if ( isinf(res) ) {
+            throw Exception("Inf!!!");
+        }
+    }
+    catch (Exception& excection) {
+		excection.show();
+		continue;
+	}
+
     cout << "Result: " << res << endl;
+
+
+
 
     cout << "press Q for exit or other key for restart : ";
     char c = getchar();

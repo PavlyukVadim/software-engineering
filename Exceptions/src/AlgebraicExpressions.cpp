@@ -8,7 +8,7 @@ bool ArePair(char opening,char closing) {
 }
 
 bool AreParanthesesBalanced(string exp) {
-    cout << "E: "<<exp << endl;
+    //cout << "E: "<<exp << endl;
 	stack<char> S;
 	for(int i =0; i < exp.length(); i++) {
 		if(exp[i] == '(')
