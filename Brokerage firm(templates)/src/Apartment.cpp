@@ -9,6 +9,11 @@ Apartment::~Apartment()
 }
 
 
+void Apartment::setParams(int nRooms, double sq) {
+    numberOfRooms = nRooms;
+    square = sq;
+}
+
 int Apartment::getNumberOfRooms() {
     return numberOfRooms;
 }
