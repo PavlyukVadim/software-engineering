@@ -1,13 +1,16 @@
 #include <iostream>
-#include "Apartment.h"
+#include "Client.h"
 
 using namespace std;
 
 int main()
 {
-    Apartment apartment;
+    /*Apartment apartment;
     apartment.setParams(5, 85, "Mira 65");
-    apartment.outputApartmentInfo();
+    apartment.outputApartmentInfo();*/
+
+    Client client("Max", "+38098 777 77 07", 5, 85, "Mira 90");
+    client.outputClientInfo();
 
     return 0;
 }
