@@ -1,7 +1,7 @@
 # depslib dependency file v1.0
-1480976948 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/main.cpp
+1480980944 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/main.cpp
 	<iostream>
-	"Client.h"
+	"BrokerageFirm.h"
 
 1480975659 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/src/Apartment.cpp
 	"Apartment.h"
@@ -16,4 +16,16 @@
 
 1480976815 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Client.h
 	"Apartment.h"
+
+1480980567 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/BrokerageFirm.h
+	"Broker.h"
+	"Client.h"
+	<vector>
+
+1480980972 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Broker.h
+	<string>
+
+1480980852 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/src/BrokerageFirm.cpp
+	"BrokerageFirm.h"
+	<iostream>
 

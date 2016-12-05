@@ -4,6 +4,13 @@
 using namespace std;
 
 Broker::Broker() {
+    name = "Anonim";
+    nTransaction = 0;
+    nCompletedTransaction = 0;
+}
+
+Broker::Broker(string bName) {
+    name = bName;
     nTransaction = 0;
     nCompletedTransaction = 0;
 }
@@ -20,6 +27,7 @@ void Broker::addCompletedTransaction() {
 }
 
 void Broker::outputBrokerInfo() {
-    cout << "Number of active transactions: " << nTransaction << endl;
-    cout << "Number of completed transactions: " << nCompletedTransaction << endl;
+    cout << " Name: " << name << endl;
+    cout << " Number of active transactions: " << nTransaction << endl;
+    cout << " Number of completed transactions: " << nCompletedTransaction << endl;
 }
