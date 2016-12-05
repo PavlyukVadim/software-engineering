@@ -9,9 +9,10 @@ Apartment::~Apartment()
 }
 
 
-void Apartment::setParams(int nRooms, double sq) {
+void Apartment::setParams(int nRooms, double sq, string ad) {
     numberOfRooms = nRooms;
     square = sq;
+    addr = ad;
 }
 
 int Apartment::getNumberOfRooms() {
@@ -25,4 +26,5 @@ double Apartment::getSquare() {
 void Apartment::outputApartmentInfo() {
     cout << "Number Of rooms: " << numberOfRooms << endl;
     cout << "Square: " << square << endl;
+    cout << "Address: " << addr << endl;
 }

@@ -2,9 +2,16 @@
 1480974424 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/main.cpp
 	<iostream>
 
-1480974345 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/src/Apartment.cpp
+1480975659 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/src/Apartment.cpp
 	"Apartment.h"
 	<iostream>
 
-1480974373 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Apartment.h
+1480975775 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Apartment.h
+	<string>
+
+1480974989 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/src/Client.cpp
+	"Client.h"
+
+1480975686 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Client.h
+	"Apartment.h"
 
