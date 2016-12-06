@@ -4,10 +4,10 @@ using namespace std;
 
 class Broker
 {
-    int nTransaction;
-    int nCompletedTransaction;
+    int nTransaction; // number of transaction
+    int nCompletedTransaction; // number of competed transaction
     string name;
-    int timeTo;
+    int timeTo; // time to next event
 
     public:
         Broker();

@@ -10,7 +10,7 @@ class BrokerageFirm
 {
     vector<Broker> brokers;
     vector<Client> clients;
-    Collection<Client, Broker, Status>* collection;
+    Collection<Client, Broker, Status>* collection; // templates - collection
 
 
     public:
@@ -26,10 +26,10 @@ class BrokerageFirm
         void addTrBr(string);
         void addCTrBr(string);
 
-        Broker searchFreeBroker();
+        Broker searchFreeBroker(); // serch free broker
         void outputCollection();
         void overviewApartment(string addr);
         void buyApartment(string addr);
         void changeDays(int days);
-        void nextStatus();
+        void nextStatus(); // change status of transaction on next
 };

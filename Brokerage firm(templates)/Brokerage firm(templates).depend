@@ -8,7 +8,7 @@
 	"Apartment.h"
 	<iostream>
 
-1481021062 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Apartment.h
+1481024607 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Apartment.h
 	<string>
 
 1481021582 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/src/Client.cpp
@@ -18,17 +18,17 @@
 1481021399 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Client.h
 	"Apartment.h"
 
-1481023807 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/BrokerageFirm.h
+1481024747 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/BrokerageFirm.h
 	"Broker.h"
 	"Client.h"
 	"Status.h"
 	"Collection.h"
 	<vector>
 
-1481020894 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Broker.h
+1481024664 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Broker.h
 	<string>
 
-1481021378 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/src/BrokerageFirm.cpp
+1481024109 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/src/BrokerageFirm.cpp
 	"BrokerageFirm.h"
 	<iostream>
 	<algorithm>
@@ -47,7 +47,7 @@
 
 1481014974 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Collection.h
 
-1481017672 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Status.h
+1481024847 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Status.h
 	<string>
 
 1481017712 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/src/Status.cpp

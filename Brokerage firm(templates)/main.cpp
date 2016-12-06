@@ -5,10 +5,10 @@
 
 using namespace std;
 
-void addBroker();
-void brokersInfo();
-void addClient();
-void clientsInfo();
+void addBroker(); // add new broker
+void brokersInfo(); // output info about brokers
+void addClient(); // add new client
+void clientsInfo(); // output info about brokers
 
 void OverviewApartment();
 void BuyApartment();

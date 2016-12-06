@@ -11,7 +11,7 @@ class Apartment
     public:
         Apartment(){};
         Apartment(int nRooms, double sq): numberOfRooms(nRooms), square(sq){};
-        void setParams(int, double, string);
+        void setParams(int, double, string); // setter
         int getNumberOfRooms();
         double getSquare();
         string getAddress();
