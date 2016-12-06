@@ -33,7 +33,7 @@ void BrokerageFirm::addClient(string cName, string cPhone, int aNRooms, double a
     }
 
     Broker broker = searchFreeBroker();
-
+    addTrBr(broker.getBrokerName());
     clients.push_back(Client(cName, cPhone, aNRooms, aSq, addr));
     collection[clients.size() - 1] = Collection<Client, Broker, Status>(
                                                                     {cName, cPhone, aNRooms, aSq, addr},
@@ -149,6 +149,26 @@ void BrokerageFirm::nextStatus() {
         if (collection[i].getSt() == 3 && collection[i].getTimeTo() <= 0) {
             collection[i].changeSt(4);
             collection[i].setTimeTo(0);
+            addCTrBr(collection[i].getBrokerName());
+        }
+    }
+}
+
+
+void BrokerageFirm::addTrBr(string name) {
+    for (int i = 0; i < brokers.size(); i++) {
+        if( name == brokers[i].getBrokerName() ) {
+            brokers[i].addTransaction();
+            return;
+        }
+    }
+}
+
+void BrokerageFirm::addCTrBr(string name) {
+    for (int i = 0; i < brokers.size(); i++) {
+        if( name == brokers[i].getBrokerName() ) {
+            brokers[i].addCompletedTransaction();
+            return;
         }
     }
 }

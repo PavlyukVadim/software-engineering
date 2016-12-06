@@ -23,6 +23,9 @@ class BrokerageFirm
         void outputBrokersInfo();
         void outputClientsInfo();
 
+        void addTrBr(string);
+        void addCTrBr(string);
+
         Broker searchFreeBroker();
         void outputCollection();
         void overviewApartment(string addr);
