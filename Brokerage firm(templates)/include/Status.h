@@ -15,7 +15,8 @@ class Status
         "5"
     };
     public:
-        Status();
+        Status() { };
+        Status(int st) : status(st) { };
         virtual ~Status();
         void changeSt(int);
         int getSt();

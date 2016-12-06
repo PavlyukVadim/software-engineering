@@ -1,8 +1,5 @@
 #include "Status.h"
 
-Status::Status() {
-    status = 0;
-}
 
 Status::~Status() { }
 

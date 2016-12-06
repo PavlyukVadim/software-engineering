@@ -1,5 +1,6 @@
 #include "Broker.h"
 #include "Client.h"
+#include "Status.h"
 #include "Collection.h"
 #include <vector>
 
@@ -9,7 +10,7 @@ class BrokerageFirm
 {
     vector<Broker> brokers;
     vector<Client> clients;
-    Collection<Client, Broker, int>* collection;
+    Collection<Client, Broker, Status>* collection;
 
    /* Info<Client, Card> bankinfo({ "Ivanov Ivan", "555-55-55" }, { 123456789, "5/10/2016", "5/10/2018" });*/
 
@@ -23,4 +24,7 @@ class BrokerageFirm
 
         void outputBrokersInfo();
         void outputClientsInfo();
+
+        Broker searchFreeBroker();
+
 };

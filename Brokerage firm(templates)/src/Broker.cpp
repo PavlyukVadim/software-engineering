@@ -26,6 +26,10 @@ void Broker::addCompletedTransaction() {
     nTransaction -= 1;
 }
 
+string Broker::getBrokerName() {
+    return name;
+}
+
 void Broker::outputBrokerInfo() {
     cout << " Name: " << name << endl;
     cout << " Number of active transactions: " << nTransaction << endl;

@@ -14,5 +14,6 @@ class Broker
         virtual ~Broker();
         void addTransaction();
         void addCompletedTransaction();
+        string getBrokerName();
         void outputBrokerInfo();
 };
