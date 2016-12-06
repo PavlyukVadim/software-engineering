@@ -1,38 +1,39 @@
 # depslib dependency file v1.0
-1480985448 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/main.cpp
+1481021493 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/main.cpp
 	<iostream>
 	<string>
 	"BrokerageFirm.h"
 
-1480983281 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/src/Apartment.cpp
+1481021090 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/src/Apartment.cpp
 	"Apartment.h"
 	<iostream>
 
-1480975775 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Apartment.h
+1481021062 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Apartment.h
 	<string>
 
-1480983247 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/src/Client.cpp
+1481021582 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/src/Client.cpp
 	"Client.h"
 	<iostream>
 
-1480976815 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Client.h
+1481021399 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Client.h
 	"Apartment.h"
 
-1481015807 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/BrokerageFirm.h
+1481020948 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/BrokerageFirm.h
 	"Broker.h"
 	"Client.h"
 	"Status.h"
 	"Collection.h"
 	<vector>
 
-1481016257 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Broker.h
+1481020894 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Broker.h
 	<string>
 
-1481014851 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/src/BrokerageFirm.cpp
+1481021378 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/src/BrokerageFirm.cpp
 	"BrokerageFirm.h"
 	<iostream>
+	<algorithm>
 
-1481016280 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/src/Broker.cpp
+1481020864 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/src/Broker.cpp
 	"Broker.h"
 	<iostream>
 
@@ -46,9 +47,9 @@
 
 1481014974 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Collection.h
 
-1481015254 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Status.h
+1481017672 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Status.h
 	<string>
 
-1481015196 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/src/Status.cpp
+1481017712 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/src/Status.cpp
 	"Status.h"
 

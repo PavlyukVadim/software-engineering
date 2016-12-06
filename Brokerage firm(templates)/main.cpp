@@ -13,6 +13,9 @@ void clientsInfo();
 void OverviewApartment();
 void BuyApartment();
 
+void outputCollection();
+void changeTime();
+
 
 BrokerageFirm firm;
 
@@ -32,8 +35,10 @@ int main()
         cout << "4. Buy apartment" << endl;
         cout << "5. Brokers info" << endl;
         cout << "6. Clients info" << endl;
-        cout << "7. Clear screen" << endl;
-        cout << "8. Exit" << endl;
+        cout << "7. Collection info" << endl;
+        cout << "8. Change time" << endl;
+        cout << "9. Clear screen" << endl;
+        cout << "10. Exit" << endl;
 
         string sc;
         cin >> sc;
@@ -47,8 +52,10 @@ int main()
             case '4' :  { BuyApartment(); break; }
             case '5' :  { brokersInfo(); break; }
             case '6' :  { clientsInfo(); break; }
-            case '7' :  { system("clear"); break; }
-            case '8' :  return 0;
+            case '7' :  { outputCollection(); break; }
+            case '8' :  { changeTime(); break; }
+            case '9' :  { system("clear"); break; }
+            case '10' :  return 0;
         }
 
     } while (cont);
@@ -92,11 +99,28 @@ void clientsInfo() {
 
 void OverviewApartment() {
     string addr;
+
+    cout << "Input apartment address : ";
     cin >> addr;
-
-
+    firm.overviewApartment(addr);
 }
 
 void BuyApartment() {
+    string addr;
 
+    cout << "Input apartment address : ";
+    cin >> addr;
+    firm.buyApartment(addr);
+}
+
+void outputCollection() {
+    firm.outputCollection();
+}
+
+
+void changeTime() {
+    int days;
+    cout << "Input numder of days: " << endl;
+    cin >> days;
+    firm.changeDays(days);
 }

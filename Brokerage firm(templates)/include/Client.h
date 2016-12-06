@@ -6,9 +6,8 @@ class Client
     string name;
     string phone;
 
-    Apartment apartment;
-
     public:
+        Apartment apartment;
         Client();
         Client(string name, string phone, int aNRooms, double aSq, string addr);
 

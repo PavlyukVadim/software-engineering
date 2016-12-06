@@ -14,6 +14,7 @@ class Apartment
         void setParams(int, double, string);
         int getNumberOfRooms();
         double getSquare();
+        string getAddress();
         void outputApartmentInfo();
         virtual ~Apartment();
 };

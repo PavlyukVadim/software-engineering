@@ -9,12 +9,6 @@ Broker::Broker() {
     nCompletedTransaction = 0;
 }
 
-Broker::Broker(string bName) {
-    name = bName;
-    nTransaction = 0;
-    nCompletedTransaction = 0;
-}
-
 Broker::~Broker() { }
 
 void Broker::addTransaction() {
@@ -28,6 +22,14 @@ void Broker::addCompletedTransaction() {
 
 string Broker::getBrokerName() {
     return name;
+}
+
+int Broker::getTimeTo() {
+    return timeTo;
+}
+
+void Broker::setTimeTo(int time) {
+    timeTo = time;
 }
 
 void Broker::outputBrokerInfo() {

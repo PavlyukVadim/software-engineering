@@ -11,3 +11,7 @@ void Status::changeSt(int st) {
 int Status::getSt() {
     return status;
 }
+
+string Status::getDescSt() {
+    return description[status];
+}

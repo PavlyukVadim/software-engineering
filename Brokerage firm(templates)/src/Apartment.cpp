@@ -25,3 +25,7 @@ void Apartment::outputApartmentInfo() {
     cout << " Square: " << square << endl;
     cout << " Address: " << addr << endl;
 }
+
+string Apartment::getAddress() {
+    return addr;
+}

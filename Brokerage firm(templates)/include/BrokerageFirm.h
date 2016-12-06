@@ -12,8 +12,6 @@ class BrokerageFirm
     vector<Client> clients;
     Collection<Client, Broker, Status>* collection;
 
-   /* Info<Client, Card> bankinfo({ "Ivanov Ivan", "555-55-55" }, { 123456789, "5/10/2016", "5/10/2018" });*/
-
 
     public:
         BrokerageFirm();
@@ -26,5 +24,9 @@ class BrokerageFirm
         void outputClientsInfo();
 
         Broker searchFreeBroker();
-
+        void outputCollection();
+        void overviewApartment(string addr);
+        void buyApartment(string addr);
+        void changeDays(int days);
+        void nextStatus();
 };
