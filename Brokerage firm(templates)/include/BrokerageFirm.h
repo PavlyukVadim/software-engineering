@@ -11,9 +11,7 @@ class BrokerageFirm
     vector<Client> clients;
     Collection<Client, Broker, int>* collection;
 
-   /* Info<Client, Card> bankinfo({ "Ivanov Ivan", "555-55-55" }, {
-
-123456789, "5/10/2016", "5/10/2018" });*/
+   /* Info<Client, Card> bankinfo({ "Ivanov Ivan", "555-55-55" }, { 123456789, "5/10/2016", "5/10/2018" });*/
 
 
     public:
