@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1481022922 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/main.cpp
+1481024589 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/main.cpp
 	<iostream>
 	<string>
 	"BrokerageFirm.h"

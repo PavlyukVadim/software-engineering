@@ -13,6 +13,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add directory="include" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -22,6 +23,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -32,7 +34,19 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="include/Apartment.h" />
+		<Unit filename="include/Broker.h" />
+		<Unit filename="include/BrokerageFirm.h" />
+		<Unit filename="include/Client.h" />
+		<Unit filename="include/Collection.h" />
+		<Unit filename="include/Status.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/Apartment.cpp" />
+		<Unit filename="src/Broker.cpp" />
+		<Unit filename="src/BrokerageFirm.cpp" />
+		<Unit filename="src/Client.cpp" />
+		<Unit filename="src/Collection.cpp" />
+		<Unit filename="src/Status.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

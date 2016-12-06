@@ -38,7 +38,7 @@ int main()
         cout << "7. Collection info" << endl;
         cout << "8. Change time" << endl;
         cout << "9. Clear screen" << endl;
-        cout << "10. Exit" << endl;
+        cout << "e. Exit" << endl;
 
         string sc;
         cin >> sc;
@@ -55,7 +55,7 @@ int main()
             case '7' :  { outputCollection(); break; }
             case '8' :  { changeTime(); break; }
             case '9' :  { system("clear"); break; }
-            case '10' :  return 0;
+            case 'e' :  return 0;
         }
 
     } while (cont);
