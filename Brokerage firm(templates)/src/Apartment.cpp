@@ -3,11 +3,7 @@
 
 using namespace std;
 
-Apartment::~Apartment()
-{
-    //dtor
-}
-
+Apartment::~Apartment() { }
 
 void Apartment::setParams(int nRooms, double sq, string ad) {
     numberOfRooms = nRooms;
@@ -24,7 +20,8 @@ double Apartment::getSquare() {
 }
 
 void Apartment::outputApartmentInfo() {
-    cout << "Number Of rooms: " << numberOfRooms << endl;
-    cout << "Square: " << square << endl;
-    cout << "Address: " << addr << endl;
+    cout << " Apartment: " << endl;
+    cout << " Number Of rooms: " << numberOfRooms << endl;
+    cout << " Square: " << square << endl;
+    cout << " Address: " << addr << endl;
 }

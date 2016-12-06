@@ -5,9 +5,13 @@
 
 using namespace std;
 
-
 void addBroker();
 void brokersInfo();
+void addClient();
+void clientsInfo();
+
+void OverviewApartment();
+void BuyApartment();
 
 
 BrokerageFirm firm;
@@ -24,9 +28,12 @@ int main()
     do {
         cout << "1. Add broker" << endl;
         cout << "2. Add client" << endl;
-        cout << "3. Buy apartment" << endl;
-        cout << "4. Brokers info" << endl;
-        cout << "5. Exit" << endl;
+        cout << "3. Overview apartment" << endl;
+        cout << "4. Buy apartment" << endl;
+        cout << "5. Brokers info" << endl;
+        cout << "6. Clients info" << endl;
+        cout << "7. Clear screen" << endl;
+        cout << "8. Exit" << endl;
 
         string sc;
         cin >> sc;
@@ -35,14 +42,16 @@ int main()
 
         switch(c) {
             case '1' :  { addBroker(); break; }
-            case '2' :  { break; }
-            case '3' :  { break; }
-            case '4' :  { brokersInfo(); break; }
-            case '5' :  return 0;
+            case '2' :  { addClient(); break; }
+            case '3' :  { OverviewApartment(); break; }
+            case '4' :  { BuyApartment(); break; }
+            case '5' :  { brokersInfo(); break; }
+            case '6' :  { clientsInfo(); break; }
+            case '7' :  { system("clear"); break; }
+            case '8' :  return 0;
         }
 
     } while (cont);
-
 
     return 0;
 }
@@ -52,9 +61,42 @@ void addBroker() {
     cout << "Input broker name : ";
     cin >> name;
     firm.addBroker(name);
-    system("clear");
 }
 
 void brokersInfo() {
     firm.outputBrokersInfo();
+}
+
+void addClient() {
+    string name, phone, addr;
+    int aNRooms;
+    double aSq;
+
+    cout << "Input client name : ";
+    cin >> name;
+    cout << "Input client phone : ";
+    cin >> phone;
+    cout << "Input number of room : ";
+    cin >> aNRooms;
+    cout << "Input square : ";
+    cin >> aSq;
+    cout << "Input address : ";
+    cin >> addr;
+
+    firm.addClient(name, phone, aNRooms, aSq, addr);
+}
+
+void clientsInfo() {
+    firm.outputClientsInfo();
+}
+
+void OverviewApartment() {
+    string addr;
+    cin >> addr;
+
+
+}
+
+void BuyApartment() {
+
 }

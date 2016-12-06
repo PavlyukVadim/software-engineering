@@ -26,7 +26,7 @@ string Client::getPhone() {
 }
 
 void Client::outputClientInfo() {
-    cout << "Name: " << name << endl;
-    cout << "Phone: " << phone << endl;
+    cout << " Name: " << name << endl;
+    cout << " Phone: " << phone << endl;
     apartment.outputApartmentInfo();
 }
