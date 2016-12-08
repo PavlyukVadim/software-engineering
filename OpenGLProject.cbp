@@ -3,7 +3,7 @@
 	<FileVersion major="1" minor="6" />
 	<Project>
 		<Option title="OpenGLProject" />
-		<Option pch_mode="2" />
+		<Option pch_mode="0" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
@@ -32,6 +32,13 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Linker>
+			<Add library="GL" />
+			<Add library="GLEW" />
+			<Add library="SDL2" />
+		</Linker>
+		<Unit filename="Display.cpp" />
+		<Unit filename="Display.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
