@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1481204844 source:/home/amadev/Рабочий стол/OpenGLProject/main.cpp
+1481204951 source:/home/amadev/Рабочий стол/OpenGLProject/main.cpp
 	<iostream>
 	<GL/glew.h>
 	"Display.h"
@@ -12,4 +12,11 @@
 1481204469 /home/amadev/Рабочий стол/OpenGLProject/Display.h
 	<SDL2/SDL.h>
 	<string>
+
+1481297906 source:/home/amadev/Рабочий стол/OpenGLProject/Mesh.cpp
+	"Mesh.h"
+
+1481297859 /home/amadev/Рабочий стол/OpenGLProject/Mesh.h
+	<glm/glm.hpp>
+	<GL/glew.h>
 
