@@ -39,6 +39,8 @@
 		</Linker>
 		<Unit filename="Display.cpp" />
 		<Unit filename="Display.h" />
+		<Unit filename="Mesh.cpp" />
+		<Unit filename="Mesh.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
