@@ -1,32 +1,33 @@
 # depslib dependency file v1.0
-1481298124 source:/home/amadev/Рабочий стол/OpenGLProject/main.cpp
+1481397253 source:/home/amadev/Рабочий стол/OpenGLProject/main.cpp
 	<iostream>
 	<GL/glew.h>
 	"Display.h"
 	"Mesh.h"
+	"Shader.h"
 
-1481204911 source:/home/amadev/Рабочий стол/OpenGLProject/Display.cpp
+1481327916 source:/home/amadev/Рабочий стол/OpenGLProject/Display.cpp
 	"Display.h"
 	<GL/glew.h>
 	<iostream>
 
-1481204469 /home/amadev/Рабочий стол/OpenGLProject/Display.h
+1481327878 /home/amadev/Рабочий стол/OpenGLProject/Display.h
 	<SDL2/SDL.h>
 	<string>
 
-1481297906 source:/home/amadev/Рабочий стол/OpenGLProject/Mesh.cpp
+1481328842 source:/home/amadev/Рабочий стол/OpenGLProject/Mesh.cpp
 	"Mesh.h"
 
-1481297859 /home/amadev/Рабочий стол/OpenGLProject/Mesh.h
+1481391945 /home/amadev/Рабочий стол/OpenGLProject/Mesh.h
 	<glm/glm.hpp>
 	<GL/glew.h>
 
-1481327083 source:/home/amadev/Рабочий стол/OpenGLProject/Shader.cpp
+1481397290 source:/home/amadev/Рабочий стол/OpenGLProject/Shader.cpp
 	"Shader.h"
 	<iostream>
 	<fstream>
 
-1481326903 /home/amadev/Рабочий стол/OpenGLProject/Shader.h
+1481390837 /home/amadev/Рабочий стол/OpenGLProject/Shader.h
 	<string>
 	<GL/glew.h>
 

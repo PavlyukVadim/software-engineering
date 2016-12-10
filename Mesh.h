@@ -19,7 +19,7 @@ private:
 class Mesh
 {
 public:
-    Mesh(Vertex* vertices, unsigned int numVertices);;
+    Mesh(Vertex* vertices, unsigned int numVertices);
 
     void Draw();
 

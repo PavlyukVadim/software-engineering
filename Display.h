@@ -10,7 +10,7 @@ public:
     Display(int width, int height, const std::string& title);
     void Update();
     bool IsClosed();
-
+    void Clear(float r, float g, float b, float a);
     virtual ~Display();
 
 protected:
