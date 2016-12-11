@@ -61,7 +61,7 @@ int main( void )
     glfwSetCursorPos(window, 1024/2, 768/2);
 
 	// Dark blue background
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+	glClearColor(0.0f, 0.0f, 0.2f, 0.0f);
 
 
 	GLuint VertexArrayID;
@@ -143,6 +143,7 @@ int main( void )
 	double lastTime = glfwGetTime();
 	double lastFrameTime = lastTime;
 	int nbFrames = 0;
+	bool reverse = false;
 
 	do {
 
@@ -212,9 +213,24 @@ int main( void )
 
 
 		{ // Euler
- 
 			// As an example, rotate arount the vertical axis at 180°/sec
 			gOrientation1.y += 3.14159f/2.0f * deltaTime;
+			
+			if (!reverse) {
+				gOrientation1.z += (3.14159f/2.0f * deltaTime) / 10;	
+				if(gOrientation1.z >= 3.14159f/8.0f) {
+					reverse = true;
+				}
+			}
+			else {
+				gOrientation1.z -= (3.14159f/2.0f * deltaTime) / 10;	
+				if(gOrientation1.z <= -3.14159f/8.0f) {
+					reverse = false;
+				}	
+			}
+			
+			
+
  
 			// Build the model matrix
 			glm::mat4 RotationMatrix = eulerAngleYXZ(gOrientation1.y, gOrientation1.x, gOrientation1.z);
