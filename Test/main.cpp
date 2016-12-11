@@ -1,4 +1,4 @@
-#include <iostream>
+/*#include <iostream>
 #include <GL/glew.h>
 
 #include "Display.h"
@@ -18,7 +18,7 @@ int main()
         Vertex(glm::vec3(0.5, -0.5, 0)),
     };
 
-    Mesh mesh(vertices, 100);
+    Mesh mesh(vertices, 3);
 
     Shader shader("./res/basicShader");
 
@@ -34,3 +34,12 @@ int main()
 
     return 0;
 }
+*/
+
+/*
+ * (c) Copyright 1995-1999, Igor Tarasov
+ * FidoNet: 2:5020/370.2 620.20 1103.5
+ * Inet: itarasov@rtuis.miem.edu.ru
+ * Phone: (095)942-50-97
+ */
+
