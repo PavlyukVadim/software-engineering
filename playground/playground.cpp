@@ -17,6 +17,7 @@ using namespace glm;
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
+#include <glm/gtx/euler_angles.hpp>
 
 #include <common/shader.hpp>
 #include <common/controls.hpp>
@@ -25,6 +26,11 @@ using namespace glm;
 
 #include "display.h"
 
+vec3 gPosition1(-1.5f, 0.0f, 0.0f);
+vec3 gOrientation1;
+ 
+vec3 gPosition2( 1.5f, 0.0f, 0.0f);
+quat gOrientation2;
 
 int main( void )
 {
@@ -131,7 +137,26 @@ int main( void )
 	glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
 	glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
 
+
+
+	// For speed computation
+	double lastTime = glfwGetTime();
+	double lastFrameTime = lastTime;
+	int nbFrames = 0;
+
 	do {
+
+		// Measure speed
+		double currentTime = glfwGetTime();
+		float deltaTime = (float)(currentTime - lastFrameTime); 
+		lastFrameTime = currentTime;
+		nbFrames++;
+		if ( currentTime - lastTime >= 1.0 ){ // If last prinf() was more than 1sec ago
+			// printf and reset
+			printf("%f ms/frame\n", 1000.0/double(nbFrames));
+			nbFrames = 0;
+			lastTime += 1.0;
+		}
 
 		// Clear the screen
 		display.Clear();
@@ -183,6 +208,26 @@ int main( void )
 			0,                                // stride
 			(void*)0                          // array buffer offset
 		);
+
+
+
+		{ // Euler
+ 
+			// As an example, rotate arount the vertical axis at 180°/sec
+			gOrientation1.y += 3.14159f/2.0f * deltaTime;
+ 
+			// Build the model matrix
+			glm::mat4 RotationMatrix = eulerAngleYXZ(gOrientation1.y, gOrientation1.x, gOrientation1.z);
+			glm::mat4 TranslationMatrix = translate(mat4(), gPosition1); // A bit to the left
+			glm::mat4 ScalingMatrix = scale(mat4(), vec3(1.0f, 1.0f, 1.0f));
+			glm::mat4 ModelMatrix = TranslationMatrix * RotationMatrix * ScalingMatrix;
+ 
+			glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+ 
+			// Send our transformation to the currently bound shader, 
+			// in the "MVP" uniform
+			glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+		}
 
 
 		// Draw the triangle !
