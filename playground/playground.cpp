@@ -15,10 +15,13 @@ GLFWwindow* window;
 using namespace glm;
 
 #include <common/shader.hpp>
+#include <common/controls.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 
+
 #include "display.h"
+
 
 int main( void )
 {
@@ -32,38 +35,43 @@ int main( void )
 	}
 
 	// Open a window and create its OpenGL context
-	Display display(1024, 700, "UFO");
+	Display display(1024, 768, "UFO");
 	window = display.window;
 	
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
 	glBindVertexArray(VertexArrayID);
 
+	
+	// Hide the mouse and enable unlimited mouvement
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    
+    // Set the mouse at the center of the screen
+    glfwPollEvents();
+    //glfwSetCursorPos(window, 1024/2, 768/2);
+
+
 	// Create and compile our GLSL program from the shaders
 	GLuint programID = LoadShaders( "VertexShader.vs", "FragmentShader.fs");
 
 
-	//glm::mat4 myScalingMatrix = glm::scale(2.0f, 2.0f ,2.0f);
+
+	// Проекционная матрица : 45&deg; поле обзора, 4:3 соотношение сторон, диапазон : 0.1 юнит <-> 100 юнитов
+	glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
+	// Матрица камеры
+	glm::mat4 View = glm::lookAt(
+	    glm::vec3(0,0,10), // Камера находится в мировых координатах (4,3,3)
+	    glm::vec3(0,0,0), // И направлена в начало координат
+	    glm::vec3(0,1,0)  // "Голова" находится сверху
+	);
+	// Матрица модели : единичная матрица (Модель находится в начале координат)
+	glm::mat4 Model = glm::mat4(1.0f);  // Индивидуально для каждой модели
+
+	// Итоговая матрица ModelViewProjection, которая является результатом перемножения наших трех матриц
+	glm::mat4 MVP = Projection * View * Model;
 
 
-	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-	glm::mat4 Projection = glm::perspective(90.0f, 4.0f / 3.0f, 0.1f, 100.0f);
-	// Or, for an ortho camera :
-	//glm::mat4 Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In world coordinates
-	
-	// Camera matrix
-	glm::mat4 View       = glm::lookAt(
-								glm::vec3(4,3,3), // Camera is at (4,3,3), in World Space
-								glm::vec3(0,0,0), // and looks at the origin
-								glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-						   );
-	// Model matrix : an identity matrix (model will be at the origin)
-	glm::mat4 Model      = glm::mat4(1.0f); //* myScalingMatrix;
-	// Our ModelViewProjection : multiplication of our 3 matrices
-	glm::mat4 MVP        = Projection * View * Model; // Remember, matrix multiplication is the other way around
-
-
-// Get a handle for our "MVP" uniform
+	// Get a handle for our "MVP" uniform
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 
 
@@ -87,9 +95,18 @@ int main( void )
 		// Use our shader
 		glUseProgram(programID);
 
+		//glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+
+		// Compute the MVP matrix from keyboard and mouse input
+		computeMatricesFromInputs();
+		glm::mat4 ProjectionMatrix = getProjectionMatrix();
+		glm::mat4 ViewMatrix = getViewMatrix();
+		glm::mat4 ModelMatrix = glm::mat4(1.0);
+		glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+
 		// Send our transformation to the currently bound shader, 
 		// in the "MVP" uniform
-		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);	
+		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
 		// 1rst attribute buffer : vertices
 		glEnableVertexAttribArray(0);
