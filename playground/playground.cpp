@@ -80,6 +80,20 @@ int main( void )
 	// Create and compile our GLSL program from the shaders
 	//GLuint programID = LoadShaders( "VertexShader.vs", "FragmentShader.fs");
     GLuint programID = LoadShaders( "TransformVertexShader.vs", "TextureFragmentShader.fs" );
+    // Create and compile our GLSL program from the shaders
+	GLuint programTriangleID = LoadShaders( "SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader" );
+
+	static const GLfloat g_vertex_buffer_data[] = { 
+		-1.0f, -1.0f, 0.0f,
+		 1.0f, -1.0f, 0.0f,
+		 0.0f,  1.0f, 0.0f,
+	};
+
+	GLuint vertexbuffertr;
+	glGenBuffers(1, &vertexbuffertr);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffertr);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+
 
 	// Проекционная матрица : 45&deg; поле обзора, 4:3 соотношение сторон, диапазон : 0.1 юнит <-> 100 юнитов
 	//glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
@@ -114,8 +128,9 @@ int main( void )
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);*/
 
 	// Load the texture
+	//GLuint Texture = loadBMP_custom("ufot.bmp");
 	GLuint Texture = loadDDS("uvmap.DDS");
-	
+
 	// Get a handle for our "myTextureSampler" uniform
 	GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
 
@@ -161,6 +176,29 @@ int main( void )
 
 		// Clear the screen
 		display.Clear();
+
+		// Use our shader
+		glUseProgram(programTriangleID);
+
+		// 1rst attribute buffer : vertices
+		glEnableVertexAttribArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffertr);
+		glVertexAttribPointer(
+			0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+			3,                  // size
+			GL_FLOAT,           // type
+			GL_FALSE,           // normalized?
+			0,                  // stride
+			(void*)0            // array buffer offset
+		);
+
+		// Draw the triangle !
+		glDrawArrays(GL_TRIANGLES, 0, 3); // 3 indices starting at 0 -> 1 triangle
+
+		glDisableVertexAttribArray(0);
+
+	
+
 
 		// Use our shader
 		glUseProgram(programID);
