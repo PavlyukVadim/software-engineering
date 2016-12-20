@@ -32,6 +32,12 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="Cifstream.cpp" />
+		<Unit filename="Cifstream.h" />
+		<Unit filename="Cistream.cpp" />
+		<Unit filename="Cistream.h" />
+		<Unit filename="Costream.cpp" />
+		<Unit filename="Costream.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
