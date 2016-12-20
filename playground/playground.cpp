@@ -81,18 +81,43 @@ int main( void )
 	//GLuint programID = LoadShaders( "VertexShader.vs", "FragmentShader.fs");
     GLuint programID = LoadShaders( "TransformVertexShader.vs", "TextureFragmentShader.fs" );
     // Create and compile our GLSL program from the shaders
-	GLuint programTriangleID = LoadShaders( "SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader" );
+	GLuint programTriangleID = LoadShaders( "TransformVertexShader.vs", "TextureFragmentShader.fs" );
+	// Get a handle for our "MVP" uniform
+	GLuint MatrixTriangleID = glGetUniformLocation(programTriangleID, "MVP");
 
 	static const GLfloat g_vertex_buffer_data[] = { 
-		-1.0f, -1.0f, 0.0f,
-		 1.0f, -1.0f, 0.0f,
-		 0.0f,  1.0f, 0.0f,
+	   -5, -5, 0,
+	    5, -5, 0,
+	   -5,  5, 0,
+
+	    5,  5, 0,
+	   -5,  5, 0,
+	    5, -5, 0
 	};
 
 	GLuint vertexbuffertr;
 	glGenBuffers(1, &vertexbuffertr);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffertr);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+
+
+	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+	glm::mat4 ProjectionBackground = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+	// Or, for an ortho camera :
+	//glm::mat4 Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In world coordinates
+	
+	// Camera matrix
+	glm::mat4 ViewBackground = glm::lookAt(
+								glm::vec3(0,0,100), // Camera is at (4,3,3), in World Space
+								glm::vec3(0,0,0), // and looks at the origin
+								glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+						   );
+	// Model matrix : an identity matrix (model will be at the origin)
+	glm::mat4 ModelBackground = glm::mat4(1.0f) * scale(mat4(), vec3(15.0f, 15.0f, 15.0f));;
+	// Our ModelViewProjection : multiplication of our 3 matrices
+	glm::mat4 MVPBackground  = ProjectionBackground * ViewBackground * ModelBackground; // Remember, matrix multiplication is the other way around
+
+
 
 
 	// Проекционная матрица : 45&deg; поле обзора, 4:3 соотношение сторон, диапазон : 0.1 юнит <-> 100 юнитов
@@ -179,6 +204,7 @@ int main( void )
 
 		// Use our shader
 		glUseProgram(programTriangleID);
+		glUniformMatrix4fv(MatrixTriangleID, 1, GL_FALSE, &MVPBackground[0][0]);
 
 		// 1rst attribute buffer : vertices
 		glEnableVertexAttribArray(0);
@@ -193,11 +219,22 @@ int main( void )
 		);
 
 		// Draw the triangle !
-		glDrawArrays(GL_TRIANGLES, 0, 3); // 3 indices starting at 0 -> 1 triangle
+		glDrawArrays(GL_TRIANGLES, 0, 6); // 3 indices starting at 0 -> 1 triangle
 
 		glDisableVertexAttribArray(0);
 
 	
+
+
+
+
+
+
+
+
+
+
+
 
 
 		// Use our shader
