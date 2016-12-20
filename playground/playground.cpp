@@ -86,19 +86,37 @@ int main( void )
 	GLuint MatrixTriangleID = glGetUniformLocation(programTriangleID, "MVP");
 
 	static const GLfloat g_vertex_buffer_data[] = { 
-	   -5, -5, 0,
-	    5, -5, 0,
-	   -5,  5, 0,
+	   -200, -200, 0,
+	    200, -200, 0,
+	   -200,  200, 0,
 
-	    5,  5, 0,
-	   -5,  5, 0,
-	    5, -5, 0
+	    200,  200, 0,
+	   -200,  200, 0,
+	    200, -200, 0
 	};
+
+
+    const GLsizeiptr texCoordSize = 6 * 2 * sizeof(GLfloat);
+    const GLfloat texCoordData[] =
+    {
+         -200, -200,
+	    200, -200, 
+	   -200,  200, 
+
+	    200,  200, 
+	   -200,  200, 
+	    200, -200
+    };
 
 	GLuint vertexbuffertr;
 	glGenBuffers(1, &vertexbuffertr);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffertr);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+
+	GLuint m_texCoordBuffer;
+	glGenBuffers(1, &m_texCoordBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, m_texCoordBuffer);
+    glBufferData(GL_ARRAY_BUFFER, texCoordSize, texCoordData, GL_STATIC_DRAW);
 
 
 	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
@@ -113,52 +131,25 @@ int main( void )
 								glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
 						   );
 	// Model matrix : an identity matrix (model will be at the origin)
-	glm::mat4 ModelBackground = glm::mat4(1.0f) * scale(mat4(), vec3(15.0f, 15.0f, 15.0f));;
+	glm::mat4 ModelBackground = glm::mat4(1.0f) * scale(mat4(), vec3(10.0f, 10.0f, 10.0f));;
 	// Our ModelViewProjection : multiplication of our 3 matrices
 	glm::mat4 MVPBackground  = ProjectionBackground * ViewBackground * ModelBackground; // Remember, matrix multiplication is the other way around
-
-
-
-
-	// Проекционная матрица : 45&deg; поле обзора, 4:3 соотношение сторон, диапазон : 0.1 юнит <-> 100 юнитов
-	//glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
-	// Матрица камеры
-	/*glm::mat4 View = glm::lookAt(
-	    glm::vec3(0,0,10), // Камера находится в мировых координатах (4,3,3)
-	    glm::vec3(0,0,0), // И направлена в начало координат
-	    glm::vec3(0,1,0)  // "Голова" находится сверху
-	);*/
-	// Матрица модели : единичная матрица (Модель находится в начале координат)
-	//glm::mat4 Model = glm::mat4(1.0f);  // Индивидуально для каждой модели
-
-	// Итоговая матрица ModelViewProjection, которая является результатом перемножения наших трех матриц
-	//glm::mat4 MVP = Projection * View * Model;
 
 
 	// Get a handle for our "MVP" uniform
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 
-
-	/*static const GLfloat g_vertex_buffer_data[] = { 
-		-1.0f, -1.0f, 0.0f,
-		 1.0f, -1.0f, 0.0f,
-		 0.0f,  1.0f, 0.0f,
-	};
-	static const GLushort g_element_buffer_data[] = { 0, 1, 2 };*/
-
-	
-	/*GLuint vertexbuffer;
-	glGenBuffers(1, &vertexbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);*/
-
 	// Load the texture
-	//GLuint Texture = loadBMP_custom("ufot.bmp");
+	
+	//GLuint Texture = loadBMP_custom("texture.bmp");
 	GLuint Texture = loadDDS("uvmap.DDS");
+
+	GLuint TextureBackground = loadBMP_custom("space.bmp");
 
 	// Get a handle for our "myTextureSampler" uniform
 	GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
-
+	GLuint TextureBackgroundID  = glGetUniformLocation(programTriangleID, "myTextureSample");
+	
 	// Read our .obj file
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec2> uvs;
@@ -202,9 +193,33 @@ int main( void )
 		// Clear the screen
 		display.Clear();
 
+
+
+
+		//-------Background
+
+
+
 		// Use our shader
 		glUseProgram(programTriangleID);
+		
+		
+
+		// Compute the MVP matrix from keyboard and mouse input
+		computeMatricesFromInputsB();
+		glm::mat4 ProjectionMatrixB = getProjectionMatrixB();
+		glm::mat4 ViewMatrixB = getViewMatrixB();
+		glm::mat4 ModelMatrixB = glm::mat4(1.0f) * scale(mat4(), vec3(100.0f, 100.0f, 100.0f));;
+		MVPBackground = ProjectionMatrixB * ViewMatrixB * ModelMatrixB;		
 		glUniformMatrix4fv(MatrixTriangleID, 1, GL_FALSE, &MVPBackground[0][0]);
+
+
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, TextureBackground);
+		// Set our "myTextureSampler" sampler to user Texture Unit 0
+		glUniform1i(TextureBackgroundID, 0);
+
 
 		// 1rst attribute buffer : vertices
 		glEnableVertexAttribArray(0);
@@ -218,22 +233,29 @@ int main( void )
 			(void*)0            // array buffer offset
 		);
 
+		glEnableVertexAttribArray(1);
+		glBindBuffer(GL_ARRAY_BUFFER, m_texCoordBuffer);
+		glVertexAttribPointer(
+			1,                                // attribute
+			2,                                // size
+			GL_FLOAT,                         // type
+			GL_FALSE,                         // normalized?
+			0,                                // stride
+			(void*)0                          // array buffer offset
+		);
+
+
 		// Draw the triangle !
 		glDrawArrays(GL_TRIANGLES, 0, 6); // 3 indices starting at 0 -> 1 triangle
 
 		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
 
 	
 
 
 
-
-
-
-
-
-
-
+		//-------UFO
 
 
 
