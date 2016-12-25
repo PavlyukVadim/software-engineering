@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1482675036 source:c:\users\ntpvlk\desktop\oop\dll_matrix\main.cpp
+	"main.h"
+
+1482674934 c:\users\ntpvlk\desktop\oop\dll_matrix\main.h
+	<iostream>
+	<stdlib.h>
+	<time.h>
+
