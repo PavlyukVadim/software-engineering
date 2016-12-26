@@ -6,7 +6,7 @@ using namespace std;
 
 BrokerageFirm::BrokerageFirm() {
     cout << "Welcome to our firm !" << endl;
-    collection = new Collection<Client, Broker, Status>[100];
+    collection = new tuple<Client, Broker, Status>[100];
 }
 
 BrokerageFirm::~BrokerageFirm() { }
@@ -35,11 +35,12 @@ void BrokerageFirm::addClient(string cName, string cPhone, int aNRooms, double a
     Broker broker = searchFreeBroker();
     addTrBr(broker.getBrokerName());
     clients.push_back(Client(cName, cPhone, aNRooms, aSq, addr));
-    collection[clients.size() - 1] = Collection<Client, Broker, Status>(
-                                                                    {cName, cPhone, aNRooms, aSq, addr},
+    collection[clients.size() - 1] = tuple<Client, Broker, Status>(Client(cName, cPhone, aNRooms, aSq, addr),
+    Broker(broker.getBrokerName()), Status(0));
+                                                                    /*{cName, cPhone, aNRooms, aSq, addr},
                                                                     {broker.getBrokerName()},
-                                                                    {0}
-                                                                    );
+                                                                    {0}*/
+                                                                // );
     outputCollection();
 
 }
@@ -61,13 +62,14 @@ Broker BrokerageFirm::searchFreeBroker() {
         brorerEmployment[i] = 0;
         string name = brokers[i].getBrokerName();
         for (int j = 0; j < clients.size(); j++) {
-            if(collection[j].getBrokerName() == name) {
-                if (collection[j].getSt() == 0 || collection[j].getSt() == 4) {
+            if( get<1>(collection[j]).getBrokerName() == name) {
+                if (get<2>(collection[j]).getSt() == 0 || get<2>(collection[j]).getSt() == 4) {
                     brorerEmployment[i] = 0;
                 }
                 else {
-                    brorerEmployment[i] += collection[j].getSt();
+                    brorerEmployment[i] += get<2>(collection[j]).getSt();
                 }
+                cout << " " << brorerEmployment[i] << endl;
             }
         }
     }
@@ -80,7 +82,7 @@ Broker BrokerageFirm::searchFreeBroker() {
             broker = brokers[i];
         }
     }
-    //cout << minEmployment << endl;
+    cout << "minEmployment: " << minEmployment << endl;
     return broker;
 }
 
@@ -90,11 +92,11 @@ void BrokerageFirm::outputCollection() {
 
         cout << endl << "Collection : " << endl;
         cout << "Client: " << "#" << i + 1 << endl;
-        collection[i].outputClientInfo();
+        get<0>(collection[i]).outputClientInfo();
         cout << "Broker: " << endl;
-        cout << " "  << collection[i].getBrokerName() << endl;
-        cout << " Time to event: "  << collection[i].getTimeTo() << " days" << endl;
-        cout << "Status : " << collection[i].getDescSt() << endl;
+        cout << " "  << get<1>(collection[i]).getBrokerName() << endl;
+        cout << " Time to event: "  << get<1>(collection[i]).getTimeTo() << " days" << endl;
+        cout << "Status : " << get<2>(collection[i]).getDescSt() << endl;
         cout << endl;
     }
 }
@@ -102,9 +104,9 @@ void BrokerageFirm::outputCollection() {
 
 void BrokerageFirm::overviewApartment(string addr) {
     for (int i = 0; i < clients.size(); i++) {
-        if (collection[i].apartment.getAddress() == addr) {
-            collection[i].setTimeTo(10);
-            collection[i].changeSt(1);
+        if (get<0>(collection[i]).apartment.getAddress() == addr) {
+            get<1>(collection[i]).setTimeTo(10);
+            get<2>(collection[i]).changeSt(1);
             return;
         }
     }
@@ -113,9 +115,9 @@ void BrokerageFirm::overviewApartment(string addr) {
 
 void BrokerageFirm::buyApartment(string addr) {
     for (int i = 0; i < clients.size(); i++) {
-        if (collection[i].apartment.getAddress() == addr) {
-            collection[i].setTimeTo(5);
-            collection[i].changeSt(2);
+        if (get<0>(collection[i]).apartment.getAddress() == addr) {
+            get<1>(collection[i]).setTimeTo(5);
+            get<2>(collection[i]).changeSt(2);
             return;
         }
     }
@@ -124,8 +126,8 @@ void BrokerageFirm::buyApartment(string addr) {
 
 void BrokerageFirm::changeDays(int days) {
     for (int i = 0; i < clients.size(); i++) {
-        if (collection[i].getTimeTo() > 0 && collection[i].getSt() != 4) {
-            collection[i].setTimeTo(collection[i].getTimeTo() - days);
+        if (get<1>(collection[i]).getTimeTo() > 0 && get<2>(collection[i]).getSt() != 4) {
+            get<1>(collection[i]).setTimeTo(get<1>(collection[i]).getTimeTo() - days);
         }
     }
     nextStatus();
@@ -133,23 +135,23 @@ void BrokerageFirm::changeDays(int days) {
 
 void BrokerageFirm::nextStatus() {
     for (int i = 0; i < clients.size(); i++) {
-        if (collection[i].getSt() == 1 && collection[i].getTimeTo() <= 0) {
-            collection[i].changeSt(0);
+        if (get<2>(collection[i]).getSt() == 1 && get<1>(collection[i]).getTimeTo() <= 0) {
+            get<2>(collection[i]).changeSt(0);
         }
 
-        if (collection[i].getSt() == 2 && collection[i].getTimeTo() <= 0) {
-            collection[i].changeSt(3);
-            collection[i].setTimeTo(collection[i].getTimeTo() + 5);
-            if (collection[i].getTimeTo() <= 0) {
+        if (get<2>(collection[i]).getSt() == 2 && get<1>(collection[i]).getTimeTo() <= 0) {
+            get<2>(collection[i]).changeSt(3);
+            get<1>(collection[i]).setTimeTo(get<1>(collection[i]).getTimeTo() + 5);
+            if (get<1>(collection[i]).getTimeTo() <= 0) {
                 nextStatus();
                 return;
             }
         }
 
-        if (collection[i].getSt() == 3 && collection[i].getTimeTo() <= 0) {
-            collection[i].changeSt(4);
-            collection[i].setTimeTo(0);
-            addCTrBr(collection[i].getBrokerName());
+        if (get<2>(collection[i]).getSt() == 3 && get<1>(collection[i]).getTimeTo() <= 0) {
+            get<2>(collection[i]).changeSt(4);
+            get<1>(collection[i]).setTimeTo(0);
+            addCTrBr(get<1>(collection[i]).getBrokerName());
         }
     }
 }

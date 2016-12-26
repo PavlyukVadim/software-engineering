@@ -1,8 +1,9 @@
 #include "Broker.h"
 #include "Client.h"
 #include "Status.h"
-#include "Collection.h"
+//#include "Collection.h"
 #include <vector>
+#include <tuple>
 
 using namespace std;
 
@@ -10,8 +11,8 @@ class BrokerageFirm
 {
     vector<Broker> brokers;
     vector<Client> clients;
-    Collection<Client, Broker, Status>* collection; // templates - collection
-
+    //Collection<Client, Broker, Status>* collection; // templates - collection
+    tuple<Client, Broker, Status>* collection;
 
     public:
         BrokerageFirm();
