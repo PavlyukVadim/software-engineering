@@ -1,8 +1,8 @@
 /* using std */
 
-
 #include <iostream>
 #include <string>
+#include <random>
 
 #include "BrokerageFirm.h"
 
@@ -67,10 +67,19 @@ int main()
 }
 
 void addBroker() {
-    string name;
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<int> dist(1, 6);
+
+    for (int i = 0; i <= 5; i++) {
+        cout << dist(gen) << " ";
+    }
+
+    cout << rd() << endl;
+    /*string name;
     cout << "Input broker name : ";
     cin >> name;
-    firm.addBroker(name);
+    firm.addBroker(name);*/
 }
 
 void brokersInfo() {
