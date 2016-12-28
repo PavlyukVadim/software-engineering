@@ -19,8 +19,35 @@ void BuyApartment();
 void outputCollection();
 void changeTime();
 
-
 BrokerageFirm firm;
+
+
+const int numberOfBrokers = 10;
+int numberOfEmpBrok = 0;
+int employedBrokers[numberOfBrokers] = {0};
+string brokersNames[numberOfBrokers] = {"Jackson", "Aiden", "Lucas",
+                                        "Liam", "Noah", "Ethan",
+                                        "Mason", "Caden", "Oliver", "Elijah"};
+
+const int numberOfClients = 10;
+int numberOfEmpClients = 0;
+int employedClients[numberOfClients] = {0};
+int completeClients[numberOfClients] = {0};
+string clientsNames[numberOfClients] = {"Sophia", "Emma", "Olivia",
+                                        "Ava", "Mia", "Isabella",
+                                        "Riley", "Aria", "Zoe", "Charlotte"};
+
+string clientsAddr[numberOfClients] = { "Mira90", "Mira91", "Mira92",
+                                        "Mira93", "Mira94", "Mira95",
+                                        "Mira96", "Mira97", "Mira98",
+                                        "Mira99" };
+
+string clientsPhone[numberOfClients] = { "+38 097 77 77 777", "+38 097 77 77 778", "+38 097 77 77 779",
+                                         "+38 097 77 77 780", "+38 097 77 77 781", "+38 097 77 77 782",
+                                         "+38 097 77 77 783", "+38 097 77 77 784", "+38 097 77 77 785",
+                                         "+38 097 77 77 786" };
+
+
 
 int main()
 {
@@ -69,17 +96,30 @@ int main()
 void addBroker() {
     random_device rd;
     mt19937 gen(rd());
-    uniform_int_distribution<int> dist(1, 6);
+    uniform_int_distribution<int> dist(1, 10);
+    string name;
 
-    for (int i = 0; i <= 5; i++) {
-        cout << dist(gen) << " ";
+    if (numberOfEmpBrok == numberOfBrokers) {
+        cout << "All brokers added" << endl;
+        return;
     }
 
-    cout << rd() << endl;
-    /*string name;
-    cout << "Input broker name : ";
-    cin >> name;
-    firm.addBroker(name);*/
+    bool findb = false;
+    while(!findb) {
+         int number = dist(gen);
+         if(!employedBrokers[number - 1]) {
+            findb = true;
+            name = brokersNames[number - 1];
+            numberOfEmpBrok++;
+            employedBrokers[number - 1] = 1;
+         }
+    }
+    cout << "Broker name : " << name << endl;
+
+    /*for (int i = 0; i <= 5; i++) {
+        cout << dist(gen) << " ";
+    }*/
+    firm.addBroker(name);
 }
 
 void brokersInfo() {
@@ -87,20 +127,42 @@ void brokersInfo() {
 }
 
 void addClient() {
+
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<int> dist(1, 10);
+    uniform_int_distribution<int> sq(60, 150); // for sq
+    uniform_int_distribution<int> nr(1, 4); // for number of room
     string name, phone, addr;
     int aNRooms;
     double aSq;
 
-    cout << "Input client name : ";
-    cin >> name;
-    cout << "Input client phone : ";
-    cin >> phone;
-    cout << "Input number of room : ";
-    cin >> aNRooms;
-    cout << "Input square : ";
-    cin >> aSq;
-    cout << "Input address : ";
-    cin >> addr;
+    if (numberOfEmpClients == numberOfClients) {
+        cout << "All clients added" << endl;
+        return;
+    }
+
+    bool findc = false;
+    while(!findc) {
+         int number = dist(gen);
+         if(!employedClients[number - 1]) {
+            findc = true;
+            name = clientsNames[number - 1];
+            addr = clientsAddr[number - 1];
+            phone = clientsPhone[number - 1];
+            aSq = sq(gen);
+            aNRooms = nr(gen);
+            numberOfEmpClients++;
+            employedClients[number - 1] = 1;
+         }
+    }
+
+    cout << "Client name : " << name << endl;
+    cout << "Client phone : " << phone << endl;
+    cout << "Apartment: " << endl;
+    cout << " Number of room : " << aNRooms << endl;
+    cout << " Square : " << aSq << endl;
+    cout << " Address : " << addr << endl;
 
     firm.addClient(name, phone, aNRooms, aSq, addr);
 }
@@ -110,18 +172,75 @@ void clientsInfo() {
 }
 
 void OverviewApartment() {
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<int> dist(1, 10);
     string addr;
 
-    cout << "Input apartment address : ";
-    cin >> addr;
+    if(!numberOfEmpClients) {
+        cout << "No customer." << endl;
+        return;
+    }
+
+    int count_free = 0;
+    for(int i = 0; i < numberOfClients; i++) {
+        if(employedClients[i] && !completeClients[i]) {
+            count_free++;
+        }
+    }
+    if(!count_free) {
+        cout << "All apartments sold!" << endl;
+        return;
+    }
+
+
+    bool finda = false;
+    while(!finda) {
+         int number = dist(gen);
+         if(employedClients[number - 1] && !completeClients[number - 1]) {
+            finda = true;
+            addr = clientsAddr[number - 1];
+         }
+    }
+
+    cout << "Apartment address : " << addr << endl;
     firm.overviewApartment(addr);
 }
 
 void BuyApartment() {
+
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<int> dist(1, 10);
     string addr;
 
-    cout << "Input apartment address : ";
-    cin >> addr;
+    if(!numberOfEmpClients) {
+        cout << "No customer." << endl;
+        return;
+    }
+
+    int count_free = 0;
+    for(int i = 0; i < numberOfClients; i++) {
+        if(employedClients[i] && !completeClients[i]) {
+            count_free++;
+        }
+    }
+    if(!count_free) {
+        cout << "All apartments sold!" << endl;
+        return;
+    }
+
+    bool finda = false;
+    while(!finda) {
+         int number = dist(gen);
+         if(employedClients[number - 1] && !completeClients[number - 1]) {
+            finda = true;
+            addr = clientsAddr[number - 1];
+            completeClients[number - 1] = 1;
+         }
+    }
+
+    cout << "Apartment address : " << addr << endl;
     firm.buyApartment(addr);
 }
 
@@ -131,8 +250,12 @@ void outputCollection() {
 
 
 void changeTime() {
-    int days;
-    cout << "Input numder of days: " << endl;
-    cin >> days;
+
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<int> dist(1, 3);
+
+    int days = dist(gen) * 5;
+    cout << "Numder of days: " << days << endl;
     firm.changeDays(days);
 }
