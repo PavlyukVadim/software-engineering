@@ -12,7 +12,7 @@ class BrokerageFirm
     vector<Broker> brokers;
     vector<Client> clients;
     //Collection<Client, Broker, Status>* collection; // templates - collection
-    tuple<Client, Broker, Status>* collection;
+    vector< tuple<Client, Broker, Status> > collection;
 
     public:
         BrokerageFirm();

@@ -6,7 +6,7 @@ using namespace std;
 
 BrokerageFirm::BrokerageFirm() {
     cout << "Welcome to our firm !" << endl;
-    collection = new tuple<Client, Broker, Status>[100];
+    //collection = new tuple<Client, Broker, Status>[100];
 }
 
 BrokerageFirm::~BrokerageFirm() { }
@@ -35,8 +35,8 @@ void BrokerageFirm::addClient(string cName, string cPhone, int aNRooms, double a
     Broker broker = searchFreeBroker();
     addTrBr(broker.getBrokerName());
     clients.push_back(Client(cName, cPhone, aNRooms, aSq, addr));
-    collection[clients.size() - 1] = tuple<Client, Broker, Status>(Client(cName, cPhone, aNRooms, aSq, addr),
-    Broker(broker.getBrokerName()), Status(0));
+    collection.push_back( tuple<Client, Broker, Status>(Client(cName, cPhone, aNRooms, aSq, addr),
+    Broker(broker.getBrokerName()), Status(0)) );
                                                                     /*{cName, cPhone, aNRooms, aSq, addr},
                                                                     {broker.getBrokerName()},
                                                                     {0}*/
