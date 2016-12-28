@@ -53,9 +53,10 @@
 1481017712 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/src/Status.cpp
 	"Status.h"
 
-1481048088 source:/home/amadev/Рабочий стол/с++/Brokerage firm (SDT)/main.cpp
+1482925514 source:/home/amadev/Рабочий стол/с++/Brokerage firm (SDT)/main.cpp
 	<iostream>
 	<string>
+	<random>
 	"BrokerageFirm.h"
 
 1481049280 /home/amadev/Рабочий стол/с++/Brokerage firm (SDT)/include/BrokerageFirm.h

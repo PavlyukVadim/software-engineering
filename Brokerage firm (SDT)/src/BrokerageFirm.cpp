@@ -64,12 +64,12 @@ Broker BrokerageFirm::searchFreeBroker() {
         for (int j = 0; j < clients.size(); j++) {
             if( get<1>(collection[j]).getBrokerName() == name) {
                 if (get<2>(collection[j]).getSt() == 0 || get<2>(collection[j]).getSt() == 4) {
-                    brorerEmployment[i] = 0;
+                    brorerEmployment[i] += 1;
                 }
                 else {
                     brorerEmployment[i] += get<2>(collection[j]).getSt();
                 }
-                cout << " " << brorerEmployment[i] << endl;
+                cout << get<1>(collection[j]).getBrokerName() << " " << brorerEmployment[i] << endl;
             }
         }
     }
