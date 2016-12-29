@@ -59,7 +59,7 @@
 	<random>
 	"BrokerageFirm.h"
 
-1482926891 /home/amadev/Рабочий стол/с++/Brokerage firm (SDT)/include/BrokerageFirm.h
+1482927045 /home/amadev/Рабочий стол/с++/Brokerage firm (SDT)/include/BrokerageFirm.h
 	"Broker.h"
 	"Client.h"
 	"Status.h"
@@ -88,7 +88,7 @@
 	"Broker.h"
 	<iostream>
 
-1482720154 source:/home/amadev/Рабочий стол/с++/Brokerage firm (SDT)/src/BrokerageFirm.cpp
+1482927242 source:/home/amadev/Рабочий стол/с++/Brokerage firm (SDT)/src/BrokerageFirm.cpp
 	"BrokerageFirm.h"
 	<iostream>
 	<algorithm>

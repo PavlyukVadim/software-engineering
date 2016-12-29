@@ -57,7 +57,7 @@ void BrokerageFirm::outputClientsInfo() {
 
 Broker BrokerageFirm::searchFreeBroker() {
     Broker broker;
-    int *brorerEmployment = new int [brokers.size()];
+    vector<int> brorerEmployment( brokers.size() );
     for (int i = 0; i < brokers.size(); i++) {
         brorerEmployment[i] = 0;
         string name = brokers[i].getBrokerName();
