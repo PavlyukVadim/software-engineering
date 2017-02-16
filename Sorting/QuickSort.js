@@ -1,8 +1,36 @@
 "use strict";
 
+const fs = require('fs');
+const path = require('path');
+
+let inputArr = [];
+let countOfOperations = 0;
+
+const filePath = path.join(__dirname, '../data_examples/input__10000.txt');
+
+fs.readFile(filePath, {encoding: 'utf-8'}, function(err,data){
+    if (!err){
+    	inputArr = data.split('\n').map((str) => Number(str)).slice(0, -1);
+    	
+    	console.time('time');
+		
+		quickSort(inputArr, 0, inputArr.length - 1);
+		console.log(countOfOperations);
+
+		console.timeEnd('time');
+
+    }else{
+        console.log(err);
+    }
+
+});
+
+
 function quickSort(arr, p, r) {
 	if (p < r) {
+
 		let q = partition(arr, p, r);
+		countOfOperations += r - p; 
 		quickSort(arr, p, q - 1);
 		quickSort(arr, q + 1, r);
 	} 
@@ -10,6 +38,11 @@ function quickSort(arr, p, r) {
 }
 
 function partition(arr, p, r) {
+	let tempElement = arr[r];
+	arr[r] = arr[p];
+	arr[p] = tempElement;
+	
+
 	let bearingElement = arr[r];
 	let i = p - 1;
 	for (let j = p; j < r; j++) {
@@ -20,12 +53,8 @@ function partition(arr, p, r) {
 			arr[j] = tempElement;
 		}
 	}
-	let tempElement = arr[r];
+	tempElement = arr[r];
 	arr[r] = arr[i + 1];
 	arr[i + 1] = tempElement;
-	console.log(arr);
 	return i + 1;  
 }
-
-let arr = [1, 5, 3, 7, 8, 10, 8, 3];
-console.log( quickSort(arr, 0, arr.length - 1) );
