@@ -28,7 +28,6 @@ fs.readFile(filePath, {encoding: 'utf-8'}, function(err,data){
 
 function quickSort(arr, p, r) {
 	if (p < r) {
-
 		let q = partition(arr, p, r);
 		countOfOperations += r - p; 
 		quickSort(arr, p, q - 1);
@@ -38,9 +37,16 @@ function quickSort(arr, p, r) {
 }
 
 function partition(arr, p, r) {
+	let middleIndex = Math.floor( (p + r) / 2 );
+	let middleElement = arr[middleIndex];
+	let valuesForResearch = [ arr[p], middleElement, arr[r]];
+
+	let averageValue = valuesForResearch.sort((a, b) => a - b)[1];
+	let indexOfAverageValue = arr.indexOf( averageValue );
+
 	let tempElement = arr[r];
-	arr[r] = arr[p];
-	arr[p] = tempElement;
+	arr[r] = arr[indexOfAverageValue];
+	arr[indexOfAverageValue] = tempElement;
 	
 
 	let bearingElement = arr[r];
