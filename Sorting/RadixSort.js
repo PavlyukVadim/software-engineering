@@ -24,7 +24,10 @@ function radixSort(arr, digit){
 		for (i = arrByCurrentDigit.length - 1; i >= 0; i--) {
 			sortedArr[arrOfFrequency[arrByCurrentDigit[i]] - 1] = arr[i];
 			arrOfFrequency[arrByCurrentDigit[i]]--; 
-		}	
+		}
+
+		arr = sortedArr.slice(0, sortedArr.length);  
+	
 	}
 
 	return 	sortedArr;
