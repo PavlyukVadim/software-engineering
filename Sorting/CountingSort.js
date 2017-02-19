@@ -16,7 +16,7 @@ function countingSort(arr) {
 	let sortedArr = [];
 	for (i = arr.length - 1; i >= 0; i--) {
 		sortedArr[arrOfFrequency[arr[i]] - 1] = arr[i];
-		arrOfFrequency[arr[i] - 1]--; 
+		arrOfFrequency[arr[i]]--; 
 	}	
 	return 	sortedArr;
 }
