@@ -44,4 +44,4 @@ WHERE "ShipAddress" LIKE '% %'
 --Task9
 --select all products that start with % or _ and end on 'm'
 SELECT "ProductName" FROM Products
-WHERE "ProductName" SIMILAR TO '(\%|\_)(m|M)'
+WHERE "ProductName" SIMILAR TO '(\%|\_)%(m|M)'
