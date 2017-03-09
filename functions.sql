@@ -23,7 +23,7 @@ RIGHT JOIN Suppliers AS SP ON
 -- 2.2
 SELECT * FROM Orders
 WHERE "ShippedDate" IS NULL AND
-      "OrderDate" BETWEEN '1998-04-01' AND timestamp '1998-04-01' + '1 months' - interval '1 days'
+      "OrderDate" BETWEEN '1998-04-01' AND '1998-04-30' 
 -- 2.3
 
 SELECT DISTINCT "LastName", "FirstName"
