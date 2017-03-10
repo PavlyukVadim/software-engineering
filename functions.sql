@@ -26,15 +26,12 @@ WHERE "ShippedDate" IS NULL AND
       "OrderDate" BETWEEN '1998-04-01' AND '1998-04-30' 
 -- 2.3
 
-SELECT DISTINCT "LastName", "FirstName"
-FROM Employees AS EMP
-LEFT JOIN EmployeeTerritories AS ET 
-          ON 'et.EmployeeID' = 'emp.EmployeeID'
-LEFT JOIN Territories AS T 
-          ON 't.TerritoryID' = 'et.TerritoryID'
-LEFT JOIN Region AS R 
-          ON 'r.RegionID' = 't.RegionID'
-WHERE 'r.RegionDescription' = 'Northern' 
+SELECT DISTINCT "LastName", "FirstName", reg."RegionDescription"
+FROM employees AS emp
+JOIN employeeTerritories AS empt ON (emp."EmployeeID" = empt."EmployeeID")
+JOIN territories AS ter ON (empt."TerritoryID" = ter."TerritoryID")
+JOIN region AS reg ON (reg."RegionID" = ter."RegionID")  
+WHERE "RegionDescription" = 'Northern';
 
 -- 2.4
 SELECT (SUM("UnitPrice" * (1 - "Discount") * "Quantity") )
