@@ -34,16 +34,18 @@ JOIN region AS reg ON (reg."RegionID" = ter."RegionID")
 WHERE "RegionDescription" = 'Northern';
 
 -- 2.4
-SELECT (SUM("UnitPrice" * (1 - "Discount") * "Quantity") )
-FROM Order_Details AS OD
-LEFT JOIN Orders AS O 
-          ON 'o.OrderID' = 'od.OrderID'
-WHERE date_part('day', 'o.OrderDate') % 2 = 1
+SELECT (SUM("UnitPrice" * (1 - "Discount") * "Quantity"))
+FROM Order_Details AS od
+JOIN Orders AS o ON o."OrderID" = od."OrderID"
+WHERE date_part('day', o."OrderDate")::integer % 2 = 1
 
 -- 2.5
 
-SELECT "ShipAddress" FROM Orders 
-WHERE "OrderID" = (SELECT "OrderID" FROM Order_Details
-                   GROUP BY "OrderID"
-                   ORDER BY SUM("UnitPrice" * (1 - "Discount") * "Quantity") DESC
-                   fetch first 1 rows only)
+WITH allData AS (SELECT o."ShipAddress", o."OrderID", sum FROM orders AS o
+JOIN (SELECT sum("Quantity" * "UnitPrice" * (1 - "Discount"))::TEXT::money AS sum, "OrderID"
+FROM order_details
+GROUP BY "OrderID") AS s ON s."OrderID" = o."OrderID")
+
+SELECT "ShipAddress"
+FROM allData
+WHERE sum = (SELECT max(sum) FROM allData)
