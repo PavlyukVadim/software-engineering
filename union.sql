@@ -65,6 +65,15 @@ SELECT "ProductName", "CategoryName" FROM products, categories;
 
 --Task 2.1
 
+SELECT "OrderID", "CustomerID", "EmployeeID", "OrderDate", 
+  CASE "ShipVia"
+    WHEN 1 THEN 'Vadim'
+    WHEN 2 THEN 'Pavlyuk'
+    WHEN 3 THEN 'Ruslanovych'
+  END AS "ShipVia", "ShipAddress"
+FROM "orders";
+
+
 --Task 2.2
 
 SELECT "Country" FROM Customers
@@ -84,6 +93,14 @@ GROUP BY e."LastName", e."FirstName";
 
 
 --Task 2.4
+
+WITH allData AS (SELECT * FROM orders AS o
+JOIN Order_Details AS od ON (od."OrderID" = o."OrderID")
+JOIN Products AS p ON (p."ProductID" = od."ProductID")
+)
+
+SELECT "ProductName" FROM allData
+WHERE "Quantity" > 100 AND "Discount" != (SELECT max("Discount") FROM allData)
 
 
 --Task 2.5
