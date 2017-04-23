@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1477344934 source:/home/amadev/Рабочий стол/с++/lab4/main.cpp
+	<iostream>
+	<stack>
+	<string>
+	<cctype>
+	<stdlib.h>
+	<sstream>
+
