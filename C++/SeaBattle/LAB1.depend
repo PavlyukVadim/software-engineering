@@ -1,0 +1,24 @@
+# depslib dependency file v1.0
+1475969769 source:c:\users\ntpvlk\desktop\oop\lab1\main.cpp
+	<iostream>
+	<conio.h>
+	<stdlib.h>
+	<ctime>
+
+1475355425 c:\users\ntpvlk\desktop\oop\lab1\seafight.h
+
+1476048375 source:c:\users\ntpvlk\downloads\seabattle-master\main.cpp
+	<iostream>
+	<conio.h>
+	<stdlib.h>
+	<ctime>
+	"seafight.h"
+
+1476048237 c:\users\ntpvlk\downloads\seabattle-master\seafight.h
+
+1476048402 source:c:\users\ntpvlk\downloads\seabattle-master\seafight.cpp
+	"seafight.h"
+	<iostream>
+	<stdlib.h>
+	<ctime>
+
