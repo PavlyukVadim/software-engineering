@@ -1,0 +1,31 @@
+# depslib dependency file v1.0
+1482236069 source:/home/amadev/Рабочий стол/с++/IOStreams/main.cpp
+	<iostream>
+	"Costream.h"
+	"Cistream.h"
+	"Cifstream.h"
+
+1482232562 source:/home/amadev/Рабочий стол/с++/IOStreams/istream.cpp
+	"istream.h"
+
+1482232564 /home/amadev/Рабочий стол/с++/IOStreams/istream.h
+
+1482233790 source:/home/amadev/Рабочий стол/с++/IOStreams/Costream.cpp
+	"Costream.h"
+
+1482233781 /home/amadev/Рабочий стол/с++/IOStreams/Costream.h
+	<iostream>
+
+1482233976 source:/home/amadev/Рабочий стол/с++/IOStreams/Cistream.cpp
+	"Cistream.h"
+
+1482233936 /home/amadev/Рабочий стол/с++/IOStreams/Cistream.h
+	<iostream>
+
+1482235750 /home/amadev/Рабочий стол/с++/IOStreams/Cifstream.h
+	<iostream>
+	<fstream>
+
+1482236051 source:/home/amadev/Рабочий стол/с++/IOStreams/Cifstream.cpp
+	"Cifstream.h"
+

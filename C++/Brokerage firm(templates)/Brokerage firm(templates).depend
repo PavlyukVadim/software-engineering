@@ -1,0 +1,55 @@
+# depslib dependency file v1.0
+1481024589 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/main.cpp
+	<iostream>
+	<string>
+	"BrokerageFirm.h"
+
+1481021090 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/src/Apartment.cpp
+	"Apartment.h"
+	<iostream>
+
+1481024607 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Apartment.h
+	<string>
+
+1481021582 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/src/Client.cpp
+	"Client.h"
+	<iostream>
+
+1481021399 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Client.h
+	"Apartment.h"
+
+1481024747 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/BrokerageFirm.h
+	"Broker.h"
+	"Client.h"
+	"Status.h"
+	"Collection.h"
+	<vector>
+
+1481024664 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Broker.h
+	<string>
+
+1481024109 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/src/BrokerageFirm.cpp
+	"BrokerageFirm.h"
+	<iostream>
+	<algorithm>
+
+1481020864 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/src/Broker.cpp
+	"Broker.h"
+	<iostream>
+
+1480986451 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/src/Сollection.cpp
+	"Сollection.h"
+
+1480986785 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Сollection.h
+
+1480986929 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/src/Collection.cpp
+	"Collection.h"
+
+1481014974 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Collection.h
+
+1481024847 /home/amadev/Рабочий стол/с++/Brokerage firm(templates)/include/Status.h
+	<string>
+
+1481017712 source:/home/amadev/Рабочий стол/с++/Brokerage firm(templates)/src/Status.cpp
+	"Status.h"
+

@@ -1,0 +1,4 @@
+EXPORTS
+    countRowSum @1
+    generateArr @2
+    showResult @3
