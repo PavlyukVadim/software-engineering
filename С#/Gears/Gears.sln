@@ -1,0 +1,17 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gears", "Gears\Gears.csproj", "{763B8376-A427-4C98-A974-C4AD8241E464}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{763B8376-A427-4C98-A974-C4AD8241E464}.Debug|x86.ActiveCfg = Debug|x86
+		{763B8376-A427-4C98-A974-C4AD8241E464}.Debug|x86.Build.0 = Debug|x86
+		{763B8376-A427-4C98-A974-C4AD8241E464}.Release|x86.ActiveCfg = Release|x86
+		{763B8376-A427-4C98-A974-C4AD8241E464}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+EndGlobal

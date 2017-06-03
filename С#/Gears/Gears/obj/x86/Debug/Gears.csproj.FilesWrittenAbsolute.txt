@@ -1,0 +1,5 @@
+/home/amadev/Рабочий стол/Gears/Gears/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/home/amadev/Рабочий стол/Gears/Gears/bin/Debug/Gears.pdb
+/home/amadev/Рабочий стол/Gears/Gears/bin/Debug/Gears.exe
+/home/amadev/Рабочий стол/Gears/Gears/obj/x86/Debug/Gears.exe
+/home/amadev/Рабочий стол/Gears/Gears/obj/x86/Debug/Gears.pdb
