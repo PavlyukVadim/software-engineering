@@ -1,0 +1,5 @@
+/home/amadev/Рабочий стол/Gears/Triad/Triad/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/home/amadev/Рабочий стол/Gears/Triad/Triad/bin/Debug/Triad.pdb
+/home/amadev/Рабочий стол/Gears/Triad/Triad/bin/Debug/Triad.exe
+/home/amadev/Рабочий стол/Gears/Triad/Triad/obj/x86/Debug/Triad.exe
+/home/amadev/Рабочий стол/Gears/Triad/Triad/obj/x86/Debug/Triad.pdb
