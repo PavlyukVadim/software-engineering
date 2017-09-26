@@ -69,3 +69,63 @@ $$ LANGUAGE plpgsql;
 
 SELECT * FROM generate_data_for_clients();
 
+
+-- function for filling clients
+CREATE OR REPLACE FUNCTION fill_clients_table(n int)
+  RETURNS void AS
+$$
+BEGIN
+  FOR i IN 0 .. n
+  LOOP
+    PERFORM generate_data_for_clients();
+  END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
+SELECT * FROM fill_clients_table(20);
+
+
+-- function for filling programs
+CREATE OR REPLACE FUNCTION generate_data_for_programs()
+  RETURNS void AS
+$$
+DECLARE
+  program_name text := get_random_data(ARRAY['ClanLib', 'Crystal Space', 'HOOPS 3D', 'Horde3D', 'Irrlicht', 'Java 3D', 'Java FX', 'JMonkey']);
+  program_version text := round(random() * 9)::text || '.'  || round(random() * 9)::text || '.' || round(random() * 9)::text;
+BEGIN
+  INSERT INTO programs ("program_name", "program_version", "price")
+  VALUES (program_name, program_version, random() * 100);
+END
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION fill_programs_table(n int)
+  RETURNS void AS
+$$
+BEGIN
+  FOR i IN 0 .. n
+  LOOP
+    PERFORM generate_data_for_programs();
+  END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
+SELECT * FROM fill_programs_table(20)
+
+
+-- fill table contracts
+INSERT INTO contracts ("client_id", "program_id", "contract_date") VALUES 
+  (1, 3, NOW() + (random() * (NOW() + '90 days' - NOW())) + '30 days'),
+  (1, 4, NOW() + (random() * (NOW() + '90 days' - NOW())) + '30 days'),
+  (2, 5, NOW() + (random() * (NOW() + '90 days' - NOW())) + '30 days'),
+  (2, 6, NOW() + (random() * (NOW() + '90 days' - NOW())) + '30 days'),
+  (3, 3, NOW() + (random() * (NOW() + '90 days' - NOW())) + '30 days');
+
+
+-- fill table deliveries
+INSERT INTO deliveries ("contract_id", "delivery_date") VALUES 
+  (2, NOW() + (random() * (NOW() + '90 days' - NOW())) + '90 days'),
+  (3, NOW() + (random() * (NOW() + '90 days' - NOW())) + '90 days'),
+  (4, NOW() + (random() * (NOW() + '90 days' - NOW())) + '90 days'),
+  (5, NOW() + (random() * (NOW() + '90 days' - NOW())) + '90 days'),
+  (6, NOW() + (random() * (NOW() + '90 days' - NOW())) + '90 days');
+
