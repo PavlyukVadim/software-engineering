@@ -160,7 +160,7 @@ SIMILAR TO '(I|J)%';
 -- task 1.4
 SELECT
   "contract_id",
-  coalesce("delivery_id", -1)
+  coalesce("delivery_id", -1) as "delivery_id"
 FROM deliveries
 RIGHT JOIN contracts
 USING("contract_id");
@@ -180,22 +180,52 @@ HAVING count(*) = (
   GROUP BY program_id
   ORDER BY count(*) 
   DESC
-  LIMIT 1)
+  LIMIT 1);
+
 
 -- task 2.2
+SELECT "contract_date", sum("price")
+FROM contracts
+JOIN programs
+USING("program_id")
+GROUP BY "contract_date"
+HAVING "contract_date" = '2017-09-27'
+
+
 -- task 2.3
+SELECT "full_name"
+FROM clients
+GROUP BY "full_name"
+HAVING "full_name" NOT IN 
+(SELECT "full_name"
+FROM clients
+JOIN contracts
+USING("client_id")
+JOIN programs
+USING("program_id")
+WHERE "program_name" = 'Horde3D')
+ORDER BY "full_name"
+
+
 -- task 2.4
+SELECT "contract_id"
+FROM deliveries
+RIGHT JOIN contracts
+USING("contract_id")
+WHERE "delivery_id" IS NULL;
+
+
 -- task 2.5
-
-
-
-
-
-
-
-
-
-
-
-
+SELECT "program_name"
+FROM programs
+JOIN contracts
+USING("program_id")
+WHERE "contract_id" IN (
+  SELECT "contract_id"
+  FROM deliveries
+  RIGHT JOIN contracts
+  USING("contract_id")
+  WHERE "delivery_id" IS NULL
+)
+GROUP BY "program_name"
 
