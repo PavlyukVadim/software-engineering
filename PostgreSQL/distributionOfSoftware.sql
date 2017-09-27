@@ -129,3 +129,73 @@ INSERT INTO deliveries ("contract_id", "delivery_date") VALUES
   (5, NOW() + (random() * (NOW() + '90 days' - NOW())) + '90 days'),
   (6, NOW() + (random() * (NOW() + '90 days' - NOW())) + '90 days');
 
+
+-- task 1.1
+SELECT program_name, max(price)
+FROM programs 
+GROUP BY program_name
+HAVING max(price) > 50
+ORDER BY max(price)
+DESC;
+
+
+-- task 1.2
+SELECT
+  "delivery_id", 
+  "contract_date",
+  "delivery_date",
+  "delivery_date"::timestamp - "contract_date"::timestamp AS "time of delivering"
+FROM deliveries
+JOIN contracts
+USING("contract_id");
+
+
+-- task 1.3
+SELECT * 
+FROM programs
+WHERE "program_name"
+SIMILAR TO '(I|J)%';
+
+
+-- task 1.4
+SELECT
+  "contract_id",
+  coalesce("delivery_id", -1)
+FROM deliveries
+RIGHT JOIN contracts
+USING("contract_id");
+
+
+-- task 2.1
+SELECT "program_id", "program_name"
+FROM programs
+JOIN contracts
+USING("program_id")
+GROUP BY program_id
+HAVING count(*) = (
+  SELECT "program_id"
+  FROM programs
+  JOIN contracts
+  USING("program_id")
+  GROUP BY program_id
+  ORDER BY count(*) 
+  DESC
+  LIMIT 1)
+
+-- task 2.2
+-- task 2.3
+-- task 2.4
+-- task 2.5
+
+
+
+
+
+
+
+
+
+
+
+
+
