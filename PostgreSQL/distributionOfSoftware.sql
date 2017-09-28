@@ -229,3 +229,37 @@ WHERE "contract_id" IN (
 )
 GROUP BY "program_name"
 
+
+-- 3.1 implementation 2.1 without limits on number of programs
+SELECT "program_name"
+FROM programs
+JOIN contracts
+USING("program_id")
+GROUP BY program_id
+HAVING count(*) = (
+  SELECT count(*)
+  FROM programs
+  JOIN contracts
+  USING("program_id")
+  GROUP BY program_id
+  ORDER BY count(*) 
+  DESC
+  LIMIT 1);
+
+
+-- 3.2 get clients, who have contracts in current year and haven't in previouses
+SELECT "client_id", "full_name"
+FROM clients
+JOIN contracts
+USING("client_id")
+WHERE date_part('year', "contract_date") = date_part('year', CURRENT_DATE)
+  AND "client_id" NOT IN (
+    SELECT "client_id"
+    FROM clients
+    JOIN contracts
+    USING("client_id")
+    WHERE date_part('year', "contract_date") < date_part('year', CURRENT_DATE)
+  )
+GROUP BY "client_id", "full_name"
+ORDER BY "client_id";
+
