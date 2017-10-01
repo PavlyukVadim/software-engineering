@@ -1,0 +1,17 @@
+(DEFUN my-reverse(l)
+  (COND ((NULL l) '())
+        ((ATOM l) (LIST l))
+        ((ATOM (CAR l)) (APPEND (my-reverse (CDR l)) (my-reverse (CAR l)))) 
+        (T (APPEND (my-reverse (CDR l)) (LIST (my-reverse (CAR l)))))
+  )
+)
+(print (my-reverse '(1 2 3 4 5)))
+
+(DEFUN swap-ends (l)
+  (COND ((NULL (CDR l)) l)
+        (T (CONS (CAR (swap-ends (CDR l))) 
+            (swap-ends (CONS (CAR l) 
+                             (CDR (swap-ends (CDR l))))))))
+)
+
+(print (swap-ends '(1 2 3 4 5)))
