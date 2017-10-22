@@ -1,5 +1,11 @@
 --Tables: contracts and programs from DB 'distributionOfSoftware'
 
+-- add column quantity to table contracts
+ALTER TABLE contracts
+ADD COLUMN quantity integer;
+
+UPDATE contracts
+SET "quantity" = "contract_id" * floor(random() * 10 + 1)
 
 --output quantity of every programs in contracts
 
