@@ -13,7 +13,7 @@
   (v-end begin (first end))
   (rest end)))
   ((dolgaya-nach? end)
-  (list (append begin
+  (list (append beginй
   (list (first end)
   (second end)))
   (cddr end)))
@@ -106,4 +106,4 @@
   'string)))
 
 
-(print (translate-word 'hello 'world)
+(print (translate-word 'hello 'world))
