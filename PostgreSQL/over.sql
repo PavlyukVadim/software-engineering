@@ -117,3 +117,40 @@ GROUP BY t1."program_id", t1."contract_id", t1."contract_date"
 ORDER BY t1."program_id", t1."contract_id"
 
 
+-- 5.6. output avg sum of first and last programs
+SELECT AVG("total_sum") FROM (
+  SELECT
+    "total_sum","program_id", "contract_date",
+    LAG("total_sum", 1) OVER (Order by "program_id", "contract_date") AS "prev-sum",
+    LEAD("total_sum", 1) OVER (Order by "program_id", "contract_date") AS "next-sum"
+  FROM "table-with-total-sum"
+) AS t
+WHERE "prev-sum" IS NULL OR "next-sum" IS NULL
+-------------------
+SELECT
+  AVG("total_sum")
+FROM (
+  SELECT * FROM (
+    SELECT
+      "total_sum",
+      "program_id",
+      "contract_date"
+    FROM "table-with-total-sum"
+    ORDER BY
+      "program_id" ASC,
+      "contract_date" ASC
+    LIMIT 1
+  ) AS t_with_first
+  UNION 
+  SELECT * FROM (
+    SELECT
+      "total_sum",
+      "program_id",
+      "contract_date"
+    FROM "table-with-total-sum"
+    ORDER BY
+      "program_id" DESC,
+      "contract_date" DESC
+    LIMIT 1
+  ) t_with_last
+) AS t
