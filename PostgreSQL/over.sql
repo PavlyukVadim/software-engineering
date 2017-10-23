@@ -154,3 +154,44 @@ FROM (
     LIMIT 1
   ) t_with_last
 ) AS t
+
+
+-----------------------
+-- Denormalized table by 1 form 
+CREATE TABLE d_contracts (
+  contract_id bigserial PRIMARY KEY,
+  second_client_name character(15) NOT NULL,
+  program_name character(15) NOT NULL,
+  price character(40) NOT NULL,
+  contract_date date 
+);
+
+INSERT INTO d_contracts
+  ("second_client_name", "program_name", "price", "contract_date")
+VALUES 
+  ('Smith', 'ClanLib', '100', NOW() + (random() * (NOW() + '90 days' - NOW())) + '30 days'),
+  ('Williams', 'HOOPS', '100 100 100', NOW() + (random() * (NOW() + '90 days' - NOW())) + '30 days'),
+  ('Johnson', 'Horde3D', '20 20', NOW() + (random() * (NOW() + '90 days' - NOW())) + '30 days'),
+  ('Brown', 'Irrlicht', '100', NOW() + (random() * (NOW() + '90 days' - NOW())) + '30 days')
+
+
+-- for normalization add column 'quantity'
+ALTER TABLE d_contracts
+ADD COLUMN quantity integer
+
+UPDATE d_contracts
+SET "quantity" = CASE "price"
+  WHEN '100' THEN 1
+  WHEN '20 20' THEN 2
+  WHEN '100 100 100' THEN 3
+  ELSE 0 END
+
+UPDATE d_contracts
+SET "price" = CASE "price"
+  WHEN '100' THEN '100'
+  WHEN '20 20' THEN '20'
+  WHEN '100 100 100' THEN '100'
+  ELSE 0 END
+
+
+-- Denormalized table by 2 form 
