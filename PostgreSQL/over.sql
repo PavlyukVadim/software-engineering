@@ -232,3 +232,46 @@ DROP COLUMN "second_client_name",
 DROP COLUMN "program_name",
 DROP COLUMN "price"
 
+
+-- denormalized table by 3 form 
+
+UPDATE d_clients
+SET "company" = 'company1'
+WHERE "company" = 'company3'
+
+ALTER TABLE d_clients
+ADD COLUMN "company_phone" character(25)
+
+UPDATE d_clients
+SET "company_phone" = CASE "company"
+  WHEN 'company1' THEN '+ 38 000 000 00 01'
+  WHEN 'company2' THEN '+ 38 000 000 00 02'
+  WHEN 'company4' THEN '+ 38 000 000 00 04'
+  ELSE '' END
+
+-- create table for companies
+CREATE TABLE companies (
+  company_id bigserial PRIMARY KEY,
+  company_name character(15) NOT NULL,
+  company_phone character(25) NOT NULL
+);
+
+INSERT INTO companies
+  ("company_name", "progracompany_phone")
+VALUES 
+  ('company1', '+ 38 000 000 00 01'),
+  ('company2', '+ 38 000 000 00 02'),
+  ('company4', '+ 38 000 000 00 04')
+
+ALTER TABLE d_clients
+ADD COLUMN "company_id" integer,
+DROP COLUMN "company",
+DROP COLUMN "company_phone"
+
+UPDATE d_clients
+SET "company_id" = CASE "client_id"
+  WHEN 1 THEN 1
+  WHEN 2 THEN 1
+  WHEN 3 THEN 2
+  WHEN 4 THEN 4
+  ELSE 5 END
