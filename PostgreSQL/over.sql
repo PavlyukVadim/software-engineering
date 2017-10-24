@@ -194,4 +194,41 @@ SET "price" = CASE "price"
   ELSE 0 END
 
 
--- Denormalized table by 2 form 
+-- for normalization to 2 form we need to separate client info and
+-- info about program to another tables
+CREATE TABLE d_clients (
+  client_id bigserial PRIMARY KEY,
+  second_name character(15) NOT NULL,
+  full_name character(40) NOT NULL,
+  address character(20) NOT NULL,
+  company character(20) NOT NULL
+);
+
+INSERT INTO d_clients
+  ("second_name", "full_name", "address", "company")
+VALUES 
+  ('Smith', 'Anthony Smith', '783 E. Fairground', 'company1'),
+  ('Williams', 'Daniel Smith', '9680 Edgemont', 'company2'),
+  ('Johnson', 'Angel Smith', '7868 Manor', 'company3'),
+  ('Brown', 'Jacob Smith', '59 Bohemia Lane', 'company4')
+
+CREATE TABLE d_programs (
+  program_id bigserial PRIMARY KEY,
+  program_name character(15) NOT NULL,
+  program_version character(40) NOT NULL,
+  price double precision NOT NULL
+);
+
+INSERT INTO d_programs
+  ("program_name", "program_version", "price")
+VALUES 
+  ('ClanLib', '9.4.1', 100),
+  ('HOOPS', '5.7.8', 200),
+  ('Horde3D', '9.7.7', 300),
+  ('Irrlicht', '8.0.1', 100)
+
+ALTER TABLE d_contracts
+DROP COLUMN "second_client_name",
+DROP COLUMN "program_name",
+DROP COLUMN "price"
+
