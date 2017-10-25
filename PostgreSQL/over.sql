@@ -275,3 +275,23 @@ SET "company_id" = CASE "client_id"
   WHEN 3 THEN 2
   WHEN 4 THEN 4
   ELSE 5 END
+
+
+-- additional task
+-- by every program count number of sold programs
+-- rank user by sold programs
+
+CREATE VIEW "new_table" AS
+ SELECT DISTINCT
+  "program_id",
+  "program_name",
+  count(*) OVER (PARTITION BY "program_id" ORDER BY "program_id" DESC) AS quantity,
+  "client_id",
+  "second_name",
+  count(*) OVER (PARTITION BY "client_id" ORDER BY "program_id" DESC) AS quantity_orders
+FROM contracts
+JOIN programs
+USING("program_id")
+JOIN clients
+USING("client_id")
+ORDER BY "program_id" ASC, "quantity_orders" DESC;
