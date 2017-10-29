@@ -59,3 +59,12 @@ $$ LANGUAGE plpgsql;
 
 SELECT * FROM fill_clients_table(20);
 
+-- reset tabels
+CREATE OR REPLACE FUNCTION reset_tabels() RETURNS void AS $$
+  BEGIN
+    DELETE FROM deliveries;
+    DELETE FROM contracts;
+    DELETE FROM clients;
+    ALTER SEQUENCE clients_client_id_seq RESTART WITH 1;
+  END;
+$$ LANGUAGE plpgsql;
