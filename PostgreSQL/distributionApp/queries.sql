@@ -52,17 +52,21 @@ SELECT * FROM generate_data_for_clients();
 
 -- function for filling clients
 CREATE OR REPLACE FUNCTION fill_clients_table(n int)
-  RETURNS void AS
+  RETURNS bigint AS
 $$
+DECLARE
+  number_of_clients bigint;
 BEGIN
-  FOR i IN 0 .. n
+  FOR i IN 1 .. n
   LOOP
     PERFORM generate_data_for_clients();
   END LOOP;
+  SELECT count(*) INTO number_of_clients FROM clients;
+  RETURN number_of_clients;
 END;
 $$ LANGUAGE plpgsql;
 
-SELECT * FROM fill_clients_table(20);
+-- SELECT * FROM fill_clients_table(20);
 
 
 CREATE OR REPLACE FUNCTION generate_data_for_contracts_wo_programs(number_of_clients bigint)
@@ -79,16 +83,19 @@ $$ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION fill_contracts_wo_programs_table(n int)
-  RETURNS void AS
+  RETURNS bigint AS
 $$
 DECLARE
   number_of_clients bigint;
+  number_of_contracts bigint;
 BEGIN
   SELECT floor(random() * count(*)) + 1 into number_of_clients From clients;
-  FOR i IN 0 .. n
+  FOR i IN 1 .. n
   LOOP
     PERFORM generate_data_for_contracts_wo_programs(number_of_clients);
   END LOOP;
+  SELECT count(*) INTO number_of_contracts FROM contracts_wo_programs;
+  RETURN number_of_contracts;
 END;
 $$ LANGUAGE plpgsql;
 
