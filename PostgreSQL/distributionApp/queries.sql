@@ -40,9 +40,8 @@ DECLARE
     '622 Roberts',
     '6 Saxton Street'
   ]);
-  company text;
+  company text := 'company#' || '_' || second_name;
 BEGIN
-  SELECT 'company#' || count(*) + 1 into company From clients;
   INSERT INTO clients ("second_name", "full_name", "address", "company")
   VALUES (second_name, first_name, address, company);
 END
