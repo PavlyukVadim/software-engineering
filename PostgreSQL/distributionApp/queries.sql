@@ -5,6 +5,12 @@ CREATE TABLE contracts (
   contract_date date 
 );
 
+CREATE TABLE contracts_wo_programs (
+  contract_id bigserial PRIMARY KEY,
+  client_id bigint references clients("client_id"),
+  contract_date date
+);
+
 -- function for generation random data 
 CREATE OR REPLACE FUNCTION get_random_data(arr text[])
   RETURNS text AS
@@ -59,12 +65,39 @@ $$ LANGUAGE plpgsql;
 
 SELECT * FROM fill_clients_table(20);
 
+
+CREATE OR REPLACE FUNCTION generate_data_for_contracts_wo_programs()
+  RETURNS void AS
+$$
+DECLARE
+  contract_date date := (NOW() + (random() * (NOW() + '90 days' - NOW())) + '30 days');
+  client_id bigint;
+BEGIN
+  SELECT floor(random() * count(*)) + 1 into client_id From clients;
+  INSERT INTO contracts_wo_programs ("client_id", "contract_date")
+  VALUES (client_id, contract_date);
+END
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION fill_contracts_wo_programs_table(n int)
+  RETURNS void AS
+$$
+BEGIN
+  FOR i IN 0 .. n
+  LOOP
+    PERFORM generate_data_for_contracts_wo_programs();
+  END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
 -- reset tabels
 CREATE OR REPLACE FUNCTION reset_tabels() RETURNS void AS $$
   BEGIN
     DELETE FROM deliveries;
-    DELETE FROM contracts;
+    DELETE FROM contracts_wo_programs;
     DELETE FROM clients;
     ALTER SEQUENCE clients_client_id_seq RESTART WITH 1;
+    ALTER SEQUENCE contracts_wo_programs_contract_id_seq RESTART WITH 1;
   END;
 $$ LANGUAGE plpgsql;
