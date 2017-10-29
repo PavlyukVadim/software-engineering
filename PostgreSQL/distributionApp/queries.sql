@@ -66,14 +66,13 @@ $$ LANGUAGE plpgsql;
 SELECT * FROM fill_clients_table(20);
 
 
-CREATE OR REPLACE FUNCTION generate_data_for_contracts_wo_programs()
+CREATE OR REPLACE FUNCTION generate_data_for_contracts_wo_programs(number_of_clients bigint)
   RETURNS void AS
 $$
 DECLARE
   contract_date date := (NOW() + (random() * (NOW() + '90 days' - NOW())) + '30 days');
-  client_id bigint;
+  client_id bigint := ceil(random() * number_of_clients);
 BEGIN
-  SELECT floor(random() * count(*)) + 1 into client_id From clients;
   INSERT INTO contracts_wo_programs ("client_id", "contract_date")
   VALUES (client_id, contract_date);
 END
@@ -83,10 +82,13 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION fill_contracts_wo_programs_table(n int)
   RETURNS void AS
 $$
+DECLARE
+  number_of_clients bigint;
 BEGIN
+  SELECT floor(random() * count(*)) + 1 into number_of_clients From clients;
   FOR i IN 0 .. n
   LOOP
-    PERFORM generate_data_for_contracts_wo_programs();
+    PERFORM generate_data_for_contracts_wo_programs(number_of_clients);
   END LOOP;
 END;
 $$ LANGUAGE plpgsql;
@@ -101,3 +103,4 @@ CREATE OR REPLACE FUNCTION reset_tabels() RETURNS void AS $$
     ALTER SEQUENCE contracts_wo_programs_contract_id_seq RESTART WITH 1;
   END;
 $$ LANGUAGE plpgsql;
+
