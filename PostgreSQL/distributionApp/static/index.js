@@ -1,19 +1,3 @@
-// var data = {};
-// data.title = "title";
-// data.message = "message";
-
-// $.ajax({
-//   type: 'POST',
-//   data: JSON.stringify(data),
-//   contentType: 'application/json',
-//   url: 'http://localhost:3000/',            
-//   success: function(data) {
-//     console.log('success');
-//     console.log(JSON.stringify(data));
-//   }
-//  }
-// );
-
 const inputNumberOfClients = $('#input-number-of-clients');
 const numberOfClients = $('#number-of-clients');
 const addClientsBtn = $('#add-row-clients');
@@ -98,3 +82,33 @@ const clearAllTables = () => {
    }
   );
 };
+
+// queries
+
+const timeQueryW = $('#time-query-w');
+const timeQueryWO = $('#time-query-wo');
+$('#query-wo').on('click', () => {
+  showLoader();
+  $.ajax({
+    type: 'GET',
+    url: 'http://localhost:3000/query-wo',
+    success: (data) => {
+      hideLoader();
+      timeQueryWO.text(data.time + 'ms');
+    }
+   }
+  );
+});
+
+$('#query-w').on('click', () => {
+  showLoader();
+  $.ajax({
+    type: 'GET',
+    url: 'http://localhost:3000/query-w',
+    success: (data) => {
+      hideLoader();
+      timeQueryW.text(data.time + 'ms');
+    }
+   }
+  );
+});
