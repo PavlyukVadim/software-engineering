@@ -1,26 +1,34 @@
-(DEFUN my-task(l)
-  (COND ((NULL l) '())
-        ((ATOM l) (LIST l))
+(defun MyFun (a b c d choise)
+    (cond
+        ((equal choise 1)
+             (cond
+                 ((null a) nil)
+                 ((atom a) (list a))
+                 ((atom (car a)) (cons (car a) (MyFun (cdr a) nil nil nil 1)))
+                 (T (append (MyFun (car a) nil nil nil 1) (MyFun (cdr a) nil nil nil 1)))
+             )
+        )
+        ((equal choise 2)
+              (cond
+                  ((null a) nil)
+                  ((null b) nil)
+                  ((member (car a) b) (cons (car a) (MyFun (cdr a) b nil nil 2)))
+                  (T (MyFun (cdr a) b nil nil 2))
+              )
+        )
+        ((equal choise 3)
+              (cond
+                  ((null b) c)
+                  ((null c) b)
+                  ((member (car b) c) (MyFun nil (cdr b) c nil 3))
+                  (T (cons (car b) (MyFun nil (cdr b) c nil 3)))
+              )
+        )
+        (T (MyFun nil (MyFun (MyFun a nil nil nil 1) (MyFun b nil nil nil 1) nil nil 2) (MyFun (MyFun c nil nil nil 1) (MyFun d nil nil nil 1) nil nil 2) nil 3))
+    )
+)
         
-  )
-)
-
-
-
-(DEFUN my-task(l-1 l-2)
-       (print l-1)
-       (print l-2)
-       (print "------------")
-  (COND ((NULL l-1) '())
-        ((NULL l-2) '())
-        ((ATOM l-1)
-         (COND ((ATOM l-2) (COND ((EQ l-1 l-2) l-1)
-                                 (T '())))
-               (T (CONS (my-task l-1 (car l-2)) (my-task l-1 (cdr l-2))))))
-        (T (append (my-task (car l-1) l-2) (my-task (cdr l-1) l-2)))
-  )
-)
-
-
-(print (my-task '(1 2 3) '(2 1 3)))
-
+(print (MyFun '(1 ((2 3) 4) 5) '(4 (((2)) 3) 6 7) '((4 6) (2 3) (8)) '(4 6 9) 0))
+(print (MyFun '(1 ((2 3) 4) 5) '(4 (((2)) 3) 6 7) '() '() 0))
+(print (MyFun '(1 ((2 3) 4) 5) '() '() '() 0))
+(print (MyFun '(1 2 3 4 5) '(1 2 3 4 5) '(6 7 8 9) '(6 7 8 9) 0))
