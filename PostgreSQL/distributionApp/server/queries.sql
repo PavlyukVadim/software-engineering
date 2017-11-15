@@ -110,3 +110,13 @@ CREATE OR REPLACE FUNCTION reset_tabels() RETURNS void AS $$
   END;
 $$ LANGUAGE plpgsql;
 
+-- query without index
+SELECT * 
+  FROM contracts_wo_programs
+  JOIN clients
+  USING (client_id)
+  WHERE contract_date
+    between NOW() and (NOW() + INTERVAL '30 DAY')
+
+-- index for prev query
+CREATE INDEX on contracts_wo_programs(contract_date)

@@ -65,16 +65,25 @@ const clearAllTables = () => {
   return db.one("SELECT * FROM reset_tabels();")
 };
 
+const queryWithJoin = `
+  SELECT *
+    FROM contracts_wo_programs
+    JOIN clients
+    USING (client_id)
+    WHERE contract_date
+      between NOW() and (NOW() + INTERVAL '30 DAY')
+`;
+
 let timeStart;
 const queryWO = () => {
   return db.any("drop index contracts_wo_programs_contract_date_idx;")
     .then(() => {
       timeStart = Number(new Date());
-      return db.any("SELECT * FROM contracts_wo_programs JOIN clients USING (client_id) WHERE contract_date between NOW() and (NOW() + INTERVAL '30 DAY')")
+      return db.any(queryWithJoin)
     })
     .catch(() => {
       timeStart = Number(new Date());
-      return db.any("SELECT * FROM contracts_wo_programs JOIN clients USING (client_id) WHERE contract_date between NOW() and (NOW() + INTERVAL '30 DAY')")
+      return db.any(queryWithJoin)
     })
 };
 
@@ -82,7 +91,7 @@ const queryW = () => {
   return db.any("create index on contracts_wo_programs(contract_date);")
     .then(() => {
       timeStart = Number(new Date());
-      return db.any("SELECT * FROM contracts_wo_programs JOIN clients USING (client_id) WHERE contract_date between NOW() and (NOW() + INTERVAL '30 DAY')")
+      return db.any(queryWithJoin)
     })
 };
 
