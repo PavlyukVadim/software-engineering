@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const pgp = require("pg-promise")(/*options*/);
-
+const pgp = require('pg-promise')();
 
 const app = express();
 app.disable('etag');
@@ -56,18 +55,18 @@ app.listen(3000, function () {
   console.log('Example app listening on port 3000!');
 });
 
-const db = pgp("postgres://vadim:vadim@localhost:5432/DistributionOfSoftware");
+const db = pgp('postgres://vadim:vadim@localhost:5432/DistributionOfSoftware');
 
 const addClients = (numberOfRows) => {
-  return db.one('SELECT * FROM fill_clients_table($1);', [numberOfRows])
+  return db.one("SELECT * FROM fill_clients_table($1);", [numberOfRows])
 };
 
 const addContracts = (numberOfRows) => {
-  return db.one('SELECT * FROM fill_contracts_wo_programs_table($1);', [numberOfRows])
+  return db.one("SELECT * FROM fill_contracts_wo_programs_table($1);", [numberOfRows])
 };
 
 const clearAllTables = () => {
-  return db.one('SELECT * FROM reset_tabels();')
+  return db.one("SELECT * FROM reset_tabels();")
 };
 
 let timeStart;
