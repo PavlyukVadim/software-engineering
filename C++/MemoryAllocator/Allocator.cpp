@@ -5,7 +5,7 @@ using namespace std;
 
 Allocator::Allocator(const int n)
 {
-	int * mas = new int[n + 1];
+	int *mas = new int[n + 1];
 	N = n;
 	bSize = sizeof(BlockHeader) / sizeof(int);
 	begin = (BlockHeader*)(&mas[0]);
@@ -13,6 +13,12 @@ Allocator::Allocator(const int n)
 	begin->size = &mas[n] - &mas[0] - bSize;
 	begin->state = false;
 	endOfMemory = &mas[n];
+}
+
+
+size_t Allocator::getBlockSize()
+{
+    return bSize;
 }
 
 
@@ -27,6 +33,7 @@ void *Allocator::mem_alloc(size_t size)
 		}
 		current = nextBlockHeader(current);
 	}
+
 	if((current->size == size) || ((current->size - size) < bSize))
 	{
 		current->state = 1;
@@ -598,10 +605,12 @@ void Allocator::mem_dump()
 {
 	BlockHeader *current = begin;
 	int i = 0;
-	cout <<"--- Out all BlockHeaders:"<< endl;
+	cout << "--- Out all BlockHeaders:" << endl;
+	cout << "#" << " " <<  "Current" << " " << "State" << " " << "CurSz" << " " << "PrevSz" << endl;
+
 	while(current != NULL)
     {
-		cout << i <<". "<< current <<"   "<< current->state <<"   "<< current->size <<"   "<< current->prevsize << endl;
+		cout << i << ". " << current << "   " << current->state << "   " << current->size << "   " << current->prevsize << endl;
 		i++;
 		current = nextBlockHeader(current);
 	}

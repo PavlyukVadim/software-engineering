@@ -63,7 +63,10 @@ void test()
 
 int main()
 {
-	test();
+    const int n = 2000;
+    Allocator alloc = Allocator(n);
+	//test();
+	cout << alloc.getBlockSize() ;
 	getchar();
 	return 0;
 }
