@@ -57,6 +57,7 @@ void *Allocator::mem_realloc(void *addr, size_t size)
 
 	BlockHeader *current = (BlockHeader*)addr - 1;
 	size_t deltaSize = current->blockSize - size; // size_t - unsigned int!!! fix it!
+
 	if(deltaSize == 0)
     {
 		return addr;
@@ -69,19 +70,22 @@ void *Allocator::mem_realloc(void *addr, size_t size)
 	{
         if(next == NULL)
 		{
-			//prev=NULL, next=NULL
+			// prev = NULL, next = NULL
+			// first block
 			return searchNewBlock(addr, size);
 		}
 		else
 		{
 			if(next->state)
 			{
-                //prev=NULL, next=1
+                // prev = NULL, next = 1
+                // next block is used
 				return searchNewBlock(addr, size);
 			}
 			else
 			{
-				//prev=NULL, next=0
+				// prev = NULL, next = 0
+				// next block is free
 				return expandRight(addr, size); //check later - fixed
 			}
         }
@@ -92,7 +96,8 @@ void *Allocator::mem_realloc(void *addr, size_t size)
         {
             if(next == NULL)
             {
-                //prev=1, next=NULL
+                // prev = 1, next = NULL
+                // next block is used
                 return searchNewBlock(addr, size);
             }
             else
@@ -245,46 +250,46 @@ bool Allocator::isLast(BlockHeader *h)
 
 void Allocator::mergeWithNext(BlockHeader *current, BlockHeader *next)
 {
-	current->blockSize += next->blockSize + sizeof(BlockHeader) / sizeof(int);
+	current->blockSize += next->blockSize + bHSize;
 	current->state = false;
-	BlockHeader *next2 = nextBlockHeader(next);
-	if(next2 != NULL)
+	BlockHeader *nextAfterNext = nextBlockHeader(next);
+	if(nextAfterNext != NULL)
 	{
-		next2->prevBlockSize = current->blockSize;
+		nextAfterNext->prevBlockSize = current->blockSize;
 	}
 }
 
 
 void Allocator::mergeWithPrevious(BlockHeader *previous, BlockHeader *current)
 {
-	previous->blockSize += current->blockSize + sizeof(BlockHeader) / sizeof(int);
+	previous->blockSize += current->blockSize + bHSize;
 }
 
 
 void Allocator::mergeWithPrevious(BlockHeader *previous, BlockHeader *current, BlockHeader *next)
 {
-	previous->blockSize += current->blockSize + sizeof(BlockHeader) / sizeof(int);
+	previous->blockSize += current->blockSize + bHSize;
 	next->prevBlockSize = previous->blockSize;
 }
 
 
 void Allocator::mergeBoth(BlockHeader *previous, BlockHeader *current, BlockHeader *next)
 {
-	previous->blockSize += current->blockSize + next->blockSize + 2 * sizeof(BlockHeader) / sizeof(int);
-	BlockHeader *next2 = nextBlockHeader(next);
-	if(next2 != NULL)
-	{
-		next2->prevBlockSize = previous->blockSize;
-	}
+	previous->blockSize += current->blockSize + next->blockSize + 2 * bHSize;
+	BlockHeader *nextAfterNext = nextBlockHeader(next);
 
+	if(nextAfterNext != NULL)
+	{
+		nextAfterNext->prevBlockSize = previous->blockSize;
+	}
 }
 
 
-void Allocator::copyData(void *from, void *to, size_t quantity)
+void Allocator::copyData(void *from, void *to, size_t usedBlockSize)
 {
 	int *f = (int*)from;
 	int *t = (int*)to;
-	for(unsigned int i = 0; i < quantity; i++)
+	for(unsigned int i = 0; i < usedBlockSize; i++)
 	{
         t[i] = f[i];
 	}
@@ -301,18 +306,18 @@ void *Allocator::searchNewBlock(void *addr, size_t size)
 		return addr;
 	}
 
-	if(deltaSize > 0)
+	if(deltaSize >= 3)
 	{
 		return separateOnUseAndFree((BlockHeader*)addr - 1, size);
 	}
-	else
+	else if(deltaSize <= 0)
 	{
-		void *nBlock = mem_alloc(size);
-		if(nBlock != NULL)
+		void *newBlock = mem_alloc(size);
+		if(newBlock != NULL)
 		{
-			copyData(addr, nBlock, current->blockSize);
+			copyData(addr, newBlock, current->blockSize);
 			mem_free(addr);
-			return nBlock;
+			return newBlock;
 		}
 		return NULL;
 	}
