@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1511393483 source:/home/amadev/Рабочий стол/study/Software-Engineering/C++/MemoryAllocator/main.cpp
+	<iostream>
+
+1511422623 source:/home/amadev/Рабочий стол/study/Software-Engineering/C++/MemoryAllocator/Allocator.cpp
+	<iostream>
+	"Allocator.h"
+
+1511394359 /home/amadev/Рабочий стол/study/Software-Engineering/C++/MemoryAllocator/Allocator.h
+	<cstddef>
+
