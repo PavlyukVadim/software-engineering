@@ -4,8 +4,8 @@
 struct BlockHeader
 {
 	bool state; //1 - used, 0 - unused
-	size_t size;
-	size_t prevsize;
+	size_t blockSize;
+	size_t prevBlockSize;
 };
 
 class Allocator
@@ -17,10 +17,10 @@ public:
 	void *mem_realloc(void *addr, size_t size); //return addr on begin of reallocated block or NULL
 	void mem_free(void *addr); //free block by this address
 	void mem_dump(); //out blocks characteristic in table on console
-    size_t getBlockSize();
+    size_t getBlockHeaderSize();
 
 private:
-	size_t bSize; //struct BlockHeader size in int
+	size_t bHSize; //BlockHeader size in int
 	int N; // length all memory in int
 	BlockHeader *begin; //first block
 	int *endOfMemory; //last int in memory

@@ -65,8 +65,8 @@ int main()
 {
     const int n = 2000;
     Allocator alloc = Allocator(n);
-	//test();
-	cout << alloc.getBlockSize() ;
+	test();
+	//cout << alloc.getBlockHeaderSize() ;
 	getchar();
 	return 0;
 }

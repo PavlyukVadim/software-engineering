@@ -7,34 +7,36 @@ Allocator::Allocator(const int n)
 {
 	int *mas = new int[n + 1];
 	N = n;
-	bSize = sizeof(BlockHeader) / sizeof(int);
+	bHSize = sizeof(BlockHeader) / sizeof(int);
 	begin = (BlockHeader*)(&mas[0]);
-	begin->prevsize = NULL;
-	begin->size = &mas[n] - &mas[0] - bSize;
+	begin->prevBlockSize = NULL;
+	begin->blockSize = &mas[n] - &mas[0] - bHSize;
 	begin->state = false;
 	endOfMemory = &mas[n];
 }
 
 
-size_t Allocator::getBlockSize()
+size_t Allocator::getBlockHeaderSize()
 {
-    return bSize;
+    return bHSize;
 }
 
 
 void *Allocator::mem_alloc(size_t size)
 {
 	BlockHeader *current = begin;
-	while(current->size < size || current->state)
+	bool isFindFreeBlock = current->blockSize >= size && !current->state;
+	while(!isFindFreeBlock)
 	{
 		if(isLast(current))
 		{
 			return NULL;
 		}
 		current = nextBlockHeader(current);
+		isFindFreeBlock = current->blockSize >= size && !current->state;
 	}
 
-	if((current->size == size) || ((current->size - size) < bSize))
+	if((current->blockSize == size) || ((current->blockSize - size) < bHSize))
 	{
 		current->state = 1;
 		return getBlock(current);
@@ -54,7 +56,7 @@ void *Allocator::mem_realloc(void *addr, size_t size)
 	}
 
 	BlockHeader *current = (BlockHeader*)addr - 1;
-	size_t deltaSize = current->size - size; // size_t - unsigned int!!! fix it!
+	size_t deltaSize = current->blockSize - size; // size_t - unsigned int!!! fix it!
 	if(deltaSize == 0)
     {
 		return addr;
@@ -214,23 +216,23 @@ BlockHeader *Allocator::nextBlockHeader(BlockHeader *current)
 	{
         return NULL;
 	}
-	return (BlockHeader*)((int*)((char*)current + sizeof(BlockHeader)) + current->size);
+	return (BlockHeader*)((int*)((char*)current + sizeof(BlockHeader)) + current->blockSize);
 }
 
 
 BlockHeader* Allocator::previousBlockHeader(BlockHeader *current)
 {
-	if(current->prevsize == NULL)
+	if(current->prevBlockSize == NULL)
 	{
         return NULL;
 	}
-	return (BlockHeader*)((int*)((char*)current - sizeof(BlockHeader)) - current->prevsize);
+	return (BlockHeader*)((int*)((char*)current - sizeof(BlockHeader)) - current->prevBlockSize);
 }
 
 
 bool Allocator::isLast(BlockHeader *h)
 {
-	if(((int*)((char*)h + sizeof(BlockHeader)) + h->size) == endOfMemory)
+	if(((int*)((char*)h + sizeof(BlockHeader)) + h->blockSize) == endOfMemory)
     {
         return true;
 	}
@@ -243,36 +245,36 @@ bool Allocator::isLast(BlockHeader *h)
 
 void Allocator::mergeWithNext(BlockHeader *current, BlockHeader *next)
 {
-	current->size += next->size + sizeof(BlockHeader) / sizeof(int);
+	current->blockSize += next->blockSize + sizeof(BlockHeader) / sizeof(int);
 	current->state = false;
 	BlockHeader *next2 = nextBlockHeader(next);
 	if(next2 != NULL)
 	{
-		next2->prevsize = current->size;
+		next2->prevBlockSize = current->blockSize;
 	}
 }
 
 
 void Allocator::mergeWithPrevious(BlockHeader *previous, BlockHeader *current)
 {
-	previous->size += current->size + sizeof(BlockHeader) / sizeof(int);
+	previous->blockSize += current->blockSize + sizeof(BlockHeader) / sizeof(int);
 }
 
 
 void Allocator::mergeWithPrevious(BlockHeader *previous, BlockHeader *current, BlockHeader *next)
 {
-	previous->size += current->size + sizeof(BlockHeader) / sizeof(int);
-	next->prevsize = previous->size;
+	previous->blockSize += current->blockSize + sizeof(BlockHeader) / sizeof(int);
+	next->prevBlockSize = previous->blockSize;
 }
 
 
 void Allocator::mergeBoth(BlockHeader *previous, BlockHeader *current, BlockHeader *next)
 {
-	previous->size += current->size + next->size + 2 * sizeof(BlockHeader) / sizeof(int);
+	previous->blockSize += current->blockSize + next->blockSize + 2 * sizeof(BlockHeader) / sizeof(int);
 	BlockHeader *next2 = nextBlockHeader(next);
 	if(next2 != NULL)
 	{
-		next2->prevsize = previous->size;
+		next2->prevBlockSize = previous->blockSize;
 	}
 
 }
@@ -292,7 +294,7 @@ void Allocator::copyData(void *from, void *to, size_t quantity)
 void *Allocator::searchNewBlock(void *addr, size_t size)
 {
 	BlockHeader *current = (BlockHeader*)addr - 1;
-	size_t deltaSize = current->size - size;
+	size_t deltaSize = current->blockSize - size;
 
 	if((deltaSize > 0) && (deltaSize < 3))
 	{
@@ -308,7 +310,7 @@ void *Allocator::searchNewBlock(void *addr, size_t size)
 		void *nBlock = mem_alloc(size);
 		if(nBlock != NULL)
 		{
-			copyData(addr, nBlock, current->size);
+			copyData(addr, nBlock, current->blockSize);
 			mem_free(addr);
 			return nBlock;
 		}
@@ -321,8 +323,8 @@ void *Allocator::expandLeft(void *addr, size_t size)
 {
 	BlockHeader *current = (BlockHeader*)addr - 1;
 	BlockHeader *previous = previousBlockHeader(current);
-	size_t area = current->size + current->prevsize + sizeof(BlockHeader) / sizeof(int);
-	size_t deltaSize = current->size - size;
+	size_t area = current->blockSize + current->prevBlockSize + sizeof(BlockHeader) / sizeof(int);
+	size_t deltaSize = current->blockSize - size;
 
 	if(deltaSize > 0) //minimize
 	{
@@ -332,14 +334,14 @@ void *Allocator::expandLeft(void *addr, size_t size)
 			first[i+deltaSize] = first[i];
 		}
 		//set BlockHeaders
-		previous->size += deltaSize;
+		previous->blockSize += deltaSize;
 		current = nextBlockHeader(previous);
-		initBlockHeader(current, true, previous->size, size, 7);
+		initBlockHeader(current, true, previous->blockSize, size, 7);
 
 		BlockHeader *next = nextBlockHeader(current);
 		if(next != NULL)
 		{
-			next->prevsize = current->size;
+			next->prevBlockSize = current->blockSize;
 		}
 		return getBlock(current);
 	}
@@ -350,30 +352,30 @@ void *Allocator::expandLeft(void *addr, size_t size)
             if((area == size) || ((area - size) < 3))
             {
                 //set BH
-                previous->size = area;
+                previous->blockSize = area;
                 BlockHeader *next = nextBlockHeader(current);
                 if(next != NULL)
                 {
-                    next->prevsize = previous->size;
+                    next->prevBlockSize = previous->blockSize;
                 }
                 previous->state = true;
-                copyData(addr, getBlock(previous), current->size); //copy
+                copyData(addr, getBlock(previous), current->blockSize); //copy
                 return getBlock(previous);
             }
             else
             {
-                previous->size = size;
+                previous->blockSize = size;
                 previous->state = true;
-                copyData(addr, getBlock(previous), current->size);
+                copyData(addr, getBlock(previous), current->blockSize);
 
                 current = nextBlockHeader(previous);
-                current->size = area - size - sizeof(BlockHeader) / sizeof(int);
+                current->blockSize = area - size - sizeof(BlockHeader) / sizeof(int);
                 current->state = false;
-                current->prevsize = previous->size;
+                current->prevBlockSize = previous->blockSize;
                 BlockHeader *next = nextBlockHeader(current);
                 if(next != NULL)
                 {
-                    next->prevsize = current->size;
+                    next->prevBlockSize = current->blockSize;
                 }
                 return getBlock(previous);
             }
@@ -383,7 +385,7 @@ void *Allocator::expandLeft(void *addr, size_t size)
 			void *p = mem_alloc(size);
 			if(p != NULL)
 			{
-				copyData(addr, p, current->size);
+				copyData(addr, p, current->blockSize);
 				BlockHeader *next = nextBlockHeader(current);
 				if(next == NULL)
 				{
@@ -405,18 +407,18 @@ void *Allocator::expandRight(void *addr, size_t size)
 {
 	BlockHeader *current = (BlockHeader*)addr - 1;
 	BlockHeader *next = nextBlockHeader(current);
-	size_t area = current->size + next->size + sizeof(BlockHeader) / sizeof(int);
-	int deltaSize = (int)(current->size) - (int)(size); //TODO: fis expression to int - fixed
+	size_t area = current->blockSize + next->blockSize + sizeof(BlockHeader) / sizeof(int);
+	int deltaSize = (int)(current->blockSize) - (int)(size); //TODO: fis expression to int - fixed
 
 	if(deltaSize > 0) //minimize
 	{
-		current->size = size; //set BlockHeaders
+		current->blockSize = size; //set BlockHeaders
 		next = nextBlockHeader(current);
-		initBlockHeader(next, false, current->size, area - size - sizeof(BlockHeader) / sizeof(int), 7);
+		initBlockHeader(next, false, current->blockSize, area - size - sizeof(BlockHeader) / sizeof(int), 7);
 		BlockHeader *next2 = nextBlockHeader(next);
 		if(next2 != NULL)
 		{
-			next2->prevsize = next->size;
+			next2->prevBlockSize = next->blockSize;
 		}
 		return getBlock(current);
 	}
@@ -426,25 +428,25 @@ void *Allocator::expandRight(void *addr, size_t size)
 		{
             if((area - size) < 3)
             {
-                current->size = area;
+                current->blockSize = area;
                 next = nextBlockHeader(current);
                 if(next != NULL)
                 {
-                    next->prevsize = current->size;
+                    next->prevBlockSize = current->blockSize;
                 }
                 return getBlock(current);
             }
             else
             {
-                current->size = size;
+                current->blockSize = size;
                 next = nextBlockHeader(current);
-                next->size = area - size - sizeof(BlockHeader) / sizeof(int);
-                next->prevsize = size;
+                next->blockSize = area - size - sizeof(BlockHeader) / sizeof(int);
+                next->prevBlockSize = size;
                 next->state = false;
                 BlockHeader *next2 = nextBlockHeader(next);
                 if(next2 != NULL)
                 {
-                    next2->prevsize = next->size;
+                    next2->prevBlockSize = next->blockSize;
                 }
                 return getBlock(current);
             }
@@ -454,7 +456,7 @@ void *Allocator::expandRight(void *addr, size_t size)
 			void *p = mem_alloc(size);
 			if(p != NULL)
 			{
-				copyData(addr, p, current->size);
+				copyData(addr, p, current->blockSize);
 				next = nextBlockHeader(current);
 				mergeWithNext(current, next);
 				return p;
@@ -470,8 +472,8 @@ void *Allocator::expandBoth(void *addr, size_t size)
 	BlockHeader *current = (BlockHeader*)addr - 1;
 	BlockHeader *previous = previousBlockHeader(current);
 	BlockHeader *next =nextBlockHeader(current);
-	size_t area = current->size + previous->size + next->size + 2 * sizeof(BlockHeader) / sizeof(int);
-	int deltaSize = (int)(current->size) - (int)(size); //fix unsigned - fixed
+	size_t area = current->blockSize + previous->blockSize + next->blockSize + 2 * sizeof(BlockHeader) / sizeof(int);
+	int deltaSize = (int)(current->blockSize) - (int)(size); //fix unsigned - fixed
 
 	if(deltaSize > 0) //minimize
 	{
@@ -486,20 +488,20 @@ void *Allocator::expandBoth(void *addr, size_t size)
 			if((area == size) || ((area - size) < 3))
             {
                 //set BH
-                previous->size = area;
+                previous->blockSize = area;
                 BlockHeader *next2 = nextBlockHeader(next);
                 if(next2 != NULL)
                 {
-                    next2->prevsize = previous->size;
+                    next2->prevBlockSize = previous->blockSize;
                 }
                 previous->state = true;
-                copyData(addr, getBlock(previous), current->size);
+                copyData(addr, getBlock(previous), current->blockSize);
                 return getBlock(previous);
             }
             else
             {
                 mergeBoth(previous, current, next);
-                copyData(addr, getBlock(previous), current->size);
+                copyData(addr, getBlock(previous), current->blockSize);
                 return separateOnUseAndFree(previous, size);
             }
 		}
@@ -508,7 +510,7 @@ void *Allocator::expandBoth(void *addr, size_t size)
 			void *p = mem_alloc(size);
 			if(p != NULL)
 			{
-				copyData(addr, p, current->size);
+				copyData(addr, p, current->blockSize);
 				mergeBoth(previous, current, next);
 				return p;
 			}
@@ -530,34 +532,29 @@ void Allocator::initBlockHeader(BlockHeader *bh, bool state, size_t previous, si
 	}
 	if(mask&2)
 	{
-		bh->prevsize = previous;
+		bh->prevBlockSize = previous;
 	}
 	if(mask&1)
 	{
-		bh->size = size;
+		bh->blockSize = size;
 	}
 }
 
 
 void *Allocator::separateOnUseAndFree(BlockHeader *current, size_t size)
 {
-	size_t curSize = current->size;
+	size_t curSize = current->blockSize;
 	BlockHeader *next = nextBlockHeader(current);
-	if(next == NULL)
+
+	initBlockHeader(current, true, NULL, size, 5);
+	BlockHeader *nextInterm = nextBlockHeader(current);
+	initBlockHeader(nextInterm, false, size, (curSize - size - bHSize), 7);
+
+	if(next != NULL)
 	{
-		initBlockHeader(current, true, NULL, size, 5);
-		BlockHeader *next1 = nextBlockHeader(current);
-		initBlockHeader(next1, false, size, (curSize - size - bSize), 7);
-		return getBlock(current);
+		next->prevBlockSize = nextInterm->blockSize;
 	}
-	else
-	{
-		initBlockHeader(current, true, NULL, size, 5);
-		BlockHeader *next1 = nextBlockHeader(current);
-		initBlockHeader(next1, false, size, (curSize - size - bSize), 7);
-		next->prevsize = next1->size;
-		return getBlock(current);
-	}
+	return getBlock(current);
 }
 
 
@@ -579,7 +576,7 @@ bool Allocator::checkDamage(int filler)
             break;
 		}
 		void *start = getBlock(current);
-		for(unsigned int i = 0; i < current->size; i++)
+		for(unsigned int i = 0; i < current->blockSize; i++)
 		{
 			if(*((int*)start + i) != filler)
 			{
@@ -610,7 +607,7 @@ void Allocator::mem_dump()
 
 	while(current != NULL)
     {
-		cout << i << ". " << current << "   " << current->state << "   " << current->size << "   " << current->prevsize << endl;
+		cout << i << ". " << current << "   " << current->state << "   " << current->blockSize << "   " << current->prevBlockSize << endl;
 		i++;
 		current = nextBlockHeader(current);
 	}
