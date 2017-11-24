@@ -10,7 +10,6 @@ Allocator::Allocator(const int n)
 	begin = (BlockHeader*)(&mas[0]);
 	begin->prevBlockSize = NULL;
 	begin->blockSize = &mas[n] - &mas[0] - bHSize;
-	cout << begin->blockSize ;
 	begin->state = false;
 	endOfMemory = &mas[n];
 }
@@ -303,12 +302,12 @@ void *Allocator::searchNewBlock(void *addr, size_t size)
 	BlockHeader *current = (BlockHeader*)addr - 1;
 	size_t deltaSize = current->blockSize - size;
 
-	if((deltaSize > 0) && (deltaSize < 3))
+	if((deltaSize > 0) && (deltaSize < 6))
 	{
 		return addr;
 	}
 
-	if(deltaSize >= 3)
+	if(deltaSize >= 6)
 	{
 		return separateOnUseAndFree((BlockHeader*)addr - 1, size);
 	}
@@ -356,7 +355,7 @@ void *Allocator::expandLeft(void *addr, size_t size)
 	{
 		if(area >= size)
 		{
-            if((area == size) || ((area - size) < 3))
+            if((area == size) || ((area - size) < 6))
             {
                 //set BH
                 previous->blockSize = area;
@@ -436,7 +435,7 @@ void *Allocator::expandRight(void *addr, size_t size)
 	{
 		if(area >= size)
 		{
-            if((area - size) < 3)
+            if((area - size) < 6)
             {
                 current->blockSize = area;
                 next = nextBlockHeader(current);
@@ -495,7 +494,7 @@ void *Allocator::expandBoth(void *addr, size_t size)
 	{
 		if(area >= size)
 		{
-			if((area == size) || ((area - size) < 3))
+			if((area == size) || ((area - size) < 6))
             {
                 //set BH
                 previous->blockSize = area;

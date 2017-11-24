@@ -18,7 +18,7 @@ void test()
 		mas[i] = curBlock;
 	}
 
-	cout << "alloc: "  <<  numberOfBlocks << "blocks " << endl;
+	cout << "alloc: "  <<  numberOfBlocks << " " << "blocks " << endl;
 	alloc.mem_dump();
 
 	cout << "5 el to 50" << endl;
