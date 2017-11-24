@@ -10,6 +10,7 @@ Allocator::Allocator(const int n)
 	begin = (BlockHeader*)(&mas[0]);
 	begin->prevBlockSize = NULL;
 	begin->blockSize = &mas[n] - &mas[0] - bHSize;
+	cout << begin->blockSize ;
 	begin->state = false;
 	endOfMemory = &mas[n];
 }
@@ -96,19 +97,21 @@ void *Allocator::mem_realloc(void *addr, size_t size)
             if(next == NULL)
             {
                 // prev = 1, next = NULL
-                // next block is used
+                // prev used, next doesn't exist
                 return searchNewBlock(addr, size);
             }
             else
             {
                 if(next->state)
                 {
-                    //prev=1, next=1
+                    // prev = 1, next = 1
+                    // prev used, next used
                     return searchNewBlock(addr, size);
                 }
                 else
                 {
-                    //prev=1, next=0
+                    // prev used, next free
+                    //prev = 1, next = 0
                     return expandRight(addr, size);
                 }
             }
@@ -117,19 +120,19 @@ void *Allocator::mem_realloc(void *addr, size_t size)
         {
             if(next == NULL)
             {
-                //prev=0, next=NULL
+                // prev = 0, next = NULL
                 return expandLeft(addr, size);
             }
             else
             {
                 if(next->state)
                 {
-                    //prev=0, next=1
+                    // prev = 0, next = 1
                     return expandLeft(addr, size);
                 }
                 else
                 {
-                    //prev=0, next=0
+                    // prev = 0, next = 0
                     return expandBoth(addr, size);
                 }
             }
@@ -149,19 +152,19 @@ void Allocator::mem_free(void *addr)
 	{
         if(next == NULL)
 		{
-            //prev=NULL, next=NULL
+            //prev = NULL, next = NULL
 			current->state = false;
 		}
 		else
 		{
             if(next->state)
 			{
-                //prev=NULL, next=1
+                //prev = NULL, next = 1
 				current->state = false;
 			}
 			else
 			{
-				//prev=NULL, next=0
+				//prev = NULL, next = 0
 				mergeWithNext(current, next);
             }
 		}
@@ -172,19 +175,19 @@ void Allocator::mem_free(void *addr)
 		{
             if(next == NULL)
 			{
-				//prev=1, next=NULL
+				//prev = 1, next = NULL
 				current->state = false;
 			}
 			else
 			{
 				if(next->state)
 				{
-					//prev=1, next=1
+					//prev = 1, next = 1
 					current->state = false;
 				}
 				else
 				{
-					//prev=1, next=0
+					//prev = 1, next = 0
 					mergeWithNext(current, next);
 				}
 			}
@@ -193,19 +196,19 @@ void Allocator::mem_free(void *addr)
 		{
 			if(next == NULL)
 			{
-				//prev=0, next=NULL
+				//prev = 0, next = NULL
 				mergeWithPrevious(previous, current);
 			}
 			else
 			{
 				if(next->state)
 				{
-					//prev=0, next=1
+					//prev = 0, next = 1
 					mergeWithPrevious(previous, current, next);
 				}
 				else
 				{
-					//prev=0, next=0
+					//prev = 0, next = 0
 					mergeBoth(previous, current, next);
 				}
 			}
@@ -533,15 +536,15 @@ void Allocator::initBlockHeader(BlockHeader *bh, bool state, size_t previous, si
 	{
         return;
 	}
-	if(mask&4)
+	if(mask & 4) // mask = 5, mask = 7
 	{
 		bh->state = state;
 	}
-	if(mask&2)
+	if(mask & 2) // mask = 7
 	{
 		bh->prevBlockSize = previous;
 	}
-	if(mask&1)
+	if(mask & 1) // mask = 7
 	{
 		bh->blockSize = size;
 	}
@@ -571,45 +574,12 @@ void *Allocator::getBlock(BlockHeader* h)
 }
 
 
-bool Allocator::checkDamage(int filler)
-{
-	BlockHeader *current = begin;
-	int count = 0;
-
-	while(true)
-	{
-		if(isLast(current))
-		{
-            break;
-		}
-		void *start = getBlock(current);
-		for(unsigned int i = 0; i < current->blockSize; i++)
-		{
-			if(*((int*)start + i) != filler)
-			{
-				count++;
-			}
-		}
-		current = nextBlockHeader(current);
-	}
-
-	if(count)
-	{
-		cout <<"damaged: "<< endl;
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-
 void Allocator::mem_dump()
 {
 	BlockHeader *current = begin;
 	int i = 0;
 	cout << "--- Out all BlockHeaders:" << endl;
+	cout << "blockHeaderSize: " << getBlockHeaderSize() << endl;
 	cout << "#" << " " <<  "Current" << " " << "State" << " " << "CurSz" << " " << "PrevSz" << endl;
 
 	while(current != NULL)
@@ -618,5 +588,5 @@ void Allocator::mem_dump()
 		i++;
 		current = nextBlockHeader(current);
 	}
-	cout <<"--- --- --- - --- --- ---"<< endl;
+	cout << "--- --- --- --- --- --- ---" << endl;
 }

@@ -67,6 +67,6 @@ int main()
     Allocator alloc = Allocator(n);
 	test();
 	//cout << alloc.getBlockHeaderSize() ;
-	getchar();
+	//getchar();
 	return 0;
 }

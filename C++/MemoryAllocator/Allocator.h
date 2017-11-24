@@ -24,7 +24,6 @@ private:
 	BlockHeader *begin; //first block
 	int *endOfMemory; //last int in memory
 
-	bool checkDamage(int filler); //all blocks must be fill the same number
 	BlockHeader *nextBlockHeader(BlockHeader *current); //return next BH or NULL if it block is last
 	BlockHeader *previousBlockHeader(BlockHeader *current); //return previous BH or NULL if it block is first
 	bool isLast(BlockHeader *h); //check if endOfMemory belongs to this block
