@@ -6,7 +6,6 @@ using namespace std;
 Allocator::Allocator(const int n)
 {
 	int *mas = new int[n + 1];
-	N = n;
 	bHSize = sizeof(BlockHeader) / sizeof(int);
 	begin = (BlockHeader*)(&mas[0]);
 	begin->prevBlockSize = NULL;
@@ -328,7 +327,7 @@ void *Allocator::expandLeft(void *addr, size_t size)
 {
 	BlockHeader *current = (BlockHeader*)addr - 1;
 	BlockHeader *previous = previousBlockHeader(current);
-	size_t area = current->blockSize + current->prevBlockSize + sizeof(BlockHeader) / sizeof(int);
+	size_t area = current->blockSize + current->prevBlockSize + bHSize;
 	size_t deltaSize = current->blockSize - size;
 
 	if(deltaSize > 0) //minimize
@@ -336,9 +335,9 @@ void *Allocator::expandLeft(void *addr, size_t size)
 		int *first = (int*)addr; //copy
 		for(int i = size - 1; i >= 0; i--)
 		{
-			first[i+deltaSize] = first[i];
+			first[i + deltaSize] = first[i];
 		}
-		//set BlockHeaders
+		// set BlockHeaders
 		previous->blockSize += deltaSize;
 		current = nextBlockHeader(previous);
 		initBlockHeader(current, true, previous->blockSize, size, 7);
@@ -359,6 +358,7 @@ void *Allocator::expandLeft(void *addr, size_t size)
                 //set BH
                 previous->blockSize = area;
                 BlockHeader *next = nextBlockHeader(current);
+
                 if(next != NULL)
                 {
                     next->prevBlockSize = previous->blockSize;
@@ -374,9 +374,10 @@ void *Allocator::expandLeft(void *addr, size_t size)
                 copyData(addr, getBlock(previous), current->blockSize);
 
                 current = nextBlockHeader(previous);
-                current->blockSize = area - size - sizeof(BlockHeader) / sizeof(int);
+                current->blockSize = area - size - bHSize;
                 current->state = false;
                 current->prevBlockSize = previous->blockSize;
+
                 BlockHeader *next = nextBlockHeader(current);
                 if(next != NULL)
                 {
@@ -392,6 +393,7 @@ void *Allocator::expandLeft(void *addr, size_t size)
 			{
 				copyData(addr, p, current->blockSize);
 				BlockHeader *next = nextBlockHeader(current);
+
 				if(next == NULL)
 				{
                     mergeWithPrevious(previous, current);
@@ -412,14 +414,14 @@ void *Allocator::expandRight(void *addr, size_t size)
 {
 	BlockHeader *current = (BlockHeader*)addr - 1;
 	BlockHeader *next = nextBlockHeader(current);
-	size_t area = current->blockSize + next->blockSize + sizeof(BlockHeader) / sizeof(int);
-	int deltaSize = (int)(current->blockSize) - (int)(size); //TODO: fis expression to int - fixed
+	size_t area = current->blockSize + next->blockSize + bHSize;
+	int deltaSize = (int)(current->blockSize) - (int)(size);
 
 	if(deltaSize > 0) //minimize
 	{
 		current->blockSize = size; //set BlockHeaders
 		next = nextBlockHeader(current);
-		initBlockHeader(next, false, current->blockSize, area - size - sizeof(BlockHeader) / sizeof(int), 7);
+		initBlockHeader(next, false, current->blockSize, area - size - bHSize, 7);
 		BlockHeader *next2 = nextBlockHeader(next);
 		if(next2 != NULL)
 		{
@@ -445,7 +447,7 @@ void *Allocator::expandRight(void *addr, size_t size)
             {
                 current->blockSize = size;
                 next = nextBlockHeader(current);
-                next->blockSize = area - size - sizeof(BlockHeader) / sizeof(int);
+                next->blockSize = area - size - bHSize;
                 next->prevBlockSize = size;
                 next->state = false;
                 BlockHeader *next2 = nextBlockHeader(next);
@@ -477,7 +479,7 @@ void *Allocator::expandBoth(void *addr, size_t size)
 	BlockHeader *current = (BlockHeader*)addr - 1;
 	BlockHeader *previous = previousBlockHeader(current);
 	BlockHeader *next =nextBlockHeader(current);
-	size_t area = current->blockSize + previous->blockSize + next->blockSize + 2 * sizeof(BlockHeader) / sizeof(int);
+	size_t area = current->blockSize + previous->blockSize + next->blockSize + 2 * bHSize;
 	int deltaSize = (int)(current->blockSize) - (int)(size); //fix unsigned - fixed
 
 	if(deltaSize > 0) //minimize

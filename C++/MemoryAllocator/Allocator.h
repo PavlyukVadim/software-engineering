@@ -21,7 +21,6 @@ public:
 
 private:
 	size_t bHSize; //BlockHeader size in int
-	int N; // length all memory in int
 	BlockHeader *begin; //first block
 	int *endOfMemory; //last int in memory
 
