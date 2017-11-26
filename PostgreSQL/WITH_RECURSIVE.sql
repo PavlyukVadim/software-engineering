@@ -17,3 +17,23 @@ VALUES
   (18, 15),
   (19, 11),
   (20, 10);
+
+-- Output children by parent ID
+PREPARE getChildrenByParentID (int) AS
+  WITH RECURSIVE r AS (
+    SELECT "program_id"
+    FROM programs
+    JOIN convertedPrograms
+    USING("program_id")
+    WHERE program_parent_id = $1
+    UNION
+    SELECT programs.program_id
+    FROM programs
+    JOIN convertedPrograms
+      ON programs.program_id = convertedPrograms.program_id
+    JOIN r
+      ON convertedPrograms.program_parent_id = r.program_id
+  )
+  SELECT * FROM r;
+    
+EXECUTE getChildrenByParentID(10);
