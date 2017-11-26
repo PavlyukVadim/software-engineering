@@ -3,7 +3,7 @@
 
 struct BlockHeader
 {
-	bool state; //1 - used, 0 - unused
+	bool state; //true - used, false - unused
 	size_t blockSize;
 	size_t prevBlockSize;
 };
