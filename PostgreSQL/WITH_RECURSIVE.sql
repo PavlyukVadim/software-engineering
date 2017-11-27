@@ -121,3 +121,33 @@ PREPARE getChildrenByParentID (int) AS
 EXECUTE getChildrenByParentID(10);
 
 
+-- For every child output list of parents
+WITH RECURSIVE r AS (
+  SELECT DISTINCT
+    "program_id",
+    "program_parent_id"::text || '/' || "program_id"::text AS path,
+    "program_parent_id",
+    0 AS is_cycle
+  FROM programs
+  JOIN convertedPrograms
+  USING("program_id")
+  UNION
+  SELECT
+    programs.program_id,
+    r.path || '/' || programs.program_id AS path,
+    convertedPrograms.program_parent_id,
+    (CASE
+      WHEN r.program_id = convertedPrograms.program_parent_id
+      AND r.program_parent_id = convertedPrograms.program_id 
+      THEN 1
+      ELSE 0
+      END
+    ) AS is_cycle
+  FROM programs
+  JOIN convertedPrograms
+    ON convertedPrograms.program_id = programs.program_id
+  JOIN r
+    ON convertedPrograms.program_parent_id  = r.program_id
+  WHERE r.is_cycle = 0
+)
+SELECT program_id, path FROM r;
