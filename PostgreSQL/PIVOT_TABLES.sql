@@ -14,3 +14,34 @@ INSERT INTO contracts ("client_id", "program_id", "quantity", "year", "month") V
   (2, 5, 3, 2008, 8),
   (2, 6, 4, 2009, 11),
   (3, 3, 2, 2007, 10);
+
+
+-- output max quantity for every month
+CREATE EXTENSION tablefunc;
+SELECT * FROM crosstab(
+  'SELECT 
+    year,
+    month,
+    max(quantity)
+  FROM contracts
+  GROUP BY
+    year,
+    month,
+    quantity
+  ORDER BY 1',
+  'SELECT m FROM generate_series(1,12) m'
+) AS (
+  year int,
+  "Jan" int,
+  "Feb" int,
+  "Mar" int,
+  "Apr" int,
+  "May" int,
+  "Jun" int,
+  "Jul" int,
+  "Aug" int,
+  "Sep" int,
+  "Oct" int,
+  "Nov" int,
+  "Dec" int
+);
