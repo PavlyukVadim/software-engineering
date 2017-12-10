@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1512894758 source:/home/amadev/Рабочий стол/study/Software-Engineering/C++/PageReplacementAlgorithm/main.cpp
+	<iostream>
+	<stdio.h>
+	<stdlib.h>
+	<ctype.h>
+
