@@ -1,0 +1,68 @@
+Initialization of MMU with: 
+ 4 frames in physical memory
+ 6 frames in virtual memory
+---------------
+# | R M P
+0 | 0 0 M
+1 | 0 0 M
+2 | 0 0 M
+3 | 0 0 M
+4 | 0 0 D
+5 | 0 0 D
+make reference to 0 virtual page: 
+---------------
+# | R M P
+0 | 1 0 M
+1 | 0 0 M
+2 | 0 0 M
+3 | 0 0 M
+4 | 0 0 D
+5 | 0 0 D
+make reference to 1 virtual page: 
+---------------
+# | R M P
+0 | 1 0 M
+1 | 1 0 M
+2 | 0 0 M
+3 | 0 0 M
+4 | 0 0 D
+5 | 0 0 D
+make reference to 4 virtual page: 
+found new frame in physical memory: 2
+---------------
+# | R M P
+0 | 1 0 M
+1 | 1 0 M
+2 | 0 0 D
+3 | 0 0 M
+4 | 1 0 M
+5 | 0 0 D
+modify 2 virtual page: 
+found new frame in physical memory: 3
+---------------
+# | R M P
+0 | 1 0 M
+1 | 1 0 M
+2 | 1 1 M
+3 | 0 0 D
+4 | 1 0 M
+5 | 0 0 D
+modify 3 virtual page: 
+found new frame in physical memory: 0
+---------------
+# | R M P
+0 | 1 0 D
+1 | 1 0 M
+2 | 1 1 M
+3 | 1 1 M
+4 | 1 0 M
+5 | 0 0 D
+callTimer: 
+---------------
+# | R M P
+0 | 1 0 D
+1 | 0 0 M
+2 | 0 1 M
+3 | 0 1 M
+4 | 0 0 M
+5 | 0 0 D

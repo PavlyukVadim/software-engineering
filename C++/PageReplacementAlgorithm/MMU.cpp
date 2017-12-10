@@ -6,13 +6,21 @@
 using namespace std;
 
 MMU::MMU(int framesInPhysicalMemory) {
+    logger = new Logger();
     numberOfFramesInPhysicalMemory = framesInPhysicalMemory;
     numberOfFrameInVirtualMemory = 1.5 * framesInPhysicalMemory;
-    cout << "Initialization of MMU with: " << endl;
-    cout << " " << framesInPhysicalMemory << " " << "frames in physical memory" << endl;
-    cout << " " << numberOfFrameInVirtualMemory << " " << "frames in virtual memory" << endl;
-
+    string notification = "Initialization of MMU with: \n";
+    string framesInPhysicalMemoryStr = ' ' + to_string(framesInPhysicalMemory) + ' ' + "frames in physical memory" + '\n';
+    string numberOfFrameInVirtualMemoryStr = ' ' + to_string(numberOfFrameInVirtualMemory) + ' ' + "frames in virtual memory" + '\n';
+    cout << notification << framesInPhysicalMemoryStr << numberOfFrameInVirtualMemoryStr;
+    logger->writeToFile(notification);
+    logger->writeToFile(framesInPhysicalMemoryStr);
+    logger->writeToFile(numberOfFrameInVirtualMemoryStr);
     setInitialStateOfPageTable();
+}
+
+MMU::~MMU() {
+    delete logger;
 }
 
 void MMU::setInitialStateOfPageTable() {
@@ -31,6 +39,9 @@ void MMU::setInitialStateOfPageTable() {
 }
 
 void MMU::makeReferenceToVirtualPage(int indexOfPage) {
+    string notification = "make reference to " + to_string(indexOfPage) + " virtual page: \n";
+    logger->writeToFile(notification);
+
     VirtualPageDescriptor* vpd = pageTable.at(indexOfPage);
     if (vpd->place == 'M') {
         vpd->R = true;
@@ -42,9 +53,13 @@ void MMU::makeReferenceToVirtualPage(int indexOfPage) {
         vpd->place = 'M';
         vpd->R = true;
     }
+    outputPageTable();
 }
 
 void MMU::modifyVirtualPage(int indexOfPage) {
+    string notification = "modify " + to_string(indexOfPage) + " virtual page: \n";
+    logger->writeToFile(notification);
+
     VirtualPageDescriptor* vpd = pageTable.at(indexOfPage);
     if (vpd->place == 'M') {
         vpd->R = true;
@@ -58,12 +73,20 @@ void MMU::modifyVirtualPage(int indexOfPage) {
         vpd->R = true;
         vpd->M = true;
     }
+    outputPageTable();
 }
 
 void MMU::outputPageTable() {
-    cout << '#' << " " << '|' << " " << 'R' << " " << 'M' << " " << "P" << endl;
+    string header = "---------------\n# | R M P\n";
+    cout << header;
+    logger->writeToFile(header);
     for(int i = 0; i < pageTable.size(); i++) {
-        cout << pageTable[i]->indexOfFrameInPhysicalMemory << " " << '|' << " " << pageTable[i]->R << " " << pageTable[i]->M << " " << pageTable[i]->place << endl;
+        string info = to_string(pageTable[i]->indexOfFrameInPhysicalMemory) + " | " +
+                      to_string(pageTable[i]->R) + ' ' +
+                      to_string(pageTable[i]->M) + ' ' +
+                      pageTable[i]->place + '\n';
+        cout << info;
+        logger->writeToFile(info);
     }
 }
 
@@ -81,6 +104,7 @@ bool MMU::checkIsFreeFrameInPhysicalMemory() {
 }
 
 int MMU::foundNewFrameInPhysicalMemory() {
+    string notification = "found new frame in physical memory: ";
     int N = pageTable.size();
     int classes[N];
     for(int i = 0; i < N; i++) {
@@ -102,12 +126,28 @@ int MMU::foundNewFrameInPhysicalMemory() {
     int minClass = 4, indexOfMin;
     for(int i = 0; i < N; i++) {
         if (!classes[i]) {
+            logger->writeToFile(notification + to_string(i) + '\n');
             return i;
+
         }
         if (classes[i] < minClass) {
             minClass = classes[i];
             indexOfMin = i;
         }
     }
+    logger->writeToFile(notification + to_string(indexOfMin) + '\n');
     return indexOfMin;
+}
+
+void MMU::callTimer() {
+    string notification = "callTimer: \n";
+    logger->writeToFile(notification);
+
+    int N = pageTable.size();
+    for(int i = 0; i < N; i++) {
+        if (pageTable[i]->place == 'M') {
+            pageTable[i]->R = false;
+        }
+    }
+    outputPageTable();
 }

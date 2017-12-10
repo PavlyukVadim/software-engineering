@@ -32,6 +32,11 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="Logger.cpp" />
+		<Unit filename="Logger.h" />
+		<Unit filename="MMU.cpp" />
+		<Unit filename="MMU.h" />
+		<Unit filename="PageDescriptor.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />

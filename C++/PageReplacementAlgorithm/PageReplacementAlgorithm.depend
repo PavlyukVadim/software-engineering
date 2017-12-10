@@ -1,17 +1,24 @@
 # depslib dependency file v1.0
-1512942364 source:/home/amadev/Рабочий стол/study/Software-Engineering/C++/PageReplacementAlgorithm/main.cpp
+1512948375 source:/home/amadev/Рабочий стол/study/Software-Engineering/C++/PageReplacementAlgorithm/main.cpp
 	<iostream>
 	"MMU.h"
 
-1512934343 source:/home/amadev/Рабочий стол/study/Software-Engineering/C++/PageReplacementAlgorithm/MMU.cpp
+1512949469 source:/home/amadev/Рабочий стол/study/Software-Engineering/C++/PageReplacementAlgorithm/MMU.cpp
 	"MMU.h"
 	<iostream>
 	<math.h>
 	"PageDescriptor.h"
 
-1512942335 /home/amadev/Рабочий стол/study/Software-Engineering/C++/PageReplacementAlgorithm/MMU.h
-	"PageDescriptor.h"
+1512947207 /home/amadev/Рабочий стол/study/Software-Engineering/C++/PageReplacementAlgorithm/MMU.h
 	<vector>
+	"PageDescriptor.h"
+	"Logger.h"
 
-1512939793 /home/amadev/Рабочий стол/study/Software-Engineering/C++/PageReplacementAlgorithm/PageDescriptor.h
+1512943382 /home/amadev/Рабочий стол/study/Software-Engineering/C++/PageReplacementAlgorithm/PageDescriptor.h
+
+1512948287 source:/home/amadev/Рабочий стол/study/Software-Engineering/C++/PageReplacementAlgorithm/Logger.cpp
+	"Logger.h"
+
+1512946018 /home/amadev/Рабочий стол/study/Software-Engineering/C++/PageReplacementAlgorithm/Logger.h
+	<fstream>
 
