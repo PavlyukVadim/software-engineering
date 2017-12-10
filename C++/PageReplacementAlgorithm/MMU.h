@@ -19,4 +19,6 @@ class MMU
         vector<VirtualPageDescriptor*> pageTable;
 
         void setInitialStateOfPageTable();
+        bool checkIsFreeFrameInPhysicalMemory();
+        int foundNewFrameInPhysicalMemory();
 };
