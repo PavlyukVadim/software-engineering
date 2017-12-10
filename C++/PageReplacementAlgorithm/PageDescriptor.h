@@ -3,6 +3,6 @@
 struct VirtualPageDescriptor {
     bool R;
     bool M;
-    int numberOfFrameInPhysicalMemory;
+    int indexOfFrameInPhysicalMemory;
 };
 

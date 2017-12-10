@@ -1,15 +1,17 @@
 # depslib dependency file v1.0
-1512931146 source:/home/amadev/Рабочий стол/study/Software-Engineering/C++/PageReplacementAlgorithm/main.cpp
+1512934255 source:/home/amadev/Рабочий стол/study/Software-Engineering/C++/PageReplacementAlgorithm/main.cpp
 	<iostream>
 	"MMU.h"
 
-1512924897 source:/home/amadev/Рабочий стол/study/Software-Engineering/C++/PageReplacementAlgorithm/MMU.cpp
+1512931828 source:/home/amadev/Рабочий стол/study/Software-Engineering/C++/PageReplacementAlgorithm/MMU.cpp
 	"MMU.h"
 	<iostream>
+	<math.h>
+	"PageDescriptor.h"
 
-1512931609 /home/amadev/Рабочий стол/study/Software-Engineering/C++/PageReplacementAlgorithm/MMU.h
+1512934134 /home/amadev/Рабочий стол/study/Software-Engineering/C++/PageReplacementAlgorithm/MMU.h
 	"PageDescriptor.h"
 	<vector>
 
-1512925315 /home/amadev/Рабочий стол/study/Software-Engineering/C++/PageReplacementAlgorithm/PageDescriptor.h
+1512932433 /home/amadev/Рабочий стол/study/Software-Engineering/C++/PageReplacementAlgorithm/PageDescriptor.h
 
