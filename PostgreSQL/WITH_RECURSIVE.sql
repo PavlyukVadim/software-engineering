@@ -125,6 +125,7 @@ EXECUTE getChildrenByParentID(10);
 WITH RECURSIVE r AS (
   SELECT DISTINCT
     "program_id",
+    "program_name"::text AS npath,
     "program_parent_id"::text || '/' || "program_id"::text AS path,
     "program_parent_id",
     0 AS is_cycle
@@ -134,6 +135,7 @@ WITH RECURSIVE r AS (
   UNION
   SELECT
     programs.program_id,
+    r.npath || '/' || programs.program_name AS npath,
     r.path || '/' || programs.program_id AS path,
     convertedPrograms.program_parent_id,
     (CASE
@@ -150,4 +152,5 @@ WITH RECURSIVE r AS (
     ON convertedPrograms.program_parent_id  = r.program_id
   WHERE r.is_cycle = 0
 )
-SELECT program_id, path FROM r;
+SELECT program_id, npath FROM r;
+
