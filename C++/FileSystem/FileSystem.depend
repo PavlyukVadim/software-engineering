@@ -1,0 +1,36 @@
+# depslib dependency file v1.0
+1514302094 source:/home/amadev/workspace/software-engineering/C++/FileSystem/main.cpp
+	<iostream>
+	<string.h>
+	<stdio.h>
+	<string>
+	<vector>
+	<iostream>
+	<fstream>
+	<dirent.h>
+	<sys/stat.h>
+
+1514294881 /home/amadev/workspace/software-engineering/C++/FileSystem/include/MyFileSystem.h
+	<stdio.h>
+	<string>
+	<vector>
+	<iostream>
+	<fstream>
+	<dirent.h>
+	<sys/stat.h>
+
+1514293963 source:/home/amadev/workspace/software-engineering/C++/FileSystem/src/MyFileSystem.cpp
+	"MyFileSystem.h"
+	<string.h>
+
+1514296322 /home/amadev/workspace/software-engineering/C++/FileSystem/include/myFileSystem.h
+	<stdio.h>
+	<string>
+	<vector>
+	<iostream>
+	<fstream>
+	<dirent.h>
+	<sys/stat.h>
+
+1514302153 source:/home/amadev/workspace/software-engineering/C++/FileSystem/src/myFileSystem.cpp
+
