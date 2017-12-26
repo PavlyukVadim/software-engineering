@@ -40,11 +40,10 @@ void writeDescriptorToFile(descriptor *desc) {
 
 descriptor *readDescriptorFromFile() {
     descriptor *desc = new descriptor();
-    char *name;
     int length;
 
     sysFile.read((char*)&length, sizeOfInt);
-    name = new char[length];
+    char *name = new char[length];
     sysFile.read(name, length * sizeOfChar);
     desc->name = string(name);
 
