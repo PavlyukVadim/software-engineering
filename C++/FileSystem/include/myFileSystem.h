@@ -6,8 +6,8 @@
 #include <dirent.h>
 #include <sys/stat.h>
 
-#define BLOCKSIZE 16
-#define MAX_DESCRIPTOR_ID 32
+#define BLOCKSIZE 16 // length of each block
+#define MAX_DESCRIPTOR_ID 32 // max number of files
 #define MAX_FILELEN 32
 
 using namespace std;
@@ -47,22 +47,19 @@ struct controlBlock {
     int lastDescriptorId;
 };
 
-
-// You need to keep in mind that all sizes ONLY in blocks
-
 bool mount();
 void unmount();
 
 string ls();
 
-descriptor* create(string name);
-descriptor* open(string name);
-void close(descriptor *fd);
+descriptor *create(string name); // create file and return descriptor
+descriptor *open(string name); // open file for reading and writing
+void close(descriptor *fd); // close file
 
-char **read(descriptor *fd, unsigned int offset, unsigned int size);
-bool write(descriptor *fd, unsigned int offset, unsigned int size, char **data);
+char **read(descriptor *fd, unsigned int offset, unsigned int size); // read size blocks with offset
+bool write(descriptor *fd, unsigned int offset, unsigned int size, char **data); // write size blocks with offset
 
 filelink *link(string filename, string linkname);
 void unlink(string linkname);
 
-bool trunkate(string filename, unsigned int newSize);
+bool trunkate(string filename, unsigned int newSize); // change file size
