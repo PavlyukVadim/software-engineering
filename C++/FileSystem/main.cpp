@@ -3,7 +3,8 @@
 #include "myFileSystem.h"
 
 int main() {
-    bool flag = mount();
+    mount();
+
     create("newFile2.txt");
 
     descriptor *fd1 = open("newFile2.txt");

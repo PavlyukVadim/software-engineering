@@ -26,7 +26,7 @@ struct descriptor {
     int id;
     bool isOpened = false;
     unsigned int size;
-    string name;
+    string fileName;
     vector<int> dataId;
 
     descriptor() {
@@ -63,3 +63,6 @@ filelink *link(string filename, string linkname);
 void unlink(string linkname);
 
 bool trunkate(string filename, unsigned int newSize); // change file size
+
+descriptor *getFileDescriptionByName(string name);
+
