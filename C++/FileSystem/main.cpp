@@ -7,7 +7,7 @@ int main() {
 
     create("newFile2.txt");
 
-    descriptor *fd1 = open("newFile2.txt");
+    Descriptor *fd1 = open("newFile2.txt");
 
     char **testData = new char*[2];
     testData[0] = "111111111111111";

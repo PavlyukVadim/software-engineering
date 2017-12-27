@@ -1,35 +1,31 @@
 #include "myFileSystem.h"
 
 const string filesystemImage = "image.txt";
-string root;
-
-const char *fileRoot;
 
 ofstream file;
 ifstream sysFile;
 
-int lastDescriptorId = 0;
-int lastBlockId = 0;
+int idOfLastDescriptor = 0;
+int idOfLastBlock = 0;
 
-dataBlock *getDataBlockById(int id);
+BlockOfData *getBlockOfDataById(int id);
 bitmapItem *getBitmapItemById(int id);
 
-vector<descriptor*> descriptors;
-vector<filelink*> links;
-vector<dataBlock*> data;
+vector<Descriptor*> descriptors;
+vector<FileLink*> fileLinks;
+vector<BlockOfData*> data;
 vector<bitmapItem*> bitmap;
 
-controlBlock controls;
+ControlBlock controls;
 
-int sizeOfInt = sizeof(int);
-int sizeOfChar = sizeof(char);
+int sizeOfInt = sizeOfInt;
+int sizeOfChar = sizeOfChar;
 int sizeOfControls = sizeof(controls);
 
 
 
-void writeDescriptorToFile(descriptor *desc) {
+void setDescriptorToFile(Descriptor *desc) {
     int lengthOfName = desc->fileName.size();
-
     file.write((char*)&lengthOfName, sizeOfInt);
     file.write(desc->fileName.c_str(), desc->fileName.length() * sizeOfChar);
     file.write((char*)&(desc->id), sizeOfInt);
@@ -38,8 +34,8 @@ void writeDescriptorToFile(descriptor *desc) {
 }
 
 
-descriptor *readDescriptorFromFile() {
-    descriptor *desc = new descriptor();
+Descriptor *getDescriptorFromFile() {
+    Descriptor *desc = new Descriptor();
     int length;
 
     sysFile.read((char*)&length, sizeOfInt);
@@ -55,26 +51,24 @@ descriptor *readDescriptorFromFile() {
 
     for (int i = 0; i < desc->size; i++) {
         desc->dataId.push_back(arr[i]);
-        cout << "data: " << i << " " << arr[i] << endl;
+        // cout << "data: " << i << " " << arr[i] << endl;
     }
-
     return desc;
 }
 
 
-void writeDataItemToFile(dataBlock *item) {
-    file.write((char*)&(item->id), sizeof(int));
-    file.write(item->data, sizeof(char) * BLOCKSIZE);
+void setBlockOfDataToFile(BlockOfData *blockOfData ) {
+    file.write((char*)&(blockOfData->id), sizeOfInt);
+    file.write(blockOfData->data, sizeOfChar * BLOCK_SIZE);
 }
 
-dataBlock* readDataItemFromFile() {
-    dataBlock *item = new dataBlock();
 
-    item->data = new char[BLOCKSIZE];
-    sysFile.read((char*)&(item->id), sizeof(int));
-    sysFile.read(item->data, sizeof(char) * BLOCKSIZE);
-
-    return item;
+BlockOfData *getBlockOfDataFromFile() {
+    BlockOfData *blockOfData = new BlockOfData();
+    blockOfData->data = new char[BLOCK_SIZE];
+    sysFile.read((char*)&(blockOfData->id), sizeOfInt);
+    sysFile.read(blockOfData->data, sizeOfChar * BLOCK_SIZE);
+    return blockOfData ;
 }
 
 
@@ -83,7 +77,7 @@ bool mount() {
     sysFile.read((char*)&controls, sizeOfControls);
 
     for (int i = 0; i < controls.numberOfFiles; i++) {
-        descriptors.push_back(readDescriptorFromFile());
+        descriptors.push_back(getDescriptorFromFile());
     }
 
     for (int i = 0; i < controls.numberOfBlocks; i++) {
@@ -93,11 +87,11 @@ bool mount() {
     }
 
     for (int i = 0; i < controls.numberOfBlocks; i++) {
-        data.push_back(readDataItemFromFile());
+        data.push_back(getBlockOfDataFromFile());
     }
 
-    lastBlockId = controls.lastBlockId;
-    lastDescriptorId = controls.lastDescriptorId;
+    idOfLastBlock = controls.idOfLastBlock;
+    idOfLastDescriptor = controls.idOfLastDescriptor;
 
     sysFile.close();
     return true;
@@ -107,8 +101,8 @@ bool mount() {
 void clearAll() {
     file.close();
 
-    lastDescriptorId = 0;
-    lastBlockId = 0;
+    idOfLastDescriptor = 0;
+    idOfLastBlock = 0;
 
     descriptors.clear();
     links.clear();
@@ -120,15 +114,15 @@ void clearAll() {
 void unmount() {
     file.open(filesystemImage, ios_base::in | ios_base::binary);
 
-    controls.lastBlockId = lastBlockId;
-    controls.lastDescriptorId = lastDescriptorId;
+    controls.idOfLastBlock = idOfLastBlock;
+    controls.idOfLastDescriptor = idOfLastDescriptor;
     controls.numberOfBlocks = bitmap.size();
     controls.numberOfFiles = descriptors.size();
 
     file.write((char*)&controls, sizeOfControls);
 
     for (int i = 0; i < controls.numberOfFiles; i++) {
-        writeDescriptorToFile(descriptors[i]);
+        setDescriptorToFile(descriptors[i]);
     }
 
     for (int i = 0; i < controls.numberOfBlocks; i++) {
@@ -136,88 +130,84 @@ void unmount() {
     }
 
     for (int i = 0; i < controls.numberOfBlocks; i++) {
-        writeDataItemToFile(data[i]);
+        setBlockOfDataToFile(data[i]);
     }
 
     clearAll();
 }
 
 
-string ls() {
-    string res = "";
+void ls() {
+    cout << "fileName"  << " " << "sizeOfFile" << endl;
     for (int i = 0; i < descriptors.size(); i++) {
-        res += descriptors[i]->fileName + "\n";
+        string fileName = descriptors[i]->fileName;
+        string sizeOfFile = to_string(descriptors[i]->size);
+        cout << fileName  << " " << sizeOfFile << endl;
     }
-    cout << res << endl;
-    return res;
 }
 
 
-descriptor* open(string name) {
-    descriptor *fd = getFileDescriptionByName(name);
-
-    if (fd == NULL) {
-        fd = new descriptor();
-        fd->isOpened = true;
-        fd->fileName = name;
-        fd->size = 0;
-        descriptors.push_back(fd);
-        return fd;
+Descriptor *open(string fileName) {
+    Descriptor *fileDescriptor = getFileDescriptionByName(fileName);
+    if (fileDescriptor == NULL) {
+        fileDescriptor = new Descriptor();
+        fileDescriptor->isOpened = true;
+        fileDescriptor->fileName = fileName;
+        fileDescriptor->size = 0;
+        descriptors.push_back(fileDescriptor);
+        return fileDescriptor;
     }
-
-    fd->isOpened = true;
-
-    return fd;
+    fileDescriptor->isOpened = true;
+    return fileDescriptor;
 }
 
-void close(descriptor *fd) {
-    fd->isOpened = false;
+
+void close(Descriptor *fileDescriptor) {
+    fileDescriptor->isOpened = false;
 }
 
-descriptor* create(string name) {
 
-    if (lastDescriptorId == MAX_DESCRIPTOR_ID) {
-        perror("Max number of files!");
-
+Descriptor *create(string fileName) {
+    if (idOfLastDescriptor == MAX_DESCRIPTOR_ID) {
+        cout << "Warning! Max number of files!" << endl;
         return NULL;
     }
 
-    if (name.size() > MAX_FILELEN) {
-        perror("Too long name!");
+    if (fileName.size() > MAX_LEN_OF_FILE) {
+        cout << "Warning! Max number of files!" << endl;
         return NULL;
     }
 
-    descriptor *fd = new descriptor();
-    fd->fileName = name;
-    fd->id = ++lastDescriptorId;
+    Descriptor *fileDescriptor = new Descriptor();
+    fileDescriptor->fileName = fileName;
+    idOfLastDescriptor += 1;
+    fileDescriptor->id = idOfLastDescriptor;
+    fileDescriptor->size = 0;
 
-    fd->size = 0;
-
-    for (int i(0); i < descriptors.size(); i++) {
-        if (descriptors[i]->fileName == name) {
-            descriptors[i] = fd;
-            return fd;
+    for (int i = 0; i < descriptors.size(); i++) {
+        if (descriptors[i]->fileName == fileName) {
+            descriptors[i] = fileDescriptor;
+            return fileDescriptor;
         }
     }
 
-    descriptors.push_back(fd);
-
-    return fd;
+    descriptors.push_back(fileDescriptor);
+    return fileDescriptor;
 }
 
 
-filelink* link(string filename, string linkname) {
-    filelink *link = new filelink();
+FileLink *link(string filename, string linkName) {
+    FileLink *link = new FileLink();
 
     for (int i = 0; i < links.size(); i++) {
-        if (links[i]->name == linkname) {
+        if (links[i]->name == linkName) {
             return links[i];
         }
     }
 
     for (int i = 0; i < descriptors.size(); i++) {
         if (descriptors[i]->fileName == filename) {
-            link->name = linkname;
+            link->name = linkName;
             link->fd = descriptors[i];
             links.push_back(link);
             return link;
@@ -228,11 +218,10 @@ filelink* link(string filename, string linkname) {
 }
 
 
-void unlink(string linkname) {
-    for (int i(0); i < links.size(); i++) {
-        if (links[i]->name == linkname) {
+void unlink(string linkName) {
+    for (int i = 0; i < links.size(); i++) {
+        if (links[i]->name == linkName) {
             links.erase(links.begin() + i);
-
             return;
         }
     }
@@ -240,7 +229,7 @@ void unlink(string linkname) {
 
 
 bool trunkate(string filename, unsigned int newSize) {
-    descriptor *fd = getFileDescriptionByName(filename);
+    Descriptor *fd = getFileDescriptionByName(filename);
 
     if ((fd == NULL) || (!fd->isOpened)) {
         fd = open(filename);
@@ -254,23 +243,23 @@ bool trunkate(string filename, unsigned int newSize) {
 
         char **zeroData;
         zeroData = new char*[1];
-        zeroData[0] = new char[BLOCKSIZE];
+        zeroData[0] = new char[BLOCK_SIZE];
 
-        for (int i(0); i < BLOCKSIZE; i++) {
+        for (int i(0); i < BLOCK_SIZE; i++) {
             zeroData[0][i] = '\0';
         }
 
         int delta = newSize - fd->size;
 
         for (int i(0); i < delta; i++) {
-            int newId = ++lastBlockId;
+            int newId = ++idOfLastBlock;
 
             bitmapItem *newItem = new bitmapItem();
 
             newItem->id = newId;
             newItem->isFree = true;
 
-            dataBlock *newBlock = new dataBlock();
+            BlockOfData *newBlock = new BlockOfData();
 
             newBlock->id = newId;
             newBlock->data = zeroData[0];
@@ -290,7 +279,7 @@ bool trunkate(string filename, unsigned int newSize) {
 }
 
 
-char **read(descriptor *fd, unsigned int offset, unsigned int size) {
+char **read(Descriptor *fd, unsigned int offset, unsigned int size) {
     char **buf;
     buf = new char*[size];
 
@@ -300,14 +289,14 @@ char **read(descriptor *fd, unsigned int offset, unsigned int size) {
     }
 
     for (int i = 0; i < size; i++) {
-        buf[i] = new char[BLOCKSIZE + 1];
-        buf[i][BLOCKSIZE] = '\0';
+        buf[i] = new char[BLOCK_SIZE + 1];
+        buf[i][BLOCK_SIZE] = '\0';
     }
 
     if (fd->isOpened) {
         for (int i(0); i < size; i++) {
-            char *data = getDataBlockById(fd->dataId[i + offset])->data;
-            for (int j = 0; j < BLOCKSIZE; j++) {
+            char *data = getBlockOfDataById(fd->dataId[i + offset])->data;
+            for (int j = 0; j < BLOCK_SIZE; j++) {
                 buf[i][j] = data[j];
             }
         }
@@ -317,30 +306,30 @@ char **read(descriptor *fd, unsigned int offset, unsigned int size) {
 }
 
 
-bool write(descriptor *fd, unsigned int offset, unsigned int size, char **dataToWrite) {
+bool write(Descriptor *fd, unsigned int offset, unsigned int size, char **dataToWrite) {
     if (fd->isOpened) {
         if (offset + size <= fd->size) {
             for (int i(offset); i < offset + size; i++) {
                 getBitmapItemById(fd->dataId[i])->isFree = false;
-                getDataBlockById(fd->dataId[i])->data = dataToWrite[i - offset];
+                getBlockOfDataById(fd->dataId[i])->data = dataToWrite[i - offset];
             }
         } else {
             for (int i(offset); i < fd->size; i++) {
                 getBitmapItemById(fd->dataId[i])->isFree = false;
-                getDataBlockById(fd->dataId[i])->data = dataToWrite[i - offset];
+                getBlockOfDataById(fd->dataId[i])->data = dataToWrite[i - offset];
             }
 
             for (int i(0); i < offset + size - fd->size; i++) {
-                dataBlock *newBlock = new dataBlock();
+                BlockOfData *newBlock = new BlockOfData();
                 bitmapItem *newBitmapItem = new bitmapItem();
 
-                newBlock->id = ++lastBlockId;
+                newBlock->id = ++idOfLastBlock;
                 newBlock->data = dataToWrite[i + fd->size];
 
                 newBitmapItem->id = newBlock->id;
                 newBitmapItem->isFree = false;
 
-                fd->dataId.push_back(lastBlockId);
+                fd->dataId.push_back(idOfLastBlock);
                 bitmap.push_back(newBitmapItem);
                 data.push_back(newBlock);
             }
@@ -354,7 +343,7 @@ bool write(descriptor *fd, unsigned int offset, unsigned int size, char **dataTo
 }
 
 
-dataBlock *getDataBlockById(int id) {
+BlockOfData *getBlockOfDataById(int id) {
     for (int i(0); i < data.size(); i++) {
         if (data[i]->id == id) {
             return data[i];
@@ -372,7 +361,7 @@ bitmapItem *getBitmapItemById(int id) {
 }
 
 
-descriptor *getFileDescriptionByName(string fileName) {
+Descriptor *getFileDescriptionByName(string fileName) {
     for (int i = 0; i < descriptors.size(); i++) {
         if (descriptors[i]->fileName == fileName) {
             return descriptors[i];

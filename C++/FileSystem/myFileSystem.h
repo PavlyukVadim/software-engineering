@@ -6,9 +6,9 @@
 #include <dirent.h>
 #include <sys/stat.h>
 
-#define BLOCKSIZE 16 // length of each block
+#define BLOCK_SIZE 16 // length of each block
 #define MAX_DESCRIPTOR_ID 32 // max number of files
-#define MAX_FILELEN 32
+#define MAX_LEN_OF_FILE 32
 
 using namespace std;
 
@@ -17,52 +17,51 @@ struct bitmapItem {
     bool isFree;
 };
 
-struct dataBlock {
+struct BlockOfData {
     int id;
     char *data;
 };
 
-struct descriptor {
+struct Descriptor {
     int id;
     bool isOpened = false;
     unsigned int size;
     string fileName;
     vector<int> dataId;
 
-    descriptor() {
+    Descriptor() {
         isOpened = false;
     }
 };
 
-struct filelink {
-    descriptor *fd;
+struct FileLink {
+    Descriptor *fileDescriptor;
     string name;
-    string filename;
+    string fileName;
 };
 
-struct controlBlock {
+struct ControlBlock {
     int numberOfBlocks;
     int numberOfFiles;
-    int lastBlockId;
-    int lastDescriptorId;
+    int idOfLastBlock;
+    int idOfLastDescriptor;
 };
 
 bool mount();
 void unmount();
+void ls();
 
-string ls();
+Descriptor *create(string fileName); // create file and return descriptor
+Descriptor *open(string fileName); // open file for reading and writing
+void close(Descriptor *fileDescriptor); // close file
 
-descriptor *create(string name); // create file and return descriptor
-descriptor *open(string name); // open file for reading and writing
-void close(descriptor *fd); // close file
+char **read(Descriptor *fd, unsigned int offset, unsigned int size); // read size blocks with offset
+bool write(Descriptor *fd, unsigned int offset, unsigned int size, char **data); // write size blocks with offset
 
-char **read(descriptor *fd, unsigned int offset, unsigned int size); // read size blocks with offset
-bool write(descriptor *fd, unsigned int offset, unsigned int size, char **data); // write size blocks with offset
-
-filelink *link(string filename, string linkname);
+FileLink *link(string filename, string linkname);
 void unlink(string linkname);
 
 bool trunkate(string filename, unsigned int newSize); // change file size
 
-descriptor *getFileDescriptionByName(string name);
+Descriptor *getFileDescriptionByName(string fileName);
 
