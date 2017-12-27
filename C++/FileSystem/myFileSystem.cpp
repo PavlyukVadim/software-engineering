@@ -1,45 +1,60 @@
-#pragma once
-#include "MyFileSystem.h"
-#include <string.h>
+#include "myFileSystem.h"
+
+const string filesystemImage = "image.txt";
+string root;
 
 const char *fileRoot;
 
 ofstream file;
 ifstream sysFile;
 
+int lastDescriptorId = 0;
+int lastBlockId = 0;
+
+controlBlock controls;
+
 descriptor *getFileDescr(string name);
 dataBlock *getDataBlockById(int id);
 bitmapItem *getBitmapItemById(int id);
 
-void writeDescriptorToFile(descriptor *desc) {
-    int len = desc->name.size();
+vector<descriptor*> descriptors;
+vector<filelink*> links;
+vector<dataBlock*> data;
+vector<bitmapItem*> bitmap;
 
-    file.write((char *)&len, sizeof(int));
-    file.write(desc->name.c_str(), desc->name.length() * sizeof(char));
-    file.write((char *)&(desc->id), sizeof(int));
-    file.write((char *)&(desc->size), sizeof(int));
-    file.write((char *)&(desc->dataId[0]), sizeof(int) * desc->dataId.size());
+
+int sizeOfInt = sizeof(int);
+int sizeOfChar = sizeof(char);
+
+
+void writeDescriptorToFile(descriptor *desc) {
+    int lengthOfName = desc->name.size();
+
+    file.write((char*)&lengthOfName, sizeOfInt);
+    file.write(desc->name.c_str(), desc->name.length() * sizeOfChar);
+    file.write((char*)&(desc->id), sizeOfInt);
+    file.write((char*)&(desc->size), sizeOfInt);
+    file.write((char*)&(desc->dataId[0]), sizeOfInt * desc->dataId.size());
 }
 
-descriptor* readDescriptorFromFile() {
+
+descriptor *readDescriptorFromFile() {
     descriptor *desc = new descriptor();
-    char *name;
-    int len;
+    int length;
 
-    sysFile.read((char *)&len, sizeof(int));
+    sysFile.read((char*)&length, sizeOfInt);
+    char *name = new char[length];
+    sysFile.read(name, length * sizeOfChar);
+    desc->name = string(name);
 
-    name = new char[len];
+    cout << "name " << desc->name << endl;
 
-    sysFile.read(name, len * sizeof(char));
+    sysFile.read((char *)&(desc->id), sizeOfInt);
 
-    string tmp(name);
-    desc->name = tmp;
-    sysFile.read((char *)&(desc->id), sizeof(int));
-
-    sysFile.read((char *)&(desc->size), sizeof(int));
+    sysFile.read((char *)&(desc->size), sizeOfInt);
 
     int *arr = new int[desc->size];
-    sysFile.read((char *)&arr[0], sizeof(int) * desc->size);
+    sysFile.read((char *)&arr[0], sizeOfInt * desc->size);
 
     for (int i(0); i < desc->size; i++) {
         desc->dataId.push_back(arr[i]);
