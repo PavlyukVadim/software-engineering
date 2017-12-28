@@ -37,7 +37,6 @@ struct Descriptor {
 struct FileLink {
     Descriptor *fileDescriptor;
     string name;
-    string fileName;
 };
 
 struct ControlBlock {

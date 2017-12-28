@@ -105,7 +105,7 @@ void clearAll() {
     idOfLastBlock = 0;
 
     descriptors.clear();
-    links.clear();
+    fileLinks.clear();
     bitmap.clear();
     data.clear();
 }
@@ -196,21 +196,21 @@ Descriptor *create(string fileName) {
 }
 
 
-FileLink *link(string filename, string linkName) {
-    FileLink *link = new FileLink();
+FileLink *link(string fileName, string linkName) {
+    FileLink *fileLink = new FileLink();
 
-    for (int i = 0; i < links.size(); i++) {
-        if (links[i]->name == linkName) {
-            return links[i];
+    for (int i = 0; i < fileLinks.size(); i++) {
+        if (fileLinks[i]->name == linkName) {
+            return fileLinks[i];
         }
     }
 
     for (int i = 0; i < descriptors.size(); i++) {
-        if (descriptors[i]->fileName == filename) {
-            link->name = linkName;
-            link->fd = descriptors[i];
-            links.push_back(link);
-            return link;
+        if (descriptors[i]->fileName == fileName) {
+            fileLink->name = linkName;
+            fileLink->fileDescriptor = descriptors[i];
+            fileLinks.push_back(fileLink);
+            return fileLink;
         }
     }
 
@@ -219,9 +219,9 @@ FileLink *link(string filename, string linkName) {
 
 
 void unlink(string linkName) {
-    for (int i = 0; i < links.size(); i++) {
-        if (links[i]->name == linkName) {
-            links.erase(links.begin() + i);
+    for (int i = 0; i < fileLinks.size(); i++) {
+        if (fileLinks[i]->name == linkName) {
+            fileLinks.erase(fileLinks.begin() + i);
             return;
         }
     }
