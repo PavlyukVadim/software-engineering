@@ -28,10 +28,6 @@ struct Descriptor {
     unsigned int size;
     string fileName;
     vector<int> dataId;
-
-    Descriptor() {
-        isOpened = false;
-    }
 };
 
 struct FileLink {
@@ -54,8 +50,8 @@ Descriptor *create(string fileName); // create file and return descriptor
 Descriptor *open(string fileName); // open file for reading and writing
 void close(Descriptor *fileDescriptor); // close file
 
-char **read(Descriptor *fd, unsigned int offset, unsigned int size); // read size blocks with offset
-bool write(Descriptor *fd, unsigned int offset, unsigned int size, char **data); // write size blocks with offset
+char **read(Descriptor *fileDescriptor, unsigned int offset, unsigned int size); // read size blocks with offset
+bool write(Descriptor *fileDescriptor, unsigned int offset, unsigned int size, char **data); // write size blocks with offset
 
 FileLink *link(string filename, string linkname);
 void unlink(string linkname);
@@ -63,4 +59,3 @@ void unlink(string linkname);
 bool trunkate(string filename, unsigned int newSize); // change file size
 
 Descriptor *getFileDescriptionByName(string fileName);
-
