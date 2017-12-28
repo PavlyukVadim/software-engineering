@@ -36,15 +36,17 @@ struct FileLink {
 };
 
 struct ControlBlock {
-    int numberOfBlocks;
     int numberOfFiles;
+    int numberOfBlocks;
     int idOfLastBlock;
     int idOfLastDescriptor;
 };
 
 bool mount();
 void unmount();
+
 void ls();
+void coutDescriptor(Descriptor *fileDescriptor);
 
 Descriptor *create(string fileName); // create file and return descriptor
 Descriptor *open(string fileName); // open file for reading and writing

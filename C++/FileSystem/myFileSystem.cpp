@@ -1,9 +1,9 @@
 #include "myFileSystem.h"
 
-const string filesystemImage = "image.txt";
+const string fileSystemStore = "store.txt";
 
 ofstream file;
-ifstream sysFile;
+ifstream storeFile;
 
 int idOfLastDescriptor = 0;
 int idOfLastBlock = 0;
@@ -37,16 +37,16 @@ Descriptor *getDescriptorFromFile() {
     Descriptor *desc = new Descriptor();
     int length;
 
-    sysFile.read((char*)&length, sizeOfInt);
+    storeFile.read((char*)&length, sizeOfInt);
     char *fileName = new char[length];
-    sysFile.read(fileName, length * sizeOfChar);
+    storeFile.read(fileName, length * sizeOfChar);
     desc->fileName = string(fileName);
 
-    sysFile.read((char*)&(desc->id), sizeOfInt);
-    sysFile.read((char*)&(desc->size), sizeOfInt);
+    storeFile.read((char*)&(desc->id), sizeOfInt);
+    storeFile.read((char*)&(desc->size), sizeOfInt);
 
     int *arr = new int[desc->size];
-    sysFile.read((char *)&arr[0], sizeOfInt * desc->size);
+    storeFile.read((char *)&arr[0], sizeOfInt * desc->size);
 
     for (int i = 0; i < desc->size; i++) {
         desc->dataId.push_back(arr[i]);
@@ -65,15 +65,15 @@ void setBlockOfDataToFile(BlockOfData *blockOfData ) {
 BlockOfData *getBlockOfDataFromFile() {
     BlockOfData *blockOfData = new BlockOfData();
     blockOfData->data = new char[BLOCK_SIZE];
-    sysFile.read((char*)&(blockOfData->id), sizeOfInt);
-    sysFile.read(blockOfData->data, sizeOfChar * BLOCK_SIZE);
-    return blockOfData ;
+    storeFile.read((char*)&(blockOfData->id), sizeOfInt);
+    storeFile.read(blockOfData->data, sizeOfChar * BLOCK_SIZE);
+    return blockOfData;
 }
 
 
 bool mount() {
-    sysFile.open(filesystemImage, ios_base::in | ios_base::binary);
-    sysFile.read((char*)&controls, sizeOfControls);
+    storeFile.open(fileSystemStore, ios_base::in | ios_base::binary);
+    storeFile.read((char*)&controls, sizeOfControls);
 
     for (int i = 0; i < controls.numberOfFiles; i++) {
         descriptors.push_back(getDescriptorFromFile());
@@ -81,7 +81,7 @@ bool mount() {
 
     for (int i = 0; i < controls.numberOfBlocks; i++) {
         bitmapItem *bi;
-        sysFile.read((char *)bi, sizeof(bitmapItem));
+        storeFile.read((char *)bi, sizeof(bitmapItem));
         bitmap.push_back(bi);
     }
 
@@ -92,7 +92,7 @@ bool mount() {
     idOfLastBlock = controls.idOfLastBlock;
     idOfLastDescriptor = controls.idOfLastDescriptor;
 
-    sysFile.close();
+    storeFile.close();
     return true;
 }
 
@@ -111,7 +111,7 @@ void clearAll() {
 
 
 void unmount() {
-    file.open(filesystemImage, ios_base::in | ios_base::binary);
+    file.open(fileSystemStore, ios_base::in | ios_base::binary);
 
     controls.idOfLastBlock = idOfLastBlock;
     controls.idOfLastDescriptor = idOfLastDescriptor;
@@ -137,12 +137,24 @@ void unmount() {
 
 
 void ls() {
+    cout << endl << "ls: " << endl;
     cout << "fileName"  << " " << "sizeOfFile" << endl;
     for (int i = 0; i < descriptors.size(); i++) {
         string fileName = descriptors[i]->fileName;
         string sizeOfFile = to_string(descriptors[i]->size);
         cout << fileName  << " " << sizeOfFile << endl;
     }
+    cout << endl;
+}
+
+
+void coutDescriptor(Descriptor *fileDescriptor) {
+    cout << endl;
+    cout << "id: " << fileDescriptor->id << endl;
+    cout << "fileName: " << fileDescriptor->fileName << endl;
+    cout << "isOpened: " << fileDescriptor->isOpened << endl;
+    cout << "size: " << fileDescriptor->size << endl;
+    cout << endl;
 }
 
 
