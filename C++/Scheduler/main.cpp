@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <time.h>
+#include <iostream>
 #include "Matrix.h"
 
 #define FIRST_SIZE 10
@@ -7,10 +8,14 @@
 #define STEP 5
 #define FIRST_PERCENT_OF_ONES 1
 #define LAST_PERCENT_OF_ONES 100
-#define NUMBER_OF_TESTS    1
+#define NUMBER_OF_TESTS    10
 #define _CRT_SECURE_NO_WARNINGS
 
-void stats() {
+using namespace std;
+
+int main() {
+    srand((unsigned int) time(NULL));
+
     FILE *f_all = fopen("test.dat", "w");
     int numberOfConflicts;
 
@@ -35,12 +40,6 @@ void stats() {
         fclose(f);
     }
     fclose(f_all);
-}
 
-
-int main() {
-    srand((unsigned int)time(NULL));
-    stats();
     return 0;
 }
-
