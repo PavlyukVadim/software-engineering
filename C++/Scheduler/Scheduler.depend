@@ -1,0 +1,13 @@
+# depslib dependency file v1.0
+1514505554 source:/home/amadev/Рабочий стол/study/Software-Engineering/C++/Scheduler/main.cpp
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	"Matrix.h"
+
+1514505852 /home/amadev/Рабочий стол/study/Software-Engineering/C++/Scheduler/Matrix.h
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+	<time.h>
+
