@@ -28,10 +28,6 @@ int destroy_matrix(matrix_t *matrix);
  * Prints matrix
  */
 void print_matrix(matrix_t *matrix);
-
-/**
- * Fills matrix with ones at random place, takes percentage of ones
- */
 void rand_matrix(matrix_t *matrix, int percent);
 
 /**
