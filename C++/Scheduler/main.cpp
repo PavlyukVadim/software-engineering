@@ -8,7 +8,7 @@
 #define STEP 5
 #define FIRST_PERCENT_OF_ONES 1
 #define LAST_PERCENT_OF_ONES 100
-#define NUMBER_OF_TESTS    10
+#define NUMBER_OF_TESTS 20
 #define _CRT_SECURE_NO_WARNINGS
 
 using namespace std;
@@ -16,7 +16,7 @@ using namespace std;
 int main() {
     srand((unsigned int) time(NULL));
 
-    FILE *f_all = fopen("test.dat", "w");
+    FILE *f_all = fopen("result.dat", "w");
     int numberOfConflicts;
 
     for (int size = FIRST_SIZE; size <= LAST_SIZE; size += STEP) {
@@ -32,14 +32,16 @@ int main() {
             }
 
             double average_conflicts_percent = (double)numberOfConflicts / NUMBER_OF_TESTS * 100.0;
-//            printf("%2d %2d | %3d | %lf\n", size, size, pc, average_conflicts_percent);
+
+            printf("%2d X %2d | %3d | %lf\n", size, size, pc, average_conflicts_percent);
+
             fprintf(f, "%d %lf\n", pc, average_conflicts_percent);
-            fprintf(f_all, "%d %lf\n", pc, average_conflicts_percent);
+            fprintf(f_all, "%2d X %2d | %d %lf\n", size, size, pc, average_conflicts_percent);
         }
+
         destroy_matrix(matrix);
         fclose(f);
     }
     fclose(f_all);
-
     return 0;
 }
