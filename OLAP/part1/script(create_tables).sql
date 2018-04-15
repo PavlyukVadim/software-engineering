@@ -79,7 +79,7 @@ create table "Clients"
    "client_id"          integer              not null,
    "full_name"          varchar(50)          not null,
    "phone"              varchar(15)          not null,
-   EMAIL                varchar(30)          not null,
+   EMAIL                varchar(50)          not null,
    constraint PK_CLIENTS primary key ("client_id")
 );
 
@@ -138,10 +138,10 @@ create table "Product"
    "company_id"         integer              not null,
    "category_id"        integer              not null,
    "name"               varchar(50)          not null,
-   "code"               varchar(10)          not null,
+   "code"               varchar(11)          not null,
    "price"              numeric(6,2)         not null,
-   "production_date"    DATE,
-   "expiration_date"    TIMESTAMP,
+   "production_date"    varchar(8),
+   "expiration_date"    varchar(8),
    constraint PK_PRODUCT primary key ("product_id")
 );
 
@@ -154,7 +154,7 @@ create table "Sales"
    "staff_id"           integer              not null,
    "client_id"          integer              not null,
    "order_id"           integer              not null,
-   "sale_date"          DATE                 not null,
+   "sale_date"          varchar(8)           not null,
    constraint PK_SALES primary key ("sale_id")
 );
 
@@ -166,7 +166,7 @@ create table "Staff"
    "staff_id"           integer              not null,
    "position_id"        INTEGER,
    "full_name"          varchar(30)          not null,
-   EMAIL                varchar(30)          not null,
+   EMAIL                varchar(50)          not null,
    constraint PK_STAFF primary key ("staff_id")
 );
 
@@ -232,3 +232,136 @@ alter table "Store"
    add constraint FK_STORE_RELATIONS_STAFF foreign key ("staff_id")
       references "Staff" ("staff_id");
 
+
+/*==============================================================*/
+/* AUTO INCREMENTS                                              */
+/*==============================================================*/
+
+CREATE SEQUENCE sq_Category
+START WITH 1 
+INCREMENT BY 1 
+NOMAXVALUE;
+
+CREATE OR REPLACE TRIGGER tr_Category before INSERT ON "Category" FOR each row
+BEGIN
+  SELECT sq_Category.NEXTVAL
+  INTO :new."category_id"
+  FROM dual;
+END;
+
+
+CREATE SEQUENCE sq_Clients
+START WITH 1 
+INCREMENT BY 1 
+NOMAXVALUE;
+
+CREATE OR REPLACE TRIGGER tr_Clients before INSERT ON "Clients" FOR each row
+BEGIN
+  SELECT sq_Clients.NEXTVAL
+  INTO :new."client_id"
+  FROM dual;
+END;
+
+
+CREATE SEQUENCE sq_Company
+START WITH 1 
+INCREMENT BY 1 
+NOMAXVALUE;
+
+CREATE OR REPLACE TRIGGER tr_Company before INSERT ON "Company" FOR each row
+BEGIN
+  SELECT sq_Company.NEXTVAL
+  INTO :new."company_id"
+  FROM dual;
+END;
+
+
+CREATE SEQUENCE sq_Invoice
+START WITH 1 
+INCREMENT BY 1 
+NOMAXVALUE;
+
+CREATE OR REPLACE TRIGGER tr_Invoice before INSERT ON "Invoice" FOR each row
+BEGIN
+  SELECT sq_Invoice.NEXTVAL
+  INTO :new."invoice_id"
+  FROM dual;
+END;
+
+
+CREATE SEQUENCE sq_Orders
+START WITH 1 
+INCREMENT BY 1 
+NOMAXVALUE;
+
+CREATE OR REPLACE TRIGGER tr_Orders before INSERT ON "Orders" FOR each row
+BEGIN
+  SELECT sq_Orders.NEXTVAL
+  INTO :new."order_id"
+  FROM dual;
+END;
+
+
+CREATE SEQUENCE sq_Position
+START WITH 1 
+INCREMENT BY 1 
+NOMAXVALUE;
+
+CREATE OR REPLACE TRIGGER tr_Position before INSERT ON "Position" FOR each row
+BEGIN
+  SELECT sq_Position.NEXTVAL
+  INTO :new."position_id"
+  FROM dual;
+END;
+
+
+CREATE SEQUENCE sq_Product
+START WITH 1 
+INCREMENT BY 1 
+NOMAXVALUE;
+
+CREATE OR REPLACE TRIGGER tr_Product before INSERT ON "Product" FOR each row
+BEGIN
+  SELECT sq_Product.NEXTVAL
+  INTO :new."product_id"
+  FROM dual;
+END;
+
+
+CREATE SEQUENCE sq_Sales
+START WITH 1 
+INCREMENT BY 1 
+NOMAXVALUE;
+
+CREATE OR REPLACE TRIGGER tr_Sales before INSERT ON "Sales" FOR each row
+BEGIN
+  SELECT sq_Sales.NEXTVAL
+  INTO :new."sale_id"
+  FROM dual;
+END;
+
+
+CREATE SEQUENCE sq_Staff
+START WITH 1 
+INCREMENT BY 1 
+NOMAXVALUE;
+
+CREATE OR REPLACE TRIGGER tr_Staff before INSERT ON "Staff" FOR each row
+BEGIN
+  SELECT sq_Staff.NEXTVAL
+  INTO :new."staff_id"
+  FROM dual;
+END;
+
+
+CREATE SEQUENCE sq_Store
+START WITH 1 
+INCREMENT BY 1 
+NOMAXVALUE;
+
+CREATE OR REPLACE TRIGGER tr_Store before INSERT ON "Store" FOR each row
+BEGIN
+  SELECT sq_Store.NEXTVAL
+  INTO :new."store_id"
+  FROM dual;
+END;
