@@ -13,9 +13,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PersonListAdapter extends ArrayAdapter<Person> {
+public class DishListAdapter extends ArrayAdapter<Dish> {
 
-    private static final String TAG = "PersonListAdapter";
+    private static final String TAG = "DishListAdapter";
 
     private Context mContext;
     private int mResource;
@@ -26,17 +26,17 @@ public class PersonListAdapter extends ArrayAdapter<Person> {
      */
     private static class ViewHolder {
         TextView name;
-        TextView birthday;
-        TextView sex;
+        TextView price;
+        TextView category;
     }
 
     /**
-     * Default constructor for the PersonListAdapter
+     * Default constructor for the DishListAdapter
      * @param context
      * @param resource
      * @param objects
      */
-    public PersonListAdapter(Context context, int resource, ArrayList<Person> objects) {
+    public DishListAdapter(Context context, int resource, ArrayList<Dish> objects) {
         super(context, resource, objects);
         mContext = context;
         mResource = resource;
@@ -45,13 +45,13 @@ public class PersonListAdapter extends ArrayAdapter<Person> {
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        //get the persons information
+        //get the dishs information
         String name = getItem(position).getName();
-        String birthday = getItem(position).getBirthday();
-        String sex = getItem(position).getSex();
+        String price = getItem(position).getPrice();
+        String category = getItem(position).getCategory();
 
-        //Create the person object with the information
-        Person person = new Person(name,birthday,sex);
+        //Create the dish object with the information
+        Dish dish = new Dish(name, price, category);
 
         //create the view result for showing the animation
         final View result;
@@ -63,10 +63,10 @@ public class PersonListAdapter extends ArrayAdapter<Person> {
         if(convertView == null){
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(mResource, parent, false);
-            holder= new ViewHolder();
+            holder = new ViewHolder();
             holder.name = (TextView) convertView.findViewById(R.id.textView1);
-            holder.birthday = (TextView) convertView.findViewById(R.id.textView2);
-            holder.sex = (TextView) convertView.findViewById(R.id.textView3);
+            holder.price = (TextView) convertView.findViewById(R.id.textView2);
+            holder.category = (TextView) convertView.findViewById(R.id.textView3);
 
             result = convertView;
 
@@ -83,9 +83,9 @@ public class PersonListAdapter extends ArrayAdapter<Person> {
         result.startAnimation(animation);
         lastPosition = position;
 
-        holder.name.setText(person.getName());
-        holder.birthday.setText(person.getBirthday());
-        holder.sex.setText(person.getSex());
+        holder.name.setText(dish.getName());
+        holder.price.setText(dish.getPrice());
+        holder.category.setText(dish.getCategory());
 
 
         return convertView;

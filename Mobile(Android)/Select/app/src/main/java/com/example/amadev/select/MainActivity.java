@@ -3,7 +3,6 @@ package com.example.amadev.select;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import java.util.ArrayList;
 import android.app.AlertDialog;
@@ -30,42 +29,36 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: Started.");
         ListView mListView = (ListView) findViewById(R.id.listView);
 
-        //Create the Person objects
-        Person john = new Person("John","12-20-1998","Male");
-        Person steve = new Person("Steve","08-03-1987","Male");
-        Person stacy = new Person("Stacy","11-15-2000","Female");
-        Person ashley = new Person("Ashley","07-02-1999","Female");
-        Person matt = new Person("Matt","03-29-2001","Male");
-        Person matt2 = new Person("Matt2","03-29-2001","Male");
-        Person matt3 = new Person("Matt3","03-29-2001","Male");
-        Person matt4 = new Person("Matt4","03-29-2001","Male");
-        Person matt5 = new Person("Matt5","03-29-2001","Male");
-        Person matt6 = new Person("Matt6","03-29-2001","Male");
-        Person matt7 = new Person("Matt7","03-29-2001","Male");
-        Person matt8 = new Person("Matt8","03-29-2001","Male");
-        Person matt9 = new Person("Matt9","03-29-2001","Male");
-        Person matt10 = new Person("Matt10","03-29-2001","Male");
-        Person matt11 = new Person("Matt11","03-29-2001","Male");
+        //Create the Dish objects
+        Dish pen1 = new Dish("Pen1","54","pen");
+        Dish spoon4 = new Dish("Spoon4","45","spoon");
+        Dish fork = new Dish("Fork","220","fork");
+        Dish knife1 = new Dish("Knife1","100","knife");
+        Dish knife2 = new Dish("Knife2","87","knife");
+        Dish fork3 = new Dish("Fork3","201","fork");
+        Dish spoon2 = new Dish("Spoon2","21","spoon");
+        Dish caps1 = new Dish("Caps1","999","caps");
+        Dish fork2 = new Dish("Fork2","354","fork");
+        Dish spoon3 = new Dish("Spoon3","900","spoon");
+        Dish caps2 = new Dish("Caps2","700","caps");
+        Dish fork1 = new Dish("Fork1","200","fork");
 
-        //Add the Person objects to an ArrayList
-        ArrayList<Person> peopleList = new ArrayList<>();
-        peopleList.add(john);
-        peopleList.add(steve);
-        peopleList.add(stacy);
-        peopleList.add(ashley);
-        peopleList.add(matt);
-        peopleList.add(matt2);
-        peopleList.add(matt3);
-        peopleList.add(matt4);
-        peopleList.add(matt5);
-        peopleList.add(matt6);
-        peopleList.add(matt7);
-        peopleList.add(matt8);
-        peopleList.add(matt9);
-        peopleList.add(matt10);
-        peopleList.add(matt11);
+        //Add the Dish objects to an ArrayList
+        ArrayList<Dish> dishesList = new ArrayList<>();
+        dishesList.add(pen1);
+        dishesList.add(spoon4);
+        dishesList.add(fork);
+        dishesList.add(knife1);
+        dishesList.add(knife2);
+        dishesList.add(fork3);
+        dishesList.add(spoon2);
+        dishesList.add(caps1);
+        dishesList.add(fork2);
+        dishesList.add(spoon3);
+        dishesList.add(caps2);
+        dishesList.add(fork1);
 
-        PersonListAdapter adapter = new PersonListAdapter(this, R.layout.adapter_view_layout, peopleList);
+        DishListAdapter adapter = new DishListAdapter(this, R.layout.adapter_view_layout, dishesList);
         mListView.setAdapter(adapter);
 
         button = (Button) findViewById(R.id.buttonOk);
@@ -82,11 +75,11 @@ public class MainActivity extends AppCompatActivity {
                         context);
 
                 // set title
-                alertDialogBuilder.setTitle("Your Title");
+                alertDialogBuilder.setTitle("Your request:");
 
                 // set dialog message
                 alertDialogBuilder
-                    .setMessage(searchView.getQuery().toString() + " " + seekBar.getProgress())
+                    .setMessage("Product: " + searchView.getQuery().toString() + "\nPrice:" + seekBar.getProgress())
                     .setCancelable(false)
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
