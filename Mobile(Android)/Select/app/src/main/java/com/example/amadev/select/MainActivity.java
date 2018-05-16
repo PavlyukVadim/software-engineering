@@ -12,12 +12,16 @@ import android.content.DialogInterface;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.SearchView;
+import android.widget.SeekBar;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     final Context context = this;
     private Button button;
+    private SearchView searchView;
+    private SeekBar seekBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
         mListView.setAdapter(adapter);
 
         button = (Button) findViewById(R.id.buttonOk);
+        searchView = (SearchView)findViewById(R.id.searchView);
+        seekBar = (SeekBar)findViewById(R.id.seekBar);
 
         // add button listener
         button.setOnClickListener(new OnClickListener() {
@@ -80,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // set dialog message
                 alertDialogBuilder
-                    .setMessage("Click yes to exit!")
+                    .setMessage(searchView.getQuery().toString() + " " + seekBar.getProgress())
                     .setCancelable(false)
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
