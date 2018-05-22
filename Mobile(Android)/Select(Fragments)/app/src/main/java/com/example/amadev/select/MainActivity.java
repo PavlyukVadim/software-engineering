@@ -2,7 +2,7 @@ package com.example.amadev.select;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.util.L0g;
 import android.widget.ListView;
 import java.util.ArrayList;
 import android.app.AlertDialog;
@@ -16,7 +16,7 @@ import android.widget.SeekBar;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
+    private static final String TАG = "MainActivity";
     final Context context = this;
     private Button button;
     private SearchView searchView;
