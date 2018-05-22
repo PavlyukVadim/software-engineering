@@ -2,32 +2,21 @@ package com.example.amadev.select;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class DishListAdapter extends ArrayAdapter<Dish> {
-
-    private static final String TAG = "DishListAdapter";
-
-    private Context mContext;
-    private int mResource;
-    private int lastPosition = -1;
+public class DishListAdapter extends ArrayAdapter {
 
     /**
      * Holds variables in a View
      */
     private static class ViewHolder {
-        TextView name;
-        TextView price;
-        TextView category;
+        TextView mName;
+        TextView tvPrice;
     }
 
     /**
@@ -36,58 +25,46 @@ public class DishListAdapter extends ArrayAdapter<Dish> {
      * @param resource
      * @param objects
      */
-    public DishListAdapter(Context context, int resource, ArrayList<Dish> objects) {
-        super(context, resource, objects);
-        mContext = context;
-        mResource = resource;
+
+    String[] spinnerTitles;
+    String[] spinnerPrice;
+    Context mContext;
+
+    public DishListAdapter(@NonNull Context context, String[] titles, String[] price) {
+        super(context, R.layout.adapter_view_layout);
+        this.spinnerTitles = titles;
+        this.spinnerPrice = price;
+        this.mContext = context;
     }
+
+    @Override
+    public int getCount() {
+        return spinnerTitles.length;
+    }
+
 
     @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        //get the dishs information
-        String name = getItem(position).getName();
-        String price = getItem(position).getPrice();
-        String category = getItem(position).getCategory();
-
-        //Create the dish object with the information
-        Dish dish = new Dish(name, price, category);
-
-        //create the view result for showing the animation
-        final View result;
-
-        //ViewHolder object
-        ViewHolder holder;
-
-
-        if(convertView == null){
-            LayoutInflater inflater = LayoutInflater.from(mContext);
-            convertView = inflater.inflate(mResource, parent, false);
-            holder = new ViewHolder();
-            holder.name = (TextView) convertView.findViewById(R.id.textView1);
-            holder.price = (TextView) convertView.findViewById(R.id.textView2);
-            holder.category = (TextView) convertView.findViewById(R.id.textView3);
-
-            result = convertView;
-
-            convertView.setTag(holder);
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        ViewHolder mViewHolder = new ViewHolder();
+        if (convertView == null) {
+            LayoutInflater mInflater = (LayoutInflater) mContext.
+                    getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = mInflater.inflate(R.layout.adapter_view_layout, parent, false);
+            mViewHolder.mName = (TextView) convertView.findViewById(R.id.tvName);
+            mViewHolder.tvPrice = (TextView) convertView.findViewById(R.id.tvPrice);
+            convertView.setTag(mViewHolder);
+        } else {
+            mViewHolder = (ViewHolder) convertView.getTag();
         }
-        else{
-            holder = (ViewHolder) convertView.getTag();
-            result = convertView;
-        }
-
-
-        Animation animation = AnimationUtils.loadAnimation(mContext,
-                (position > lastPosition) ? R.anim.load_down_anim : R.anim.load_up_anim);
-        result.startAnimation(animation);
-        lastPosition = position;
-
-        holder.name.setText(dish.getName());
-        holder.price.setText(dish.getPrice());
-        holder.category.setText(dish.getCategory());
-
+        mViewHolder.mName.setText(spinnerTitles[position]);
+        mViewHolder.tvPrice.setText(spinnerPrice[position]);
 
         return convertView;
+    }
+
+    @Override
+    public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        return getView(position, convertView, parent);
     }
 }
