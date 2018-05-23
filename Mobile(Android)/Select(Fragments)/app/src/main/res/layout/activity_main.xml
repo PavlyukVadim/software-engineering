@@ -11,8 +11,8 @@
     <fragment
         android:id="@+id/fragment"
         android:name="com.example.amadev.select.Fragment1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="306dp"
+        android:layout_height="261dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp" />
@@ -21,8 +21,8 @@
         android:id="@+id/fragment2"
         android:name="com.example.amadev.select.Fragment2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_height="98dp"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="56dp" />
+        android:layout_marginBottom="94dp" />
 </RelativeLayout>
