@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Player</string>
+    <string name="raw">Play</string>
+    <string name="pause">Pause</string>
+    <string name="resume">Resume</string>
+    <string name="stop">Stop</string>
+    <string name="loop">Cycle</string>
+    <string name="back">&#60;&#60;</string>
+    <string name="forw">&#62;&#62;</string>
+</resources>
