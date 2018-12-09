@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/amadev/Desktop/workflow/Repos/software-engineering/Parallel/MPI/main.cpp
+stdio.h
+-
+iostream
+-
+mpi.h
+-
+

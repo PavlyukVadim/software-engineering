@@ -1,0 +1,3 @@
+/Users/amadev/Desktop/workflow/Repos/software-engineering/Parallel/MPI/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/amadev/Desktop/workflow/Repos/software-engineering/Parallel/MPI/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/amadev/Desktop/workflow/Repos/software-engineering/Parallel/MPI/cmake-build-debug/CMakeFiles/MPI.dir
