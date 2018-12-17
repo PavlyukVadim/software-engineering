@@ -1,20 +1,10 @@
-/******************************************************************************
-
-   Input        : Size of matrices (numofrows and noofcols )
-
-   Output       : Each thread transposes assaigned Row and finally
-                  master prints the final resultant matrix
-
-******************************************************************************/
-
 #include <stdio.h>
 #include <sys/time.h>
 #include <omp.h>
 #include <cstdlib>
 
 
-int main()
-{
+int main() {
     int NoofRows = 4, NoofCols = 4;
     int i, j;
     int **Matrix, **Trans, **Checkoutput;
@@ -107,7 +97,6 @@ int main()
     /* Calculation Of Flops */
 
     flops = (float) 2 * NoofRows * NoofCols / (float) time_overhead;
-    printf("\nNoofRows=%d\t NoofCols=%d \t Flops=%fMFlops\n", NoofRows, NoofCols, flops);
 
     /* Freeing Allocated Memory */
 
