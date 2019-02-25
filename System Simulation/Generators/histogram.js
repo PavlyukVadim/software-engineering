@@ -37,8 +37,8 @@ const histogram = (ctx, array) => {
     return numbersInInterval
   })
 
-  console.log('frequencies', frequencies)    
-  console.log('intervals', intervals)
+  // console.log('frequencies', frequencies)    
+  // console.log('intervals', intervals)
 
   const backgroundColors = [
     'rgba(255, 99, 132, 0.2)',

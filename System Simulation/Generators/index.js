@@ -1,8 +1,10 @@
 const canvas1 = document.getElementById('generator1')
 const canvas2 = document.getElementById('generator2')
+const canvas3 = document.getElementById('generator3')
 
 const ctx1 = canvas1.getContext('2d')
 const ctx2 = canvas2.getContext('2d')
+const ctx3 = canvas3.getContext('2d')
 
 const N = 1000
 
@@ -61,8 +63,28 @@ const generateNumbersWithNormalGenerator = () => {
   histogram(ctx2, numbers)
 }
 
+// uniform generator
+const eGA = Math.pow(5, 13)
+const eGC = Math.pow(2, 31)
+const evenGenerator = (arrOfZ, prevZ) => {
+  const z = (eGA * prevZ) % eGC
+  arrOfZ.push(z)
+  const x = z / eGC
+  return x
+}
+
+const generateNumbersWithEvenGenerator = () => {
+  const numbers = Array.from({length: N})
+  const arrOfZ = []
+  arrOfZ[0] = 3
+  numbers.forEach((n, i, arr) => {
+    arr[i] = evenGenerator(arrOfZ, arrOfZ[i])
+  })
+  
+  researchGenerator(numbers)
+  histogram(ctx3, numbers)
+}
 
 generateNumbersWithExponentialGenerator()
 generateNumbersWithNormalGenerator()
-
-// console.log(numbe/rs)
+generateNumbersWithEvenGenerator()
