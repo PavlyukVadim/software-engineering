@@ -7,7 +7,17 @@
   <title>Document</title>
 </head>
 <body>
-  <canvas id="generator1" width="500" height="500"></canvas>
+  <style>
+    canvas {
+      max-height: 300px;
+    }
+  </style>
+  <h2>histogram #1</h2>
+  <canvas id="generator1" width="500" height="300"></canvas>
+  <h2>histogram #2</h2>
+  <canvas id="generator2" width="500" height="300"></canvas>
+  <h2>histogram #3</h2>
+  <canvas id="generator3" width="500" height="300"></canvas>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js"></script>
   <script src="./histogram.js"></script>
   <script src="./index.js"></script>
