@@ -26,6 +26,10 @@ t->questions->remove(q3)
 
 // t->questions->amount 2
 
+if (t->questions->amount > 2) {
+  print('remove doesn\'t work')
+}
+
 t->answers->add({
   id: 1,
   q1: 'Vadim',
@@ -38,11 +42,11 @@ t->answers->add({
   q2: '25',
 })
 
-forEach(question in t) {
+forEach(t->questions as question) {
   print(question->q1)
 }
 
-forEach(answer in t) {
+forEach(t->answers as answer) {
   print(answer->q1)
 }
 ```
