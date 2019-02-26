@@ -24,7 +24,7 @@ t->questions->add(q2)
 t->questions->add(q3)
 t->questions->remove(q3)
 
-<!-- t->questions->amount --> 2
+// t->questions->amount 2
 
 t->answers->add({
   id: 1,
@@ -39,7 +39,7 @@ t->answers->add({
 })
 
 forEach(question in t) {
-  print(answer->q1)
+  print(question->q1)
 }
 
 forEach(answer in t) {
