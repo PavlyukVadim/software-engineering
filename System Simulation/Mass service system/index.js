@@ -275,11 +275,11 @@ class Model {
       for (let e of this.list) {
         if (e.getTnext() < this.tNext) {
           this.tNext = e.getTnext()
-          this.event = e.getId()
+          this.eventId = e.getId()
         }
       }
 
-      const event = this.list[this.event] || {}
+      const event = this.list[this.eventId] || {}
       const eventName = event.getName
         ? event.getName()
         : 'unknown'
@@ -290,7 +290,7 @@ class Model {
       }
 
       this.tCurr = this.tNext
-      console.log('this.tCurr', this.tCurr)
+      // console.log('this.tCurr', this.tCurr)
 
       for (let e of this.list) {
         e.setTcurr(this.tCurr)
@@ -320,9 +320,9 @@ class Model {
     for (let e of this.list) {
       e.printResult()
       if (e instanceof Process) {
-        console.log('e.getMeanQueue()', e.getMeanQueue())
-        console.log('this.tCurr', tCurr)
-        console.log('e.getFailure()', e.getFailure())
+        // console.log('e.getMeanQueue()', e.getMeanQueue())
+        // console.log('this.tCurr', tCurr)
+        // console.log('e.getFailure()', e.getFailure())
         console.log(`mean length of queue = ${e.getMeanQueue() / tCurr}`)
         console.log(`failure probability = ${e.getFailure() / e.getQuantity()}`)
       }
@@ -346,9 +346,7 @@ p.setDistribution('exp')
 console.log('c', c)
 console.log('p', p)
 
-const list = []
-list.push(c)
-list.push(p)
+const list = [c, p]
 
 const model = new Model(list)
 model.simulate(100)
