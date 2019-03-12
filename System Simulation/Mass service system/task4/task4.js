@@ -169,7 +169,7 @@ class Element {
     console.log(`${this.getName()} quantity = ${this.quantity}`)
   }
 
-  printInfo = () => {
+  printInfo() {
     const name = this.getName()
     console.log(`${name} state = ${this.state} quantity = ${this.quantity} tnext = ${this.tNext}`)
   }
@@ -231,6 +231,10 @@ class Process extends Element {
       this.setState(1)
       this.setTnext(this.getTcurr() + this.getDelay())
     }
+
+    if (this.outActCallBack) {
+      this.outActCallBack()
+    }
   }
 
   doStatistics(delta) {
@@ -254,6 +258,7 @@ class Process extends Element {
 
   printInfo() {
     super.printInfo()
+    console.log(`queue = ${this.getQueue()}`)
     console.log(`failure = ${this.getFailure()}`)
   }
 
@@ -334,21 +339,32 @@ class Model {
 
 
 const c = new Create(2)
-const p = new Process(1)
-
-console.log(`id0 = ${c.getId()} id1 = ${p.getId()}`)
-
-c.setNextElement(p)
-p.setMaxqueue(5)
 c.setName('CREATOR')
-p.setName('PROCESSOR')
 c.setDistribution('exp')
-p.setDistribution('exp')
 
-console.log('c', c)
-console.log('p', p)
+const p1 = new Process(1)
+p1.setName('PROCESSOR 1')
+p1.setDistribution('exp')
+p1.setMaxqueue(5)
+p1.outActCallBack = () => p2.inAct()
 
-const list = [c, p]
+const p2 = new Process(2)
+p2.setName('PROCESSOR 2')
+p2.setDistribution('exp')
+p2.setMaxqueue(5)
+p2.outActCallBack = () => p3.inAct()
+
+const p3 = new Process(3)
+p3.setName('PROCESSOR 3')
+p3.setDistribution('exp')
+p3.setMaxqueue(5)
+
+c.setNextElement(p1)
+
+console.log(`id0 = ${c.getId()} id1 = ${p1.getId()}`)
+
+const list = [c, p1, p2, p3]
 
 const model = new Model(list)
-model.simulate(100)
+// model.simulate(20)
+
