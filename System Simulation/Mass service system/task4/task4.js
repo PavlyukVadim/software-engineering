@@ -275,7 +275,7 @@ class Model {
     this.tCurr = this.tNext
   }
 
-  simulate(time) {
+  simulate(time, disableOutput) {
     while (this.tCurr < time) {
       this.tNext = Number.MAX_VALUE
       for (let e of this.list) {
@@ -289,7 +289,10 @@ class Model {
       const eventName = event.getName
         ? event.getName()
         : 'unknown'
-      console.log(`It's time for event in ${eventName}, time = ${this.tNext}`)
+
+      if (!disableOutput) {
+        console.log(`It's time for event in ${eventName}, time = ${this.tNext}`)  
+      }
       
       for (let e of this.list) {
         e.doStatistics(this.tNext - this.tCurr)
@@ -302,14 +305,16 @@ class Model {
         e.setTcurr(this.tCurr)
       }
 
-      event.outAct()
+      event.outAct && event.outAct()
       for (let e of this.list) {
         if (e.getTnext() == this.tCurr) {
           e.outAct()
         }
       }
 
-      this.printInfo()
+      if (!disableOutput) {
+        this.printInfo()
+      }
     }
     this.printResult()
   }
@@ -327,44 +332,203 @@ class Model {
     for (let e of this.list) {
       e.printResult()
       if (e instanceof Process) {
-        // console.log('e.getMeanQueue()', e.getMeanQueue())
-        // console.log('this.tCurr', tCurr)
-        // console.log('e.getFailure()', e.getFailure())
-        console.log(`mean length of queue = ${e.getMeanQueue() / tCurr}`)
-        console.log(`failure probability = ${e.getFailure() / e.getQuantity()}`)
+        const meanQ = Number(e.getMeanQueue() / tCurr).toFixed(2)
+        const failP = Number(e.getFailure() / e.getQuantity()).toFixed(2)
+        console.log(`mean length of queue = ${meanQ}`)
+        console.log(`failure probability = ${failP}`)
+
+        switch(e.getName()) {
+          case 'PROCESSOR 1': {
+            result.p1Quant.push(e.quantity)
+            result.p1MeanQ.push(meanQ)
+            result.p1FailP.push(failP)
+            break
+          }
+          case 'PROCESSOR 2': {
+            result.p2Quant.push(e.quantity)
+            result.p2MeanQ.push(meanQ)
+            result.p2FailP.push(failP)
+            break
+          }
+          case 'PROCESSOR 3': {
+            result.p3Quant.push(e.quantity)
+            result.p3MeanQ.push(meanQ)
+            result.p3FailP.push(failP)
+            break
+          }
+        }
+      } else {
+        result.cQuant.push(e.quantity)
       }
     }
   }
 }
 
+const modelRunner = (cConfig, p1Config, p2Config, p3Config) => {
+  const c = new Create(cConfig.delay) // 2
+  c.setName('CREATOR')
+  c.setDistribution(cConfig.distr) // 'exp'
+  result.cDelay.push(cConfig.delay)
+  
+  const p1 = new Process(p1Config.delay)
+  p1.setName('PROCESSOR 1')
+  p1.setDistribution(p1Config.distr)  // 'exp'
+  p1.setMaxqueue(p1Config.maxq) // 5
+  p1.outActCallBack = () => p2.inAct()
+  result.p1Delay.push(p1Config.delay)
+  result.p1Maxq.push(p1Config.maxq)
+  
+  const p2 = new Process(p2Config.delay)
+  p2.setName('PROCESSOR 2')
+  p2.setDistribution(p2Config.distr)
+  p2.setMaxqueue(p2Config.maxq)
+  p2.outActCallBack = () => p3.inAct()
+  result.p2Delay.push(p2Config.delay)
+  result.p2Maxq.push(p2Config.maxq)
+  
+  const p3 = new Process(p3Config.delay)
+  p3.setName('PROCESSOR 3')
+  p3.setDistribution(p3Config.distr)
+  p3.setMaxqueue(p3Config.maxq)
+  result.p3Delay.push(p3Config.delay)
+  result.p3Maxq.push(p3Config.maxq)
+  
+  c.setNextElement(p1)
 
-const c = new Create(2)
-c.setName('CREATOR')
-c.setDistribution('exp')
+  const list = [c, p1, p2, p3]
 
-const p1 = new Process(1)
-p1.setName('PROCESSOR 1')
-p1.setDistribution('exp')
-p1.setMaxqueue(5)
-p1.outActCallBack = () => p2.inAct()
+  const model = new Model(list)
+  model.simulate(1000, true)
+}
 
-const p2 = new Process(2)
-p2.setName('PROCESSOR 2')
-p2.setDistribution('exp')
-p2.setMaxqueue(5)
-p2.outActCallBack = () => p3.inAct()
+const test1 = [
+  { delay: 2, distr: 'exp' },
+  { delay: 1, distr: 'exp', maxq: 5 },
+  { delay: 2, distr: 'exp', maxq: 5 },
+  { delay: 3, distr: 'exp', maxq: 5 },
+]
 
-const p3 = new Process(3)
-p3.setName('PROCESSOR 3')
-p3.setDistribution('exp')
-p3.setMaxqueue(5)
+const test2 = [
+  { delay: 3, distr: 'exp' },
+  { delay: 3, distr: 'exp', maxq: 5 },
+  { delay: 3, distr: 'exp', maxq: 5 },
+  { delay: 3, distr: 'exp', maxq: 5 },
+]
 
-c.setNextElement(p1)
+const test3 = [
+  { delay: 2, distr: 'exp' },
+  { delay: 1, distr: 'exp', maxq: 5 },
+  { delay: 1, distr: 'exp', maxq: 5 },
+  { delay: 1, distr: 'exp', maxq: 5 },
+]
 
-console.log(`id0 = ${c.getId()} id1 = ${p1.getId()}`)
+const test4 = [
+  { delay: 3, distr: 'exp' },
+  { delay: 1, distr: 'exp', maxq: 3 },
+  { delay: 1, distr: 'exp', maxq: 3 },
+  { delay: 1, distr: 'exp', maxq: 3 },
+]
 
-const list = [c, p1, p2, p3]
+const test5 = [
+  { delay: 2, distr: 'exp' },
+  { delay: 2, distr: 'exp', maxq: 1 },
+  { delay: 2, distr: 'exp', maxq: 1 },
+  { delay: 2, distr: 'exp', maxq: 1 },
+]
 
-const model = new Model(list)
-// model.simulate(20)
+const test6 = [
+  { delay: 2, distr: 'exp' },
+  { delay: 3, distr: 'exp', maxq: 5 },
+  { delay: 3, distr: 'exp', maxq: 5 },
+  { delay: 3, distr: 'exp', maxq: 5 },
+]
 
+const test7 = [
+  { delay: 5, distr: 'exp' },
+  { delay: 2, distr: 'exp', maxq: 5 },
+  { delay: 2, distr: 'exp', maxq: 5 },
+  { delay: 2, distr: 'exp', maxq: 5 },
+]
+
+const test8 = [
+  { delay: 5, distr: 'exp' },
+  { delay: 2, distr: 'exp', maxq: 5 },
+  { delay: 3, distr: 'exp', maxq: 5 },
+  { delay: 4, distr: 'exp', maxq: 5 },
+]
+
+const test9 = [
+  { delay: 5, distr: 'exp' },
+  { delay: 4, distr: 'exp', maxq: 10 },
+  { delay: 3, distr: 'exp', maxq: 8 },
+  { delay: 2, distr: 'exp', maxq: 6 },
+]
+
+const test10 = [
+  { delay: 3, distr: 'exp' },
+  { delay: 3, distr: 'exp', maxq: 3 },
+  { delay: 3, distr: 'exp', maxq: 3 },
+  { delay: 3, distr: 'exp', maxq: 3 },
+]
+
+const test11 = [
+  { delay: 10, distr: 'exp' },
+  { delay: 2, distr: 'exp', maxq: 5 },
+  { delay: 2, distr: 'exp', maxq: 5 },
+  { delay: 2, distr: 'exp', maxq: 5 },
+]
+
+const test12 = [
+  { delay: 10, distr: 'exp' },
+  { delay: 50, distr: 'exp', maxq: 3 },
+  { delay: 40, distr: 'exp', maxq: 3 },
+  { delay: 30, distr: 'exp', maxq: 3 },
+]
+
+const tests = [
+  test1,
+  test2,
+  test3,
+  test4,
+  test5,
+  test6,
+  test7,
+  test8,
+  test9,
+  test10,
+  test11,
+  test12,
+]
+
+const result = {
+  cDelay: [],
+  // p1
+  p1Delay: [],
+  p1Maxq: [],
+  // p2
+  p2Delay: [],
+  p2Maxq: [],
+  // p3
+  p3Delay: [],
+  p3Maxq: [],
+  // c
+  cQuant: [],
+  // p1
+  p1Quant: [],
+  p1MeanQ: [],
+  p1FailP: [],
+  // p2
+  p2Quant: [],
+  p2MeanQ: [],
+  p2FailP: [],
+  // p3
+  p3Quant: [],
+  p3MeanQ: [],
+  p3FailP: [],
+}
+
+tests.forEach((test) => {
+  modelRunner(...test)
+})
+
+buildTable(result)

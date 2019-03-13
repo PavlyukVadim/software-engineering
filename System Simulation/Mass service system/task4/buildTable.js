@@ -1,11 +1,11 @@
 const thead = document.getElementById('thead')
 const tbody = document.getElementById('tbody')
 
-const results = {
-  a: [1, 2, 3],
-  b: [0, 0, 0],
-  c: [3, 3, 3],
-}
+// const results = {
+//   a: [1, 2, 3],
+//   b: [0, 0, 0],
+//   c: [3, 3, 3],
+// }
 
 function buildTable(results) {
   const buildHead = () => {
@@ -37,4 +37,4 @@ function buildTable(results) {
   buildBody()
 }
 
-buildTable(results)
+// buildTable(results)
