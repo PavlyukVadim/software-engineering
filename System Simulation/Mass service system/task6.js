@@ -204,6 +204,7 @@ class Process extends Element {
     this.queue = 0
     this.maxqueue = Number.MAX_SAFE_INTEGER
     this.meanQueue = 0
+    this.meanLoad = 0
     this.failure = 0
     this.workers = Array
       .from({length: workersNumber})
@@ -211,6 +212,7 @@ class Process extends Element {
         state: 0,
         nextTime: Number.MAX_VALUE,
         done: 0,
+        meanLoad: 0,
       }))
   }
 
@@ -298,6 +300,9 @@ class Process extends Element {
   doStatistics(delta) {
     super.doStatistics()
     this.meanQueue = this.getMeanQueue() + this.queue * delta
+    this.workers.forEach((worker) => {
+      worker.meanLoad += worker.state * delta
+    })
   }
 
   getFailure = () => this.failure
@@ -366,7 +371,7 @@ class Model {
 
       this.printInfo()
     }
-    this.printResult()
+    this.printResult(time)
   }
 
   printInfo() {
@@ -376,15 +381,25 @@ class Model {
     console.log('---------------------------------')
   }
 
-  printResult() {
+  printResult(time) {
     console.log('-------------RESULTS-------------')
+    console.log('TIME: ', time)
     const { tCurr } = this
     for (let e of this.list) {
       e.printResult()
       if (e instanceof Process) {
-        console.log(`mean length of queue = ${e.getMeanQueue() / tCurr}`)
-        console.log(`failure probability = ${e.getFailure() / e.getQuantity()}`)
-        console.log('workers', e.workers)
+        const meanQueue = Number(e.getMeanQueue() / tCurr).toFixed(2)
+        const failureProb = Number(e.getFailure() / e.getQuantity()).toFixed(2)
+        console.log('mean length of queue:', meanQueue)
+        console.log('failure probability:', failureProb)
+        console.log('workers:')
+        e.workers.forEach((worker, index) => {
+          const { done, meanLoad } = worker
+          console.log('  worker#', index + 1)
+          console.log('    done:', done)
+          console.log('    meanLoad:', Number(meanLoad / tCurr).toFixed(2))
+        })
+        console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
       }
     }
   }
