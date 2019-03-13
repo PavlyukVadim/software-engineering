@@ -336,7 +336,7 @@ class Model {
     this.tCurr = this.tNext
   }
 
-  simulate(time) {
+  simulate(time, hideOutput) {
     while (this.tCurr < time) {
       this.tNext = Number.MAX_VALUE
       for (let e of this.list) {
@@ -350,7 +350,10 @@ class Model {
       const eventName = event.getName
         ? event.getName()
         : 'unknown'
-      console.log(`It's time for event in ${eventName}, time = ${this.tNext}`)
+      
+      if (!hideOutput) {
+        console.log(`It's time for event in ${eventName}, time = ${this.tNext}`)
+      }
 
       for (let e of this.list) {
         e.doStatistics(this.tNext - this.tCurr)
@@ -369,7 +372,9 @@ class Model {
         }
       }
 
-      this.printInfo()
+      if (!hideOutput) {
+        this.printInfo()  
+      }
     }
     this.printResult(time)
   }
@@ -472,9 +477,9 @@ p21.setBranch(branch_P2_P3)
 
 console.log(`id0 = ${c.getId()} id1 = ${p1.getId()}`)
 
-console.log(p1)
+// console.log(p1)
 
 const list = [c, p1, p21, p22, p3]
 
 const model = new Model(list)
-model.simulate(20)
+model.simulate(500, true)
