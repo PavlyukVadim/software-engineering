@@ -1,4 +1,4 @@
-const iterations = 2
+const iterations = 5
 const simulationTime = 100000
 
 let p1QueueSum = 0
@@ -119,6 +119,16 @@ p2LoadSum /= iterations
 p3LoadSum /= iterations
 p4LoadSum /= iterations
 
+const p1QueueSumT = 1.786
+const p2QueueSumT = 0.003
+const p3QueueSumT = 0.004
+const p4QueueSumT = 0.00001
+
+const p1LoadSumT = 0.714
+const p2LoadSumT = 0.054
+const p3LoadSumT = 0.062
+const p4LoadSumT = 0.036
+
 console.log('p1QueueSum', Number(p1QueueSum).toFixed(8))
 console.log('p2QueueSum', Number(p2QueueSum).toFixed(8))
 console.log('p3QueueSum', Number(p3QueueSum).toFixed(8))
@@ -128,3 +138,9 @@ console.log('p1LoadSum', Number(p1LoadSum).toFixed(8))
 console.log('p2LoadSum', Number(p2LoadSum).toFixed(8))
 console.log('p3LoadSum', Number(p3LoadSum).toFixed(8))
 console.log('p4LoadSum', Number(p4LoadSum).toFixed(8))
+
+
+console.log('p1QueueSum %', (p1QueueSumT - Number(p1QueueSum).toFixed(8)) * 100)
+console.log('p2QueueSum %', (p2QueueSumT - Number(p2QueueSum).toFixed(8)) * 100)
+console.log('p3QueueSum %', (p3QueueSumT - Number(p3QueueSum).toFixed(8)) * 100)
+console.log('p4QueueSum %', (p4QueueSumT - Number(p4QueueSum).toFixed(8)) * 100)

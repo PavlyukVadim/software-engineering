@@ -64,7 +64,7 @@ class Element {
     if (delay) {
       // this.name = 'anonymus'
       this.delayMean = delay
-      this.distribution = ''
+      this.distribution = 'exp'
     }
 
     if (nameOfElement) {
@@ -187,35 +187,102 @@ class Element {
 
 class Create extends Element {
   constructor(delay) {
-    super(delay)
+    super('', delay)
+  }
+
+  setPriorityBranch(routes) {
+    this.priorityBranch = routes
   }
 
   outAct() {
     super.outAct()
-    // console.log('super', super)
     const tCurr = this.getTcurr()
     this.setTnext(tCurr + this.getDelay())
-    // this.setTnext(Number.MAX_VALUE + 100)
-    this.getNextElement().inAct()
+    // this.getNextElement().inAct()
+
+    if (this.priorityBranch) {
+      let nextElement = this.priorityBranch.priority
+
+      this.priorityBranch.forEach((process) => {
+        if(process.getQueueSize() < nextElement.getQueueSize()) {
+          nextElement = process
+        }
+      })
+      nextElement.inAct()
+    } else {
+      this.getNextElement().inAct()
+    }
   }
 }
 
 class Process extends Element {
-  constructor(delay) {
-    super(delay)
-    this.queue = 0
+  constructor(delay, workersNumber = 1) {
+    super('', delay)
+    this.queue = []
     this.maxqueue = Number.MAX_SAFE_INTEGER
     this.meanQueue = 0
+    this.meanLoad = 0
     this.failure = 0
+    this.workers = Array
+      .from({length: workersNumber})
+      .map(() => ({
+        state: 0,
+        nextTime: Number.MAX_VALUE,
+        done: 0,
+        meanLoad: 0,
+      }))
+  }
+
+  getFreeWorker() {
+    const freeWorker = this.workers.find((worker) => {
+      return (worker.state === 0)
+    })
+    return freeWorker
+  }
+
+  getLastActiveWorker() {
+    const minNextTime = this.getWorkersMinNextTime()
+
+    const lastActiveWorker = this.workers.find((worker) => {
+      return (worker.nextTime === minNextTime)
+    })
+    return lastActiveWorker
+  }
+
+  getWorkersMinNextTime() {
+    const nextTimes = this.workers
+      .map((worker) => worker.nextTime)
+  
+    const minNextTime = Math.min(...nextTimes)
+    return minNextTime
+  }
+
+  activateWorker(worker) {
+    worker.state = 1
+    worker.nextTime = this.getTcurr() + this.getDelay()
+  }
+
+  getTnext() {
+    const minNextTime = this.getWorkersMinNextTime()
+    return minNextTime
+  }
+
+  setBranch(branch) {
+    this.branch = branch
   }
 
   inAct() {
-    if (this.getState() == 0) {
-      this.setState(1)
-      this.setTnext(this.getTcurr() + this.getDelay())
+    const freeWorker = this.getFreeWorker()
+    if (freeWorker) {
+      this.activateWorker(freeWorker)
     } else {
-      if (this.getQueue() < this.getMaxqueue()) {
-        this.setQueue(this.getQueue() + 1)
+      const queueSize = this.getQueueSize()
+      const maxQueueSize = this.getMaxQueueSize()
+      if (queueSize < maxQueueSize) {
+        const queueItem = {
+          creationTime: new Date(),
+        }
+        this.addQueueItem(queueItem)
       } else {
         this.failure++
       }
@@ -224,33 +291,65 @@ class Process extends Element {
 
   outAct() {
     super.outAct()
-    this.setTnext(Number.MAX_VALUE)
-    this.setState(0)
-    if (this.getQueue() > 0) {
-      this.setQueue(this.getQueue() - 1)
-      this.setState(1)
-      this.setTnext(this.getTcurr() + this.getDelay())
+    const worker = this.getLastActiveWorker()
+    worker.nextTime = Number.MAX_VALUE
+    worker.state = 0
+    worker.done++
+    const queueSize = this.getQueueSize()
+    if (queueSize > 0) {
+      const item = this.removeQueueItem()
+      item.deletionTime = new Date()
+      store.successClients.push(item)
+
+      worker.state = 1
+      worker.nextTime = this.getTcurr() + this.getDelay()
     }
 
-    if (this.outActCallBack) {
-      this.outActCallBack()
+    if (this.branch) {
+      const probability = Math.random()
+
+      // transforms [0.3, 0.3, 0.4] into [0.3, 0.6, 1]
+      const routesProbabilitiesMaxValues = []
+      this.branch.forEach((route, i) => {
+        routesProbabilitiesMaxValues[i] =
+          route.probability + (routesProbabilitiesMaxValues[i - 1] || 0)
+      })
+
+      const routeIndex = routesProbabilitiesMaxValues
+        .findIndex((value) => value >= probability)
+
+      const route = this.branch[routeIndex]
+      route.nextElement.inAct()
+    }
+
+    if (this.outActCallback) {
+      this.outActCallback()
     }
   }
 
   doStatistics(delta) {
     super.doStatistics()
-    this.meanQueue = this.getMeanQueue() + this.queue * delta
+    const queueSize = this.getQueueSize()
+    this.meanQueue = this.getMeanQueue() + queueSize * delta
+    this.workers.forEach((worker) => {
+      worker.meanLoad += worker.state * delta
+    })
   }
 
   getFailure = () => this.failure
-  
-  getQueue = () => this.queue
-    
-  setQueue(queue) {
-    this.queue = queue
+
+  getQueueSize = () => this.queue.length
+
+  addQueueItem(queueItem) {
+    this.queue.push(queueItem)
   }
-    
-  getMaxqueue = () => this.maxqueue
+
+  removeQueueItem() {
+    const firstItem = this.queue.shift()
+    return firstItem
+  }
+
+  getMaxQueueSize = () => this.maxqueue
     
   setMaxqueue(maxqueue) {
     this.maxqueue = maxqueue
@@ -258,16 +357,22 @@ class Process extends Element {
 
   printInfo() {
     super.printInfo()
-    console.log(`queue = ${this.getQueue()}`)
+    console.log(`queue = ${this.getQueueSize()}`)
     console.log(`failure = ${this.getFailure()}`)
   }
 
   getMeanQueue = () => this.meanQueue
+
+  getMeanLoad = () => {
+    let load = 0
+    this.workers.forEach((worker) => {
+      load += worker.meanLoad
+    })
+    return load
+  }
 }
 
 class Model {
-  // const list = []
-  
   constructor(elements = []) {
     this.list = [...elements]
     this.tNext = 0
@@ -275,7 +380,7 @@ class Model {
     this.tCurr = this.tNext
   }
 
-  simulate(time) {
+  simulate(time, hideOutput) {
     while (this.tCurr < time) {
       this.tNext = Number.MAX_VALUE
       for (let e of this.list) {
@@ -289,29 +394,35 @@ class Model {
       const eventName = event.getName
         ? event.getName()
         : 'unknown'
-      console.log(`It's time for event in ${eventName}, time = ${this.tNext}`)
       
+      if (!hideOutput) {
+        console.log(`It's time for event in ${eventName}, time = ${this.tNext}`)
+      }
+
       for (let e of this.list) {
         e.doStatistics(this.tNext - this.tCurr)
       }
 
       this.tCurr = this.tNext
-      // console.log('this.tCurr', this.tCurr)
 
       for (let e of this.list) {
         e.setTcurr(this.tCurr)
       }
 
-      event.outAct()
+      if (typeof event.outAct === 'function') {
+        event.outAct()
+      }
       for (let e of this.list) {
         if (e.getTnext() == this.tCurr) {
           e.outAct()
         }
       }
 
-      this.printInfo()
+      if (!hideOutput) {
+        this.printInfo()  
+      }
     }
-    this.printResult()
+    this.printResult(time)
   }
 
   printInfo() {
@@ -321,49 +432,98 @@ class Model {
     console.log('---------------------------------')
   }
 
-  printResult() {
+  printResult(time) {
     console.log('-------------RESULTS-------------')
+    console.log('TIME: ', time)
     const { tCurr } = this
     for (let e of this.list) {
       e.printResult()
       if (e instanceof Process) {
-        // console.log('e.getMeanQueue()', e.getMeanQueue())
-        // console.log('this.tCurr', tCurr)
-        // console.log('e.getFailure()', e.getFailure())
-        console.log(`mean length of queue = ${e.getMeanQueue() / tCurr}`)
-        console.log(`failure probability = ${e.getFailure() / e.getQuantity()}`)
+        const meanQueue = Number(e.getMeanQueue() / tCurr).toFixed(2)
+        const failureProb = Number(e.getFailure() / e.getQuantity()).toFixed(2)
+        console.log('mean length of queue:', meanQueue)
+        console.log('failure probability:', failureProb)
+        console.log('workers:')
+        e.workers.forEach((worker, index) => {
+          const { done, meanLoad } = worker
+          console.log('  worker#', index + 1)
+          console.log('    done:', done)
+          console.log('    meanLoad:', Number(meanLoad / tCurr).toFixed(2))
+        })
+        console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
       }
     }
   }
 }
 
 
-const c = new Create(2)
-c.setName('CREATOR')
-c.setDistribution('exp')
+const store = {
+  successClients: [],
+}
+const simulationTime = 10000
 
-const p1 = new Process(1)
-p1.setName('PROCESSOR 1')
-p1.setDistribution('exp')
-p1.setMaxqueue(5)
-p1.outActCallBack = () => p2.inAct()
+const c = new Create(0.5)
+const p1 = new Process(0.3, 1)
+const p2 = new Process(0.3, 1)
+const d = new Process(0, 1)
 
-const p2 = new Process(2)
-p2.setName('PROCESSOR 2')
-p2.setDistribution('exp')
-p2.setMaxqueue(5)
-p2.outActCallBack = () => p3.inAct()
+let changes = 0
 
-const p3 = new Process(3)
-p3.setName('PROCESSOR 3')
-p3.setDistribution('exp')
-p3.setMaxqueue(5)
+c.setName('CREATE')
+p1.setName('PROCESS 1')
+p2.setName('PROCESS 2')
+d.setName('DISPOSE')
 
-c.setNextElement(p1)
+p1.setMaxqueue(3)
+p2.setMaxqueue(3)
+d.setMaxqueue(Number.MAX_VALUE)
 
-console.log(`id0 = ${c.getId()} id1 = ${p1.getId()}`)
+p1.setBranch([{ nextElement: d, probability: 1 }])
+p2.setBranch([{ nextElement: d, probability: 1 }])
 
-const list = [c, p1, p2, p3]
+p1.outActCallback = () => {
+  const p1Queue = p1.getQueueSize()
+  const p2Queue = p2.getQueueSize()
 
+  if (p2Queue - p1Queue >= 2) {
+    const item = p2.removeQueueItem()
+    p1.addQueueItem(item)
+    changes++
+  }
+}
+
+p2.outActCallback = () => {
+  const p1Queue = p1.getQueueSize()
+  const p2Queue = p2.getQueueSize()
+
+  if (p1Queue - p2Queue >= 2) {
+    const item = p1.removeQueueItem()
+    p2.addQueueItem(item)
+    changes++
+  }
+}
+
+const routes_C_P1_P2 = [p1, p2]
+routes_C_P1_P2.priority = p1
+
+c.setPriorityBranch(routes_C_P1_P2)
+
+const list = [c, p1, p2, d]
 const model = new Model(list)
-model.simulate(20)
+model.simulate(simulationTime, true)
+
+const p1MeanLoad = (p1.getMeanLoad() / simulationTime)
+const p2MeanLoad = (p2.getMeanLoad() / simulationTime)
+
+const p1MeanQueue = (p1.getMeanQueue() / simulationTime)
+const p2MeanQueue = (p2.getMeanQueue() / simulationTime)
+
+const averageClients = p1MeanLoad + p1MeanQueue + p2MeanLoad + p2MeanQueue
+
+const averageTime = Number(store.successClients.reduce((sum, item) => {
+  return sum + ((item.deletionTime - item.creationTime) / 1000)
+}, 0) / store.successClients.length).toFixed(4)
+
+console.log('Average clients', averageClients)
+console.log('Average time', averageTime)
+console.log('Changes', changes)

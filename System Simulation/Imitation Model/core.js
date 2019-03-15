@@ -190,11 +190,28 @@ class Create extends Element {
     super('', delay)
   }
 
+  setPriorityBranch(routes) {
+    this.priorityBranch = routes
+  }
+
   outAct() {
     super.outAct()
     const tCurr = this.getTcurr()
     this.setTnext(tCurr + this.getDelay())
-    this.getNextElement().inAct()
+    // this.getNextElement().inAct()
+
+    if (this.priorityBranch) {
+      let nextElement = this.priorityBranch.priority
+
+      this.priorityBranch.forEach((process) => {
+        if(process.getQueue() < nextElement.getQueue()) {
+          nextElement = process
+        }
+      })
+      nextElement.inAct()
+    } else {
+      this.getNextElement().inAct()
+    }
   }
 }
 
@@ -294,6 +311,10 @@ class Process extends Element {
 
       const route = this.branch[routeIndex]
       route.nextElement.inAct()
+    }
+
+    if (this.outActCallback) {
+      this.outActCallback()
     }
   }
 
