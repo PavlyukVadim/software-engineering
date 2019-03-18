@@ -91,8 +91,6 @@ for(let i = 0; i < iterations; i++) {
   const p3MeanQueue = (p3.getMeanQueue() / simulationTime)
   const p4MeanQueue = (p4.getMeanQueue() / simulationTime)
 
-  // console.log('p1MeanQueue', p1MeanQueue / simulationTime)
-
   p1QueueSum += p1MeanQueue
   p2QueueSum += p2MeanQueue
   p3QueueSum += p3MeanQueue
@@ -129,18 +127,27 @@ const p2LoadSumT = 0.054
 const p3LoadSumT = 0.062
 const p4LoadSumT = 0.036
 
-console.log('p1QueueSum', Number(p1QueueSum).toFixed(8))
-console.log('p2QueueSum', Number(p2QueueSum).toFixed(8))
-console.log('p3QueueSum', Number(p3QueueSum).toFixed(8))
-console.log('p4QueueSum', Number(p4QueueSum).toFixed(8))
+p1QueueSum = Number(p1QueueSum).toFixed(8)
+p2QueueSum = Number(p2QueueSum).toFixed(8)
+p3QueueSum = Number(p3QueueSum).toFixed(8)
+p4QueueSum = Number(p4QueueSum).toFixed(8)
 
-console.log('p1LoadSum', Number(p1LoadSum).toFixed(8))
-console.log('p2LoadSum', Number(p2LoadSum).toFixed(8))
-console.log('p3LoadSum', Number(p3LoadSum).toFixed(8))
-console.log('p4LoadSum', Number(p4LoadSum).toFixed(8))
+p1LoadSum = Number(p1LoadSum).toFixed(8)
+p2LoadSum = Number(p2LoadSum).toFixed(8)
+p3LoadSum = Number(p3LoadSum).toFixed(8)
+p4LoadSum = Number(p4LoadSum).toFixed(8)
 
+console.log('p1QueueSum', p1QueueSum)
+console.log('p2QueueSum', p2QueueSum)
+console.log('p3QueueSum', p3QueueSum)
+console.log('p4QueueSum', p4QueueSum)
 
-console.log('p1QueueSum %', (p1QueueSumT - Number(p1QueueSum).toFixed(8)) * 100)
-console.log('p2QueueSum %', (p2QueueSumT - Number(p2QueueSum).toFixed(8)) * 100)
-console.log('p3QueueSum %', (p3QueueSumT - Number(p3QueueSum).toFixed(8)) * 100)
-console.log('p4QueueSum %', (p4QueueSumT - Number(p4QueueSum).toFixed(8)) * 100)
+console.log('p1LoadSum', p1LoadSum)
+console.log('p2LoadSum', p2LoadSum)
+console.log('p3LoadSum', p3LoadSum)
+console.log('p4LoadSum', p4LoadSum)
+
+console.log('p1QueueSum %', (p1QueueSumT - p1QueueSum) * 100)
+console.log('p2QueueSum %', (p2QueueSumT - p2QueueSum) * 100)
+console.log('p3QueueSum %', (p3QueueSumT - p3QueueSum) * 100)
+console.log('p4QueueSum %', (p4QueueSumT - p4QueueSum) * 100)
