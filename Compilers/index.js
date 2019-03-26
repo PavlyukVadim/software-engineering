@@ -41,7 +41,7 @@ function TokenStream(input) {
 
   const isId = (ch) => (isIdStart(ch) || '?!-<>=0123456789'.includes(ch))
   
-  const isOpChar = (ch) => '+-*/%=&|<>!'.includes(ch)
+  const isOpChar = (ch) => '+-*/%=:&|<>!'.includes(ch)
 
   const isPunc = (ch) => ',;(){}[]'.includes(ch)
 
@@ -157,6 +157,7 @@ function TokenStream(input) {
 function parse(input) {
   const PRECEDENCE = {
     '=': 1,
+    ':': 1,
     '||': 2,
     '&&': 3,
     '<': 7, '>': 7, '<=': 7, '>=': 7, '==': 7, '!=': 7,
@@ -212,7 +213,11 @@ function parse(input) {
       if (his_prec > my_prec) {
         input.next()
         return maybeBinary({
-          type: (tok.value === '=') ? 'assign' : 'binary',
+          type: (tok.value === '=')
+            ? 'assign'
+            : (tok.value === ':')
+              ? 'literalAssign'
+              : 'binary',
           operator: tok.value,
           left: left,
           right: maybeBinary(parseAtom(), his_prec)
@@ -302,6 +307,7 @@ function parse(input) {
         return exp
       }
       if (isPunc('{')) return parseProg()
+      if (isPunc('[')) return parseObjLiteral()
       if (isKw('if')) return parseIf()
       if (isKw('true') || isKw('false')) return parseBool()
       if (isKw('lambda') || isKw('Î»')) {
@@ -343,6 +349,14 @@ function parse(input) {
     return {
       type: 'prog',
       prog: prog
+    }
+  }
+
+  function parseObjLiteral() {
+    const properties = delimited('[', ']', ',', parseExpression)
+    return {
+      type: 'objLiteral',
+      properties,
     }
   }
 
@@ -508,11 +522,17 @@ console.log('ts', ts)
 
 // var ast1 = parse(TokenStream(InputStream('1 + 2')));
 var ast2 = parse(TokenStream(InputStream(`
-  var a = 5;
-  var b = 5;
-  if(a <= b) {
-    return true;
-  }
+  var a = [
+    b: 45,
+    c: 71,
+  ];
+  #var a = {
+  #  foo: 'bar',
+  #};
+  # var b = 5;
+  # if(a <= b) {
+  #  return true;
+  # }
 `)));
 
 // console.log('ast1', JSON.stringify(ast1, null, 2))
