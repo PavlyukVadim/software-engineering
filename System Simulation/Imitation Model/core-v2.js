@@ -200,6 +200,14 @@ class Create extends Element {
     super.outAct()
     const tCurr = this.getTcurr()
     this.setTnext(tCurr + this.getDelay())
+
+    if (this.name === 'Pation1 Creator') {
+      store.c1SumCreation += +new Date()
+    } else if (this.name === 'Pation2 Creator') {
+      store.c2SumCreation += +new Date()
+    } else if (this.name === 'Pation3 Creator') {
+      store.c3SumCreation += +new Date()
+    }
     // this.getNextElement().inAct()
 
     if (this.priorityBranch) {
@@ -210,9 +218,9 @@ class Create extends Element {
           nextElement = process
         }
       })
-      nextElement.inAct()
+      nextElement.inAct(this)
     } else {
-      this.getNextElement().inAct()
+      this.getNextElement().inAct(this)
     }
   }
 }
@@ -259,9 +267,21 @@ class Process extends Element {
     return minNextTime
   }
 
-  activateWorker(worker) {
+  activateWorker(worker, creatorItem) {
     worker.state = 1
     worker.nextTime = this.getTcurr() + this.getDelay()
+    this.lastWorkedCreatorItem = creatorItem
+
+    const queueItem = {
+      creationTime: new Date(),
+      creatorItem,
+    }
+
+    worker.item = queueItem
+
+    if (this.name === 'DISPOSE') {
+      store.disposedClients.push(queueItem)
+    }
   }
 
   getTnext() {
@@ -273,16 +293,25 @@ class Process extends Element {
     this.branch = branch
   }
 
-  inAct() {
+  setTypeBranch(typeBranch) {
+    this.typeBranch = typeBranch
+  }
+
+  setPriorityQueueTarget(priorityQueueTarget) {
+    this.priorityQueueTarget = priorityQueueTarget
+  }
+
+  inAct(creatorItem) {
     const freeWorker = this.getFreeWorker()
     if (freeWorker) {
-      this.activateWorker(freeWorker)
+      this.activateWorker(freeWorker, creatorItem)
     } else {
       const queueSize = this.getQueueSize()
       const maxQueueSize = this.getMaxQueueSize()
       if (queueSize < maxQueueSize) {
         const queueItem = {
           creationTime: new Date(),
+          creatorItem,
         }
         this.addQueueItem(queueItem)
       } else {
@@ -296,15 +325,41 @@ class Process extends Element {
     const worker = this.getLastActiveWorker()
     worker.nextTime = Number.MAX_VALUE
     worker.state = 0
+    worker.item.deletionTime = new Date()
     worker.done++
+
+    if (this.name === 'OUT') {
+      store.outedClients.push(worker.item)
+      store.outSumCreation += +new Date()
+    } else if (this.name === 'DISPOSE') {
+      store.desposeSumCreation += +new Date()
+    }
+    
+
+    let lastQueueItem = {}
     const queueSize = this.getQueueSize()
     if (queueSize > 0) {
-      const item = this.removeQueueItem()
-      item.deletionTime = new Date()
-      store.successClients.push(item)
-
+      lastQueueItem = this.removeQueueItem()
+      lastQueueItem.deletionTime = new Date()
+      lastQueueItem.worker = worker
       worker.state = 1
       worker.nextTime = this.getTcurr() + this.getDelay()
+    }
+
+     if (this.typeBranch) {
+      const route = this.typeBranch.find((typeRoute) => {
+        return (typeRoute.type === this.lastWorkedCreatorItem)
+      })
+
+      if (route) {
+        const routeItemCreator = route.itemCreator
+        // console.log('routeItemCreator', routeItemCreator)
+        if (routeItemCreator) {
+          store.returnedToDoctors++
+          this.lastWorkedCreatorItem = routeItemCreator
+        }
+        route.nextElement.inAct(routeItemCreator || this.lastWorkedCreatorItem)
+      }
     }
 
     if (this.branch) {
@@ -321,9 +376,9 @@ class Process extends Element {
         .findIndex((value) => value >= probability)
 
       const route = this.branch[routeIndex]
-      route.nextElement.inAct()
+      route.nextElement.inAct(this.lastWorkedCreatorItem)
     }
-
+    
     if (this.outActCallback) {
       this.outActCallback()
     }
@@ -347,6 +402,13 @@ class Process extends Element {
   }
 
   removeQueueItem() {
+    // implement priority queue
+    this.queue.sort((item) => {
+      return (item.creatorItem === this.priorityQueueTarget)
+        ? -1
+        : 1
+    })
+    
     const firstItem = this.queue.shift()
     return firstItem
   }
