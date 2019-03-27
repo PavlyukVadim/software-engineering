@@ -24,7 +24,7 @@ t->questions->add(q2)
 t->questions->add(q3)
 t->questions->remove(q3)
 
-// t->questions->amount 2
+# t->questions->amount 2
 
 if (t->questions->amount > 2) {
   print('remove doesn\'t work')
