@@ -17,7 +17,7 @@ function InputStream(input) {
   const eof = () => (peek() === '')
 
   const croak = (msg) => {
-    throw new Error(msg + ' (' + line + ':' + col + ')');
+    throw new Error(msg + ' (' + line + ':' + col + ')')
   }
 
   return {
@@ -35,22 +35,19 @@ function TokenStream(input) {
   const keywords = [
     'test',     // type of var, consist of questions
     'question', // type of var, part of test
-    'if',
-    'then',
-    'else',
-    'forEach',
+    'if',       // cond statement
+    'else',     // cond statement
+    'forEach',  // loof
     'as',       // variable declaration inside forEach
-    'lambda',
-    'Î»',
-    'true',
-    'false',
+    'true',     // bool value
+    'false',    // bool value
   ]
 
   const isKeyword = (x) => keywords.includes(x)
 
-  const isDigit = (ch) => /[0-9]/i.test(ch)
+  const isDigit = (ch) => /[\d]/i.test(ch)
 
-  const isIdStart = (ch) => /[a-zÎ»_]/i.test(ch)
+  const isIdStart = (ch) => /[\w]/i.test(ch)
 
   const isId = (ch) => (isIdStart(ch) || '0123456789'.includes(ch))
   
@@ -62,8 +59,9 @@ function TokenStream(input) {
 
   const readWhile = (predicate) => {
     let str = ''
-    while (!input.eof() && predicate(input.peek()))
+    while (!input.eof() && predicate(input.peek())) {
       str += input.next()
+    }
     return str
   }
 
@@ -171,18 +169,21 @@ function parse(input) {
   const PRECEDENCE = {
     '=': 1,    // assign
     ':': 1,    // assign for props inside literals
-    '||': 2,
-    '&&': 3,
-    '<': 7, '>': 7, '<=': 7, '>=': 7, '==': 7, '!=': 7,
-    '+': 10, '-': 10,
-    '*': 20, '/': 20, '%': 20,
-    '->': 30,   // access to props
-    'as': 30,
-  }
-
-  const FALSE = {
-    type: 'bool',
-    value: false,
+    '||': 2,   // bool or
+    '&&': 3,   // bool and
+    '<': 4,    // les
+    '>': 4,    // more
+    '<=': 4,   // les or equal
+    '>=': 4,   // more or equal
+    '==': 4,   // equal
+    '!=': 4,   // not equal
+    '+': 5,    // plus
+    '-': 5,    // minus
+    '*': 6,    // multiple
+    '/': 6,    // divide
+    '%': 6,    // remaining from dividing
+    '->': 7,   // access to props
+    'as': 7,   // forEach var identifier
   }
 
   return parseTopLevel()
@@ -211,11 +212,6 @@ function parse(input) {
   function skipKw(kw) {
     if (isKw(kw)) input.next()
     else input.croak("Expecting keyword: \"" + kw + "\"")
-  }
-
-  function skip_op(op) {
-    if (isOp(op)) input.next()
-    else input.croak("Expecting operator: \"" + op + "\"")
   }
 
   function unexpected() {
@@ -343,14 +339,6 @@ function parse(input) {
     return ret
   }
 
-  function parseLambda() {
-    return {
-      type: 'lambda',
-      vars: delimited('(', ')', ',', parseVarName),
-      body: parseExpression()
-    }
-  }
-
   function parseBool() {
     return {
       type: 'bool',
@@ -379,10 +367,7 @@ function parse(input) {
       if (isKw('true') || isKw('false')) return parseBool()
       if (isKw('test')) return parseVarTestName()
       if (isKw('question')) return parseVarQuestionName()
-      if (isKw('lambda') || isKw('Î»')) {
-        input.next()
-        return parseLambda()
-      }
+
       const tok = input.next()
       if (
         (tok.type === 'var') ||
@@ -412,8 +397,15 @@ function parse(input) {
 
   function parseProg() {
     const prog = delimited('{', '}', ';', parseExpression)
-    if (prog.length === 0) return FALSE
-    if (prog.length === 1) return prog[0]
+    if (prog.length === 0) {
+      return {
+        type: 'bool',
+        value: false,
+      }
+    }
+    if (prog.length === 1) {
+      return prog[0]
+    }
 
     return {
       type: 'prog',
