@@ -49,6 +49,8 @@ const modelSimulateWrapper = (n, time) => {
   console.log('N', n, ':', 'working time', workingTime)
 }
 
+modelSimulateWrapper(1, 1000)
+modelSimulateWrapper(2, 1000)
 modelSimulateWrapper(5, 1000)
 modelSimulateWrapper(10, 1000)
 modelSimulateWrapper(20, 1000)
