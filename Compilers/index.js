@@ -31,15 +31,28 @@ function InputStream(input) {
 // TokenStream function
 function TokenStream(input) {
   let current = null
-  let keywords = ' if then else lambda Î» true false '
+  
+  const keywords = [
+    'test',     // type of var, consist of questions
+    'question', // type of var, part of test
+    'if',
+    'then',
+    'else',
+    'forEach',
+    'as',       // variable declaration inside forEach
+    'lambda',
+    'Î»',
+    'true',
+    'false',
+  ]
 
-  const isKeyword = (x) => keywords.includes(` ${x} `)
+  const isKeyword = (x) => keywords.includes(x)
 
   const isDigit = (ch) => /[0-9]/i.test(ch)
 
   const isIdStart = (ch) => /[a-zÎ»_]/i.test(ch)
 
-  const isId = (ch) => (isIdStart(ch) || '?!-<>=0123456789'.includes(ch))
+  const isId = (ch) => (isIdStart(ch) || '0123456789'.includes(ch))
   
   const isOpChar = (ch) => '+-*/%=:&|<>!'.includes(ch)
 
@@ -156,13 +169,15 @@ function TokenStream(input) {
 
 function parse(input) {
   const PRECEDENCE = {
-    '=': 1,
-    ':': 1,
+    '=': 1,    // assign
+    ':': 1,    // assign for props inside literals
     '||': 2,
     '&&': 3,
     '<': 7, '>': 7, '<=': 7, '>=': 7, '==': 7, '!=': 7,
     '+': 10, '-': 10,
     '*': 20, '/': 20, '%': 20,
+    '->': 30,   // access to props
+    'as': 30,
   }
 
   const FALSE = {
@@ -184,6 +199,7 @@ function parse(input) {
 
   function isOp(op) {
     const tok = input.peek()
+    console.log('op tok', tok)
     return (tok && (tok.type === 'op') && (!op || tok.value === op))
   }
 
@@ -212,12 +228,31 @@ function parse(input) {
       const his_prec = PRECEDENCE[tok.value]
       if (his_prec > my_prec) {
         input.next()
+        let type
+        switch(tok.value) {
+          case '=': {
+            type = 'assignExpression'
+            break
+          }
+          case ':': {
+            type = 'literalAssignExpression'
+            break
+          }
+          case '->': {
+            type = 'memberExpression'
+            break
+          }
+          case 'as': {
+            type = 'identifierExpression'
+            break
+          }
+          default: {
+            type = 'binaryExpression'
+          }
+        }
+
         return maybeBinary({
-          type: (tok.value === '=')
-            ? 'assign'
-            : (tok.value === ':')
-              ? 'literalAssign'
-              : 'binary',
+          type,
           operator: tok.value,
           left: left,
           right: maybeBinary(parseAtom(), his_prec)
@@ -261,19 +296,49 @@ function parse(input) {
     return name.value
   }
 
+  function parseVarTestName() {
+    skipKw('test')
+    const name = input.next()
+    return {
+      type: 'testVar',
+      name: name.value
+    }
+  }
+
+  function parseVarQuestionName() {
+    skipKw('question')
+    const name = input.next()
+    return {
+      type: 'questionVar',
+      name: name.value
+    }
+  }
+
   function parseIf() {
     skipKw('if')
     const cond = parseExpression()
     if (!isPunc('{')) skipKw('then')
     const then = parseExpression()
     const ret = {
-      type: 'if',
+      type: 'ifStatement',
       cond,
       then,
     }
     if (isKw('else')) {
       input.next()
       ret.else = parseExpression()
+    }
+    return ret
+  }
+
+  function parseForEach() {
+    skipKw('forEach')
+    const inner = parseExpression()
+    const body = parseExpression()
+    const ret = {
+      type: 'forEachStatement',
+      inner,
+      body,
     }
     return ret
   }
@@ -295,6 +360,7 @@ function parse(input) {
 
   function maybeCall(expr) {
     expr = expr()
+    // console.log('expr', expr)
     return isPunc('(') ? parseCall(expr) : expr
   }
 
@@ -309,7 +375,10 @@ function parse(input) {
       if (isPunc('{')) return parseProg()
       if (isPunc('[')) return parseObjLiteral()
       if (isKw('if')) return parseIf()
+      if (isKw('forEach')) return parseForEach()
       if (isKw('true') || isKw('false')) return parseBool()
+      if (isKw('test')) return parseVarTestName()
+      if (isKw('question')) return parseVarQuestionName()
       if (isKw('lambda') || isKw('Î»')) {
         input.next()
         return parseLambda()
