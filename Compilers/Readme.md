@@ -5,19 +5,19 @@
 ##### Code samples
 
 ```
-test t = {
+test t = [
   title: 'My first test',
-}
+]
 
-question q1 = {
+question q1 = [
   description: 'What's your name',
-}
+]
 
-question q2 = {
+question q2 = [
   description: 'How old are you',
-}
+]
 
-question q3 = {}
+question q3 = []
 
 t->questions->add(q1)
 t->questions->add(q2)

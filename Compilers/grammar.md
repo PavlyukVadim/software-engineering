@@ -3,7 +3,7 @@ PrimaryExpression	::=	"this"
                   |	ObjectLiteral
                   | Identifier
 Identifier	::=	<IDENTIFIER_NAME>
-ObjectLiteral	::=	"{" ( PropertyNameAndValueList )? "}"
+ObjectLiteral	::=	"[" ( PropertyNameAndValueList )? "]"
 PropertyNameAndValueList	::=	PropertyNameAndValue ( ","PropertyNameAndValue | "," )*
 PropertyNameAndValue	::=	PropertyName ":" AssignmentExpression
 PropertyName ::=	Identifier
