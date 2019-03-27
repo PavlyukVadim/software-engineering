@@ -2,7 +2,7 @@ function InputStream(input) {
   let pos = 0, line = 1, col = 0
   
   const next = () => {
-    let ch = input.charAt(pos++)
+    const ch = input.charAt(pos++)
     if (ch === '\n') {
       line++
       col = 0
@@ -250,7 +250,7 @@ function parse(input) {
         return maybeBinary({
           type,
           operator: tok.value,
-          left: left,
+          left,
           right: maybeBinary(parseAtom(), his_prec)
         }, my_prec)
       }
@@ -282,14 +282,6 @@ function parse(input) {
       func,
       args: delimited('(', ')', ',', parseExpression),
     }
-  }
-
-  function parseVarName() {
-    const name = input.next()
-    if (name.type !== 'var') {
-      input.croak('Expecting variable name')
-    }
-    return name.value
   }
 
   function parseVarTestName() {

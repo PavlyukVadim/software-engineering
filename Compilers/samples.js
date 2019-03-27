@@ -61,8 +61,8 @@ const forEachSampleCode = `
     print(q->description)
   }
 `
-// const astOfForEachSampleCode = parse(TokenStream(InputStream(forEachSampleCode)))
-// outputAstToConsole(astOfForEachSampleCode, forEachSampleCode)
+const astOfForEachSampleCode = parse(TokenStream(InputStream(forEachSampleCode)))
+outputAstToConsole(astOfForEachSampleCode, forEachSampleCode)
 
 
 
