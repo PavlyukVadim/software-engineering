@@ -9,8 +9,8 @@ const testVariableAssignCode = `
     title: "My first test",
   ]
 `
-// const astOfTestVariableAssignCode = parse(TokenStream(InputStream(testVariableAssignCode)))
-// outputAstToConsole(astOfTestVariableAssignCode, testVariableAssignCode)
+const astOfTestVariableAssignCode = parse(TokenStream(InputStream(testVariableAssignCode)))
+outputAstToConsole(astOfTestVariableAssignCode, testVariableAssignCode)
 
 
 
@@ -112,5 +112,5 @@ const fullCodeSample = `
     print(a->some)
   }
 `
-const astOfFullSampleCode = parse(TokenStream(InputStream(fullCodeSample)))
-outputAstToConsole(astOfFullSampleCode, fullCodeSample)
+// const astOfFullSampleCode = parse(TokenStream(InputStream(fullCodeSample)))
+// outputAstToConsole(astOfFullSampleCode, fullCodeSample)
