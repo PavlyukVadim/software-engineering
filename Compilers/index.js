@@ -218,11 +218,11 @@ function parse(input) {
     input.croak("Unexpected token: " + JSON.stringify(input.peek()))
   }
 
-  function maybeBinary(left, my_prec) {
+  function maybeBinary(left, myPrec) {
     const tok = input.peek()
     if (tok) {
-      const his_prec = PRECEDENCE[tok.value]
-      if (his_prec > my_prec) {
+      const hisPrec = PRECEDENCE[tok.value]
+      if (hisPrec > myPrec) {
         input.next()
         let type
         switch(tok.value) {
@@ -251,8 +251,8 @@ function parse(input) {
           type,
           operator: tok.value,
           left,
-          right: maybeBinary(parseAtom(), his_prec)
-        }, my_prec)
+          right: maybeBinary(parseAtom(), hisPrec)
+        }, myPrec)
       }
     }
     return left
@@ -338,14 +338,13 @@ function parse(input) {
     }
   }
 
+  // check does it a function call
   function maybeCall(expr) {
-    expr = expr()
-    // console.log('expr', expr)
     return isPunc('(') ? parseCall(expr) : expr
   }
 
   function parseAtom() {
-    return maybeCall(() => {
+    const expr = (() => {
       if (isPunc('(')) {
         input.next()
         const exp = parseExpression()
@@ -369,7 +368,9 @@ function parse(input) {
         return tok
       }
       unexpected()
-    })
+    })()
+
+    return maybeCall(expr)
   }
 
   function parseTopLevel() {
@@ -414,8 +415,6 @@ function parse(input) {
   }
 
   function parseExpression() {
-    return maybeCall(() => {
-      return maybeBinary(parseAtom(), 0)
-    })
+    return maybeCall(maybeBinary(parseAtom(), 0))
   }
 }
