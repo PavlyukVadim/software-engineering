@@ -4,13 +4,21 @@ const outputAstToConsole = (ast, code) => {
   console.log('AST:\n', JSON.stringify(ast, null, 2))
 }
 
+const outputEnv = (env) => {
+  console.log('env:\n', JSON.stringify(env, null, 2))
+}
+
 const testVariableAssignCode = `
   test t = [
     title: "My first test",
   ]
 `
+
+outputEnv(globalEnv)
 // const astOfTestVariableAssignCode = parse(TokenStream(InputStream(testVariableAssignCode)))
 // outputAstToConsole(astOfTestVariableAssignCode, testVariableAssignCode)
+// evaluate(astOfTestVariableAssignCode, globalEnv)
+// console.log('globalEnv', globalEnv)
 
 
 
@@ -19,18 +27,44 @@ const questionVariableAssignCode = `
     description: "What's your name",
   ]
 `
+
 // const astOfQuestionVariableAssignCode = parse(TokenStream(InputStream(questionVariableAssignCode)))
 // outputAstToConsole(astOfQuestionVariableAssignCode, questionVariableAssignCode)
-
+// evaluate(astOfQuestionVariableAssignCode, globalEnv)
 
 
 
 const testMembersExprCode = `
+  test t = [
+    title: "My first test",
+  ]
+  question q1 = [
+    description: "What's your name",
+  ]
+  question q2 = [
+    description: "How old are you",
+  ]
+  question q3 = []
   t->questions->add(q1)
-`
-// const astOfTestMembersExprCode = parse(TokenStream(InputStream(testMembersExprCode)))
-// outputAstToConsole(astOfTestMembersExprCode, testMembersExprCode)
+  t->questions->add(q2)
+  t->questions->add(q3)
+  t->questions->remove(q3)
 
+  # print("amount", t->questions->amount) 2
+
+  if (t->questions->amount > 1) {
+    print("questions amount more than 1")
+  }
+
+  forEach(t->questions as q) {
+    print(q->description)
+  }
+`
+
+
+const astOfTestMembersExprCode = parse(TokenStream(InputStream(testMembersExprCode)))
+outputAstToConsole(astOfTestMembersExprCode, testMembersExprCode)
+evaluate(astOfTestMembersExprCode, globalEnv)
 
 
 const testMembersWithLiteralExprCode = `
@@ -61,8 +95,8 @@ const forEachSampleCode = `
     print(q->description)
   }
 `
-const astOfForEachSampleCode = parse(TokenStream(InputStream(forEachSampleCode)))
-outputAstToConsole(astOfForEachSampleCode, forEachSampleCode)
+// const astOfForEachSampleCode = parse(TokenStream(InputStream(forEachSampleCode)))
+// outputAstToConsole(astOfForEachSampleCode, forEachSampleCode)
 
 
 
@@ -114,3 +148,6 @@ const fullCodeSample = `
 `
 // const astOfFullSampleCode = parse(TokenStream(InputStream(fullCodeSample)))
 // outputAstToConsole(astOfFullSampleCode, fullCodeSample)
+console.log('globalEnv', globalEnv)
+
+// -----------------

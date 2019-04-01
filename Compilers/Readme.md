@@ -26,8 +26,8 @@ t->questions->remove(q3)
 
 # t->questions->amount 2
 
-if (t->questions->amount > 2) {
-  print("remove doesn\'t work")
+if (t->questions->amount > 1) {
+  print("questions amount more than 1")
 }
 
 t->answers->add([
