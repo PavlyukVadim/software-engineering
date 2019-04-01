@@ -50,3 +50,7 @@ forEach(t->answers as a) {
   print(a->some)
 }
 ```
+
+##### Steps
+
+Input Stream -> Token Stream -> Parsing into AST -> Evaluation

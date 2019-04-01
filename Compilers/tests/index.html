@@ -11,7 +11,12 @@
   <script src="https://unpkg.com/mocha@4.0.1/mocha.js"></script>
   
   <script>mocha.setup('bdd')</script>
-  <script src="./../index.js"></script>
+  <!-- compiler -->
+  <script src="../src/parser/inputStream.js"></script>
+  <script src="../src/parser/tokenStream.js"></script>
+  <script src="../src/parser/index.js"></script>
+
+  <!-- tests -->
   <script src="./index.js"></script>
   
   <script>
