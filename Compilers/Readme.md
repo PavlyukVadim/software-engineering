@@ -42,12 +42,12 @@ t->answers->add([
   q2: "25",
 ])
 
-forEach(t->questions as q) {
+forEach(t->questions->items as q) {
   print(q->description)
 }
 
-forEach(t->answers as a) {
-  print(a->some)
+forEach(t->answers->items as a) {
+  print(q1->description, a->q1)
 }
 ```
 

@@ -3,8 +3,8 @@ const globalVars = {
 }
 
 function Environment(parent) {
-  this.vars = Object.create(parent ? parent.vars : null);
-  this.parent = parent;
+  this.vars = Object.create(parent ? parent.vars : null)
+  this.parent = parent
 }
 
 Environment.prototype = {
@@ -12,24 +12,27 @@ Environment.prototype = {
     return new Environment(this)
   },
   lookup: function(name) {
-    var scope = this
+    let scope = this
     while (scope) {
       if (Object.prototype.hasOwnProperty.call(scope.vars, name)) {
         return scope
-      }      
+      }
       scope = scope.parent
     }
   },
   get: function(name) {
     if (name in this.vars) {
       return this.vars[name]
+      // TODO: refactor
+    } else if (this.parent && name in this.parent.vars) {
+      return this.parent.vars[name]
     } else if (name in globalVars) {
       return globalVars[name]
     }
     throw new Error("Undefined variable " + name)
   },
   set: function(name, value) {
-    var scope = this.lookup(name)
+    const scope = this.lookup(name)
     if (!scope && this.parent) {
       throw new Error("Undefined variable " + name)
     }
@@ -47,6 +50,8 @@ const expTypes = {
   member: 'memberExpression',                 // ->
   cond: 'ifStatement',                        // if
   binary: 'binaryExpression',                 // +, -, /, *, >, <
+  loop: 'forEachStatement',                   // forEach,
+  loopVar: 'identifierExpression',            // as
 }
 
 const varTypes = [
@@ -91,9 +96,20 @@ function evaluate(exp, env) {
             return value.questions.items.length
           }
         }
-        
-        // value.questions.amount = () => {}
-        // value.questions.amount.toString = () => value.questions.length
+        value.answers = {
+          items: [],
+          add: (newQuestion) => {
+            value.answers.items.push(newQuestion)
+          },
+          remove: (wasteQuestion) => {
+            value.answers.items = value.answers.items.filter((item) => (
+              item.id !== wasteQuestion.id
+            ))
+          },
+          get amount() {
+            return value.answers.items.length
+          }
+        }
       }
       return env.set(varName, value)
     }
@@ -124,15 +140,25 @@ function evaluate(exp, env) {
     case expTypes.member: {
       // get all members values of the literal
       const parent = evaluate(exp.left, env)
-      const localEnv = {
-        vars: {
-          ...parent,
-        },
-      }
+      // const localEnv = {
+      //   vars: {
+      //     ...parent,
+      //   },
+      // }
       // create a new env that consist only from parent members
-      const innerEnv = new Environment(localEnv)
+      const innerEnv = new Environment(env)
+      innerEnv.vars = {
+        ...parent,
+      }
       // call child on a closed env
+
+      // let child
+      // if (exp.right.type === 'call') {
+      //   child = evaluate(exp.right, globalEnv)
+      // } else {
       const child = evaluate(exp.right, innerEnv)
+      // }
+      
       return child
     }
 
@@ -158,15 +184,36 @@ function evaluate(exp, env) {
       }
     }
 
+    case expTypes.loop: {
+      const [varName, varValues] = evaluate(exp.inner, env)
+      varValues.forEach((varValue) => {
+        // create a new env that consist only from parent members
+        const innerEnv = new Environment(env)
+        innerEnv.vars = {
+          [varName]: varValue,
+        }
+        const result = evaluate(exp.body, innerEnv)
+      })
+      return
+    }
+
+    case expTypes.loopVar: {
+      const value = evaluate(exp.left, env)
+      const varName = exp.right.value
+      return [varName, value]
+    }
+
     case "prog":
-      var val = false;
-      exp.prog.forEach(function(exp){ val = evaluate(exp, env) });
-      return val;
+      let val = false
+      exp.prog.forEach(function(exp) {
+        val = evaluate(exp, env)
+      })
+      return val
 
     case 'call': {
       var func = evaluate(exp.func, env)
       return func.apply(null, exp.args.map((arg) => {
-        return evaluate(arg, globalEnv)
+        return evaluate(arg, env)
       }))
     }
 
