@@ -1,8 +1,8 @@
-### Theory of compilers
+## Theory of compilers
 
-#### Implementation of my own programming language
+### Implementation of specific programming language for testing system
 
-##### Code samples
+### Getting started
 
 ```
 test t = [
@@ -51,6 +51,60 @@ forEach(t->answers->items as a) {
 }
 ```
 
-##### Steps
+### Implementation
 
 Input Stream -> Token Stream -> Parsing into AST -> Evaluation
+
+### BNF
+
+```
+PrimaryExpression	::=
+  "this" |
+  ObjectLiteral |
+  Identifier
+Identifier ::=
+  <IDENTIFIER_NAME>
+CommentSymbol ::=
+  ("#")
+ObjectLiteral	::=
+  "[" (PropertyNameAndValueList)? "]"
+PropertyNameAndValueList ::=
+  PropertyNameAndValue (","PropertyNameAndValue | ",")*
+PropertyNameAndValue ::=
+  PropertyName ":" AssignmentExpression
+PropertyName ::=
+  Identifier |
+  <STRING_LITERAL>
+RelationalOperator ::=
+  "<" |
+  ">" |
+  "<=" |
+  ">="
+MemberExpression ::=
+  MemberExpressionPart
+MemberExpressionPart ::=
+  ("->" Identifier)
+AssignmentOperator ::=
+  ("=")
+Expression ::=
+  AssignmentExpression ("," AssignmentExpression)*
+Statement ::=
+  Block |
+  IfStatement |
+  IterationStatement
+Block ::=
+  "{" (StatementList)? "}"
+StatementList	::=
+  (Statement)
+VariableStatement	::=
+  "test" VariableDeclarationList |
+  "question" VariableDeclarationList
+VariableDeclarationList	::=
+  VariableDeclaration ( "," VariableDeclaration )*
+VariableDeclaration	::=
+  Identifier (Initialiser)?
+IfStatement	::=
+  "if" "(" Expression ")" Statement ("else" Statement)?
+IterationStatement ::=
+  ("forEach" VariableStatement "as" VariableDeclaration)
+```
