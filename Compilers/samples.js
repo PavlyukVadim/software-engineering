@@ -14,10 +14,13 @@ const testVariableAssignCode = `
   ]
 `
 
-outputEnv(globalEnv)
+const globalEnv = new Environment()
+
+// outputEnv(globalEnv)
 // const astOfTestVariableAssignCode = parse(TokenStream(InputStream(testVariableAssignCode)))
 // outputAstToConsole(astOfTestVariableAssignCode, testVariableAssignCode)
 // evaluate(astOfTestVariableAssignCode, globalEnv)
+// outputEnv(globalEnv)
 // console.log('globalEnv', globalEnv)
 
 
@@ -31,6 +34,7 @@ const questionVariableAssignCode = `
 // const astOfQuestionVariableAssignCode = parse(TokenStream(InputStream(questionVariableAssignCode)))
 // outputAstToConsole(astOfQuestionVariableAssignCode, questionVariableAssignCode)
 // evaluate(astOfQuestionVariableAssignCode, globalEnv)
+// outputEnv(globalEnv)
 
 
 
@@ -68,9 +72,9 @@ const testMembersExprCode = `
     q2: "25",
   ])
 
-  # forEach(t->questions->items as q) {
-  #  print(q->description)
-  # }
+  forEach(t->questions->items as q) {
+    print(q->description)
+  }
 
   forEach(t->answers->items as a) {
     print(q1->description, a->q1)
@@ -79,8 +83,9 @@ const testMembersExprCode = `
 
 
 const astOfTestMembersExprCode = parse(TokenStream(InputStream(testMembersExprCode)))
-outputAstToConsole(astOfTestMembersExprCode, testMembersExprCode)
+// outputAstToConsole(astOfTestMembersExprCode, testMembersExprCode)
 evaluate(astOfTestMembersExprCode, globalEnv)
+outputEnv(globalEnv)
 
 
 const testMembersWithLiteralExprCode = `

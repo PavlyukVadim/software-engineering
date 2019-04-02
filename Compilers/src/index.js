@@ -4,7 +4,9 @@ const globalVars = {
 
 function Environment(parent) {
   this.vars = Object.create(parent ? parent.vars : null)
-  this.parent = parent
+  if (parent) {
+    this.parent = parent
+  }
 }
 
 Environment.prototype = {
@@ -266,7 +268,7 @@ function applyOp(op, a, b) {
 
 // /* -----[ entry point for NodeJS ]----- */
 
-var globalEnv = new Environment();
+// var globalEnv = new Environment();
 
 
 
