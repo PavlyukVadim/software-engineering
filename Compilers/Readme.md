@@ -2,6 +2,11 @@
 
 ### Implementation of specific programming language for testing system
 
+### Technology stack
+
+Main language: ```javascript```.
+For testing: ```mocha```, ```chai```.
+
 ### Getting started
 
 The interpreted language specified for analyzing testing results.
@@ -94,7 +99,19 @@ forEach(t->answers->items as a) {
 
 ### Implementation
 
-Input Stream -> Token Stream -> Parsing into AST -> Evaluation
+#### Tokenizing/Lexing
+
+Breaking up a string of characters into meaningful (to the language) chunks, called tokens. For instance, consider the program: ```test t = []```. This program would be broken up into the following tokens: ```test```, ```t```, ```=```, ```[```, ```]```. Whitespace may not be persisted as a token, because of their meaningless.
+
+#### Parsing
+
+Taking a stream (array) of tokens and turning it into a tree of nested elements, which collectively represent the grammatical structure of the program. This tree is called an "AST" (Abstract Syntax Tree).
+
+The tree for ```t = []``` might start with a top-level node called assignExpression, with a child node called testVar (whose name is t), and another child called objLiteral.
+
+#### Code-Generation
+
+The process of taking an ```AST``` and turning it into executable code. Evaluator gets as input parameter ```AST structure``` and starts handle each node step by step. The binding block of code with variables is by using ```scopes```. It's abstractions that consist of all data, that are available for the block of code and link to parent scope. On the top level scopes are bound to the ```global scope```, that consist of top-level variable and system methods.
 
 ### BNF
 
