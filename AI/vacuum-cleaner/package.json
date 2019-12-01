@@ -1,0 +1,17 @@
+{
+  "name": "vacuum-cleaner",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Environment.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node --experimental-modules src/index.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "deep-freeze": "^0.0.1",
+    "ramda": "^0.26.1"
+  }
+}
