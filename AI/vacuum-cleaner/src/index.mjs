@@ -38,16 +38,39 @@ const worlds = [
   createWorld(initialDirtAppearanceProbability, randomReflexAgent),
 ]
 
-// const { grid } = world.environment
+worlds.forEach(world => {
+  world.trashCountOnEachStep = []
+})
+
+const dirtyCount = (grid) => {
+  let count = 0
+  grid.forEach(c => {
+    c.forEach(cc => {
+      if (cc.isDirty) {
+        count++
+      }
+    })
+  })
+  return count
+}
 
 let i = 0
-while(i < 1000) {
+const N = 1000
+while(i < N) {
   i++
   worlds.forEach(world => {
     world.performNextAction()
+    world.trashCountOnEachStep.push(dirtyCount(world.environment.grid))
   })
 }
 
 console.log('simpleReflexAgent', simpleReflexAgent.energySpent)
 console.log('modelBasedReflexAgent', modelBasedReflexAgent.energySpent)
 console.log('randomReflexAgent', randomReflexAgent.energySpent)
+
+console.log('--------')
+
+worlds.forEach((world) => {
+  const sum = world.trashCountOnEachStep.reduce((ac, el) => el + ac)
+  console.log('trashCountOnEachStep', sum / N)
+})

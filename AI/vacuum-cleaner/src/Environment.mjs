@@ -18,7 +18,7 @@ export default ({ dirtAppearanceProbability }) => {
         bumpOccurred: false,
         isDirty: getVacuumCleanerCell(grid).isDirty
       }
-    }
+    },
   }
 }
 
