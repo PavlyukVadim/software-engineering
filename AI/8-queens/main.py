@@ -34,26 +34,18 @@ def plot_NQueens(solution):
 
 nqp = NQueensProblem(8)
 
-#breadth_first_tree_search(nqp)
-
 def func(nqp):
-    #breadth_first_tree_search(nqp)
-    bfts = depth_limited_search(nqp, 5000).solution()
-    # bfts = breadth_first_tree_search(nqp).solution()
-    # print(depth_limited_search(nqp))
-    # plot_NQueens(bfts)
+    bfts = breadth_first_tree_search(nqp).solution()
 
 print('breadth_first_tree_search:', timeit.timeit('[func(nqp)]', globals=globals(), number=500))
 
 nqp = NQueensProblem(8)
 
-# def func(nqp):
-#     astar = recursive_best_first_search(nqp).solution()
+def func(nqp):
+    astar = astar_search(nqp).solution()
 
-# print('astar_search:', timeit.timeit('[func(nqp)]', globals=globals(), number=500))
+print('astar_search:', timeit.timeit('[func(nqp)]', globals=globals(), number=500))
 
-# nqp = NQueensProblem(8)
-
-# astar = recursive_best_first_search(nqp).solution()
+nqp = NQueensProblem(8)
 
 # plot_NQueens(astar)
